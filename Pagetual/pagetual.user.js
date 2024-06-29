@@ -10,8 +10,8 @@
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.11
-// @description  Perpetual pages - powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
+// @version      1.9.37.65
+// @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
@@ -192,6 +192,8 @@
                 nextSwitch: "Switch next link",
                 arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
                 sideController: "Display the paging control bar in the sidebar",
+                sideControllerScroll: "Scroll toggle",
+                sideControllerAlways: "Always show",
                 hideLoadingIcon: "Hide loading animation",
                 hideBarArrow: "Hide arrow for page bar",
                 duplicate: "Duplicate Pagetual have been installed, check your script manager!",
@@ -202,6 +204,7 @@
                 disableAutoScroll: "Stop Auto Scroll",
                 enableAutoScroll: "Enable Auto Scroll",
                 toggleAutoScroll: "Toggle Auto Scroll",
+                ruleRequest: "Rule Request",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -229,6 +232,256 @@
                 rulesExample: "Rules Example",
                 lastPage: "Reached the last page",
                 lastPageTips: "Show tips when reaching the last page"
+            }
+        },
+        {
+            //Translated by SrKalopsia (srkalopsia@gmail.com).
+            name: "Español",
+            match: ["es", "es-ES"],
+            lang: {
+                enableDebug: "Habilitar salida de depuración",
+                updateNotification: "Notificación después de actualizar las reglas",
+                disable: "Desactivar",
+                disableSite: "Alternar estado desactivado",
+                disableSiteTips: "Desactivado en este sitio",
+                enableSiteTips: "Activado en este sitio",
+                enable: "Habilitar",
+                toTop: "Ir al inicio",
+                toBottom: "Ir al final",
+                current: "Página actual",
+                forceIframe: "Forzar para unirse a la siguiente página",
+                cancelForceIframe: "Cancelar unión forzada",
+                configure: "Configurar",
+                firstUpdate: "Haga clic aquí para inicializar las reglas",
+                update: "Actualizar reglas en línea",
+                click2update: "Haga clic para actualizar las reglas desde la URL ahora",
+                loadNow: "Cargar el siguiente automáticamente",
+                loadConfirm: "¿Cuántas páginas desea cargar? (0 significa infinito)",
+                noNext: "No se encontró el enlace siguiente, por favor cree una nueva regla",
+                passSec: "Actualizado hace #t# segundos",
+                passMin: "Actualizado hace #t# minutos",
+                passHour: "Actualizado hace #t# horas",
+                passDay: "Actualizado hace #t# días",
+                cantDel: "No se pueden eliminar las reglas incorporadas",
+                confirmDel: "¿Está seguro de que desea eliminar esta regla?",
+                updateSucc: "Actualización exitosa",
+                beginUpdate: "Comenzar actualización, espere un momento por favor",
+                customUrls: "Importar URL de reglas de Pagetual o AutoPagerize, una URL por línea",
+                customRules: "Introduzca reglas personalizadas. <a href='#t#'>✍️Contribuir reglas</a>",
+                save: "Guardar",
+                loadingText: "Shojo Cargando...",
+                opacity: "Opacidad",
+                opacityPlaceholder: "0: ocultar espaciador",
+                hideBar: "Ocultar el espaciador de paginación",
+                hideBarButNoStop: "Ocultar pero no detener",
+                dbClick2Stop: "Haga doble clic en el espacio en blanco para pausar",
+                sortTitle: "La ordenación surtirá efecto después de la próxima actualización de reglas",
+                autoRun: "Habilitar automáticamente (modo lista negra)",
+                autoLoadNum: "Cantidad de páginas para precargar",
+                turnRate: "Pasar a la siguiente página cuando esté a menos de 【X】 veces la altura de la página desde el pie de página",
+                inputPageNum: "Ingrese el número de página para saltar",
+                enableHistory: "Escribir historial de navegación después de pasar la página",
+                enableHistoryAfterInsert: "Escribir historial de navegación inmediatamente después de unir, de lo contrario escribir después de navegar",
+                contentVisibility: "Cambiar automáticamente la visibilidad del contenido para mejorar el rendimiento de renderización",
+                initRun: "Pasar páginas inmediatamente después de abrir",
+                preload: "Precargar la siguiente página para acelerar",
+                click2ImportRule: "Haga clic para importar el enlace de reglas base, luego espere hasta que la actualización esté completa: ",
+                forceAllBody: "¿Unir el cuerpo completo de la página?",
+                openInNewTab: "Abrir URLs de adiciones en una nueva pestaña",
+                importSucc: "Importación completada",
+                import: "Importar",
+                editCurrent: "Editar regla para la actual",
+                editBlacklist: "Editar URLs de la lista negra, una por línea, admite ? * para comodín",
+                upBtnImg: "Icono de volver al inicio",
+                downBtnImg: "Icono de ir al pie de página",
+                sideControllerIcon: "Icono de la barra lateral",
+                loadingTextTitle: "Texto de carga",
+                dbClick2StopCtrl: "Tecla Ctrl",
+                dbClick2StopAlt: "Tecla Alt",
+                dbClick2StopShift: "Tecla Shift",
+                dbClick2StopMeta: "Tecla Meta",
+                dbClick2StopKey: "Tecla de acceso rápido",
+                pageElementCss: "Estilo personalizado para los elementos principales de la página",
+                customCss: "CSS completo personalizado",
+                firstAlert: "No ha importado la regla base, por favor seleccione la regla adecuada para importar",
+                picker: "Selector de elementos de página de Pagetual",
+                closePicker: "Cerrar selector de Pagetual",
+                pickerPlaceholder: "Selector de elementos, déjelo vacío si no tiene idea",
+                pickerCheck: "Comprobar selector y copiar",
+                switchSelector: "Haga clic para cambiar el elemento",
+                gotoEdit: "Ir a editar la regla con el selector actual",
+                manualMode: "Deshabilitar unión, pasar páginas manualmente con las teclas de flecha derecha (o despachar evento 'pagetual.next')",
+                clickMode: "Deshabilitar unión, hacer clic automáticamente en la siguiente página al desplazarse al final de la página",
+                pageBarMenu: "Haga clic en el centro de la barra de página para abrir el menú del selector",
+                nextSwitch: "Cambiar al siguiente enlace",
+                arrowToScroll: "Presione la tecla de flecha izquierda para desplazarse anterior y la tecla de flecha derecha para desplazarse siguiente",
+                sideController: "Mostrar la barra de control de paginación en la barra lateral",
+                sideControllerScroll: "Alternar desplazamiento",
+                sideControllerAlways: "Mostrar siempre",
+                hideLoadingIcon: "Ocultar animación de carga",
+                hideBarArrow: "Ocultar flecha para la barra de página",
+                duplicate: "Pagetual duplicado ha sido instalado, ¡revise su gestor de scripts!",
+                forceStateIframe: "Incrustar página completa como iframe",
+                forceStateDynamic: "Cargar contenido dinámico a través de iframe",
+                forceStateDisable: "Deshabilitar pasar páginas en este sitio",
+                autoScrollRate: "Velocidad de desplazamiento (1~1000)",
+                disableAutoScroll: "Detener desplazamiento automático",
+                enableAutoScroll: "Habilitar desplazamiento automático",
+                toggleAutoScroll: "Alternar desplazamiento automático",
+                ruleRequest: "Solicitud de regla",
+                page: "Página ",
+                prevPage: "Página anterior",
+                nextPage: "Página siguiente",
+                errorRulesMustBeArray: "¡Las reglas deben ser un array!",
+                errorJson: "Error JSON, ¡verifique de nuevo!",
+                editSuccess: "Editado exitosamente",
+                errorWrongUrl: "URL incorrecta, ¡verifique de nuevo!",
+                errorAlreadyExists: "¡Ya existe!",
+                settingsSaved: "La configuración se ha guardado, actualice para ver",
+                iframe: "Iframe",
+                dynamic: "Dinámico",
+                reloadPage: "Edición completada, ¿recargar página ahora?",
+                copied: "Copiado",
+                noValidContent: "No se detectó contenido válido, puede ser necesario realizar una acción de Captcha, haga clic para ver",
+                outOfDate: "El script está desactualizado, ¡actualice a la última versión a tiempo!",
+                hideBarTips: "Ocultar la barra de paginación, alternar experiencia inmersiva",
+                setConfigPage: "Establecer la página actual como la página de configuración predeterminada",
+                wedata2github: "Cambiar la dirección de wedata a la dirección espejo en el repositorio de GitHub",
+                addOtherProp: "Agregar propiedad de regla",
+                addNextSelector: "Agregar contenido del selector como nextLink",
+                addPageSelector: "Agregar contenido del selector como pageElement",
+                propName: "Ingrese el nombre de la propiedad de la regla",
+                propValue: "Ingrese el valor de la propiedad de la regla",
+                customFirst: "Ignorar caché para reglas personalizadas locales",
+                rulesExample: "Ejemplo de reglas",
+                lastPage: "Llegó a la última página",
+                lastPageTips: "Mostrar consejos al llegar a la última página"
+            }
+        },
+        {
+            //Translated by Prankster 199 (vfggf95565).
+            name: "Arabic",
+            match: ["ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE"],
+            lang: {
+                enableDebug: "تمكين تصحيح الأخطاء",
+                updateNotification: "إشعار بعد تحديث القواعد",
+                disable: "معطل",
+                disableSite: "تبديل حالة التعطيل/التفعيل للموقع",
+                disableSiteTips: "معطل على هذا الموقع",
+                enableSiteTips: "مفعل على هذا الموقع",
+                enable: "مفعل",
+                toTop: "إلى الأعلى",
+                toBottom: "إلى الأسفل",
+                current: "الصفحة الحالية",
+                forceIframe: "إجبار على الانضمام للصفحة التالية",
+                cancelForceIframe: "إلغاء الانضمام القسري",
+                configure: "إعداد",
+                firstUpdate: "انقر هنا لتفعيل القواعد لأول مرة",
+                update: "تحديث القواعد عبر الإنترنت",
+                click2update: "انقر لتحديث القواعد من الرابط الآن",
+                loadNow: "تحميل التالي تلقائيًا",
+                loadConfirm: "كم عدد الصفحات التي ترغب تحميلها؟ (0 يعني لانهائي)",
+                noNext: "لم يتم العثور على رابط الصفحة التالية، يرجى إنشاء قاعدة جديدة",
+                passSec: "تم التحديث منذ #t# ثانية",
+                passMin: "تم التحديث منذ #t# دقيقة",
+                passHour: "تم التحديث منذ #t# ساعة",
+                passDay: "تم التحديث منذ #t# يوم",
+                cantDel: "لا يمكن حذف القواعد المدمجة",
+                confirmDel: "هل أنت متأكد من حذف هذه القاعدة؟",
+                updateSucc: "تم التحديث بنجاح",
+                beginUpdate: "بدأ التحديث، يرجى الانتظار لحظة",
+                customUrls: "استيراد رابط قاعدة Pagetual أو AutoPagerize، رابط واحد لكل سطر",
+                customRules: "إدخال القواعد المخصصة. <a href='#t#'>✍️ساهم بالقواعد</a>",
+                save: "حفظ",
+                /* From the creator hoothin :
+                "Shojo Now Loading..." is a meme that refers to the game loading text in the Japanese Touhou (東方) game series. */
+                loadingText: "جارٍ التحميل...",
+                opacity: "الشفافية",
+                opacityPlaceholder: "0: إخفاء الفاصل",
+                hideBar: "إخفاء الفاصل التصفحي",
+                hideBarButNoStop: "إخفاء، لكن لا تتوقف",
+                dbClick2Stop: "انقر مزدوج على المساحة الفارغة للإيقاف",
+                sortTitle: "يتم تفعيل الفرز بعد التحديث التالي للقواعد",
+                autoRun: "تمكين تلقائي (وضع القائمة السوداء)",
+                autoLoadNum: "عدد صفحات التحميل المسبق",
+                turnRate: "الانتقال للصفحة التالية عندما تكون المسافة أقل من 【X】 مرات ارتفاع الصفحة من التذييل",
+                inputPageNum: "أدخل رقم الصفحة للانتقال",
+                enableHistory: "كتابة سجل التصفح بعد تحويل الصفحة",
+                enableHistoryAfterInsert: "كتابة سجل التصفح فورًا بعد الدمج، أو بعد التصفح",
+                contentVisibility: "التنقل التلقائي لرؤية المحتوى, لتحسين أداء العرض",
+                initRun: "الانتقال بين الصفحات فور الفتح",
+                preload: "تحميل الصفحة التالية مسبقًا لتسريع الأداء",
+                click2ImportRule: "انقر لاستيراد رابط القواعد الأساسية، ثم انتظر حتى يكتمل التحديث",
+                forceAllBody: "دمج كامل الصفحة كإطار؟",
+                openInNewTab: "فتح الروابط الإضافية في علامة تبويب جديدة",
+                importSucc: "تم الاستيراد بنجاح",
+                import: "استيراد",
+                editCurrent: "تحرير القاعدة للحالية",
+                editBlacklist: "تحرير عناوين القائمة السوداء، سطر بسطر، دعم؟ * للرموز المتحركة",
+                upBtnImg: "أيقونة العودة إلى الأعلى",
+                downBtnImg: "أيقونة الانتقال إلى الأسفل",
+                sideControllerIcon: "أيقونة الشريط الجانبي",
+                loadingTextTitle: "تحميل النص",
+                dbClick2StopCtrl: "مفتاح Ctrl",
+                dbClick2StopAlt: "مفتاح Alt",
+                dbClick2StopShift: "مفتاح Shift",
+                dbClick2StopMeta: "مفتاح Meta",
+                dbClick2StopKey: "مفاتيح الاختصار",
+                pageElementCss: "نمط مخصص لعناصر الصفحة الرئيسية",
+                customCss: "مخصص بالكامل CSS نمط",
+                firstAlert: "لم تستورد القاعدة الأساسية بعد، يرجى اختيار القاعدة المناسبة للاستيراد",
+                picker: "محدد عناصر الصفحة Pagetual",
+                closePicker: "إغلاق محدد Pagetual",
+                pickerPlaceholder: "محدد العناصر، اتركه فارغًا إذا كنت لا تعرف",
+                pickerCheck: "تحقق من المحدد ونسخ",
+                switchSelector: "انقر للتبديل بين العناصر",
+                gotoEdit: "اذهب لتحرير القاعدة بالمحدد الحالي",
+                manualMode: "تعطيل الدمج/الربط، واستخدام مفتاح الاتجاه الأيمن يدويًا للتمرير، واستخدام مفتاح السهم الأيسر للرجوع",
+                clickMode: "تعطيل الدمج/الربط، عند التمرير إلى نهاية الصفحة، سيتم النقر تلقائيًا على الصفحة التالية",
+                pageBarMenu: "انقر على مركز شريط الصفحة لفتح قائمة التحديد",
+                nextSwitch: "تبديل الرابط التالي",
+                arrowToScroll: "انقر على مفتاح السهم الأيمن للتمرير التالي ومفتاح السهم الأيسر للتمرير السابق",
+                sideController: "عرض شريط التحكم في التصفح الترقيم في الشريط الجانبي",
+                sideControllerScroll: "تبديل التمرير",
+                sideControllerAlways: "عرض دائمًا",
+                hideLoadingIcon: "إخفاء رمز التحميل",
+                hideBarArrow: "إخفاء سهم شريط الصفحة",
+                duplicate: "تم تثبيت Pagetual مكرر، تحقق من مدير النصوص البرمجية الخاص بك!",
+                forceStateIframe: "تضمين الصفحة بالكامل كإطار",
+                forceStateDynamic: "تحميل المحتوى الديناميكي عبر الإطار",
+                forceStateDisable: "تعطيل تحويل الصفحات على هذا الموقع",
+                autoScrollRate: "سرعة التمرير (1~1000)",
+                disableAutoScroll: "إيقاف التمرير التلقائي",
+                enableAutoScroll: "تمكين التمرير التلقائي",
+                toggleAutoScroll: "تبديل التمرير التلقائي",
+                ruleRequest: "طلب قاعدة",
+                page: "صفحة ",
+                prevPage: "الصفحة السابقة",
+                nextPage: "الصفحة التالية",
+                errorRulesMustBeArray: "يجب أن تكون القواعد مصفوفة!",
+                errorJson: "خطأ في JSON، تحقق مرة أخرى!",
+                editSuccess: "تم التحرير بنجاح",
+                errorWrongUrl: "عنوان URL خاطئ، تحقق مرة أخرى!",
+                errorAlreadyExists: "موجود بالفعل!",
+                settingsSaved: "تم حفظ الإعدادات، قم بالتحديث لعرض",
+                iframe: "إطار",
+                dynamic: "ديناميكي",
+                reloadPage: "اكتمل التحرير، إعادة تحميل الصفحة الآن؟",
+                copied: "تم النسخ",
+                noValidContent: "لم يتم الكشف عن محتوى صالح، قد يكون الإجراء Captcha مطلوبًا، انقر لعرض",
+                outOfDate: "النص البرمجي قديم، قم بالتحديث إلى الإصدار الأحدث في الوقت المناسب!",
+                hideBarTips: "إخفاء شريط التحكم في التصفح الترقيم ، والتبديل لوضع كامل الصفحة",
+                setConfigPage: "تعيين الصفحة الحالية كصفحة الإعداد الافتراضية",
+                wedata2github: "تغيير عنوان الويب داتا إلى العنوان البديل المرآة, في مستودع جيت هاب",
+                addOtherProp: "إضافة خاصية قاعدة",
+                addNextSelector: "إضافة محتوى المحدد كـ nextLink",
+                addPageSelector: "إضافة محتوى المحدد كـ pageElement",
+                propName: "أدخل اسم خاصية القاعدة",
+                propValue: "أدخل قيمة خاصية القاعدة",
+                customFirst: "تجاهل ذاكرة التخزين المؤقت للقواعد المخصصة المحلية",
+                rulesExample: "مثال على القواعد",
+                lastPage: "تم الوصول إلى الصفحة الأخيرة",
+                lastPageTips: "عرض تلميحات عند الوصول إلى الصفحة الأخيرة"
             }
         },
         {
@@ -312,6 +565,8 @@
                 nextSwitch: "切换其他页码",
                 arrowToScroll: "左方向键滚动至上一页，右方向键滚动至下一页",
                 sideController: "在侧边显示翻页控制栏",
+                sideControllerScroll: "滚动开关",
+                sideControllerAlways: "始终显示",
                 hideLoadingIcon: "隐藏加载动画",
                 hideBarArrow: "隐藏分隔条定位箭头",
                 duplicate: "检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
@@ -322,6 +577,7 @@
                 disableAutoScroll: "停止自动滚动",
                 enableAutoScroll: "开启自动滚动",
                 toggleAutoScroll: "自动滚动开关",
+                ruleRequest: "适配请求",
                 page: "Page ",
                 prevPage: "上一页",
                 nextPage: "下一页",
@@ -353,7 +609,7 @@
         },
         {
             name: "正體中文",
-            match: ["zh-TW", "zh-HK"],
+            match: ["zh", "zh-TW", "zh-HK"],
             lang: {
                 enableDebug: "調試模式，輸出信息至控制台",
                 updateNotification: "規則更新后提示",
@@ -432,6 +688,8 @@
                 nextSwitch: "切換其他頁碼",
                 arrowToScroll: "左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
                 sideController: "在側邊顯示翻頁控制欄",
+                sideControllerScroll: "滾燈開關",
+                sideControllerAlways: "始終顯示",
                 hideLoadingIcon: "隱藏加載動畫",
                 hideBarArrow: "隱藏分隔條定位箭頭",
                 duplicate: "檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
@@ -442,6 +700,7 @@
                 disableAutoScroll: "停止自動滾動",
                 enableAutoScroll: "開啟自動滾動",
                 toggleAutoScroll: "自動滾動開關",
+                ruleRequest: "適配請求",
                 page: "Page ",
                 prevPage: "上一頁",
                 nextPage: "下一頁",
@@ -552,6 +811,8 @@
                 nextSwitch: "次のページに切り替え",
                 arrowToScroll: "左矢印キーで前へ、右矢印キーで次へ",
                 sideController: "サイドバーにページング コントロール バーを表示する",
+                sideControllerScroll: "スクロール スイッチ",
+                sideControllerAlways: "常に表示",
                 hideLoadingIcon: "読み込み中のアニメーションを隠す",
                 hideBarArrow: "分割線の位置矢印を隠す",
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
@@ -562,6 +823,7 @@
                 disableAutoScroll: "自動スクロールを停止します",
                 EnableAutoScroll: "自動スクロールを有効にする",
                 toggleAutoScroll: "自動スクロールの切り替え",
+                ruleRequest: "ルール要求",
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
@@ -672,6 +934,8 @@
                 nextSwitch: "Переключить ссылку на следующую страницу",
                 arrowToScroll: "Листать страницы клавишами со стрелками влево и вправо",
                 sideController: "Показать справа панель перемещения по вкладке",
+                sideControllerScroll: "Переключатель прокрутки",
+                sideControllerAlways: "Всегда показывать",
                 hideLoadingIcon: "Скрыть анимацию загрузки",
                 hideBarArrow: "Скрыть кнопки перемещения на разделителе",
                 duplicate: "Похоже, Pagetual установлен несколько раз. Пожалуйста, удалите Pagetual из других менеджеров скриптов!",
@@ -682,6 +946,7 @@
                 disableAutoScroll: "Остановить автоматическую прокрутку",
                 enableAutoScroll: "Включить автопрокрутку",
                 toggleAutoScroll: "Переключить автопрокрутку",
+                ruleRequest: "Запрос правил",
                 page: "Страница ",
                 prevPage: "Предыдущая страница",
                 nextPage: "Следующая страница",
@@ -769,7 +1034,7 @@
     } else if (typeof GM !== 'undefined' && typeof GM.notification !== 'undefined') {
         _GM_notification = GM.notification;
     } else {
-        _GM_notification = (s) => {showTips(String(s));};
+        _GM_notification = (s) => {showTips(String(s.text || s));};
     }
     if (typeof GM_openInTab !== 'undefined') {
         _GM_openInTab = GM_openInTab;
@@ -892,18 +1157,18 @@
         });
     }
     const isMobile = ('ontouchstart' in document.documentElement);
-    const configPage = ["https://pagetual.hoothin.com/rule.html",
+    const configPage = [`https://pagetual.hoothin.com/${lang === 'zh-CN' ? 'cn/' : ''}rule.html`,
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
-    const mainSel = "article,.article,[role=main],main,.main,#main";
+    const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
     const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false;
+    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false, loadNowNum = 5, autoScrollRate = 50;
     var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
@@ -912,7 +1177,8 @@
     }
 
     function getElementByXpath(xpath, doc, contextNode) {
-        doc = doc || document;
+        if (doc && doc.ownerDocument) doc = doc.ownerDocument;
+        doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         try {
             let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
@@ -924,7 +1190,8 @@
     }
 
     function getAllElementsByXpath(xpath, contextNode, doc) {
-        doc = doc || document;
+        if (doc && doc.ownerDocument) doc = doc.ownerDocument;
+        doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         var result = [];
         try {
@@ -998,7 +1265,7 @@
         return false;
     }
 
-    function geneSelector(ele, addID) {
+    function geneSelector(ele, addID, exact) {
         let selector = ele.nodeName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if (selector !== "html" && selector !== "body") {
@@ -1015,7 +1282,7 @@
                     let classList = ele.classList;
                     for (let i = 0; i < classList.length; i++) {
                         let c = classList[i];
-                        if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
+                        if (c !== 'scrolling' && /^[a-z_][\w\-_]*$/.test(c) && !/\d{4,}/.test(c)) {
                             className += '.' + c;
                         }
                     }
@@ -1023,13 +1290,27 @@
                 }
                 let parent = ele.parentElement;
                 if (parent) {
-                    if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
+                    if (exact) {
+                        let i, nth = 0, all = 0;
+                        for (i = 0; i < parent.children.length; i++) {
+                            if (parent.children[i].nodeName === ele.nodeName) {
+                                all++;
+                                if (parent.children[i] === ele) {
+                                    nth = all;
+                                }
+                                if (nth > 0 && all > 1) {
+                                    break;
+                                }
+                            }
+                        }
+                        selector += (all === 1 ? "" : `:nth-of-type(${nth})`);
+                    } else if (!className && !hasId && parent.children.length > 1 && !compareNodeName(parent, ["html"])) {
                         let prevE = ele.previousElementSibling;
                         if (prevE && prevE.className) {
                             let classList = prevE.classList;
                             for (let i = 0; i < classList.length; i++) {
                                 let c = classList[i];
-                                if (/^[\w\-_]+$/.test(c) && !/\d{4,}/.test(c)) {
+                                if (c !== 'scrolling' && /^[a-z_][\w\-_]*$/.test(c) && !/\d{4,}/.test(c)) {
                                     className += '.' + c;
                                 }
                             }
@@ -1053,7 +1334,7 @@
                             selector += (all === 1 ? "" : `:nth-of-type(${nth})`);
                         }
                     }
-                    selector = geneSelector(parent, addID) + ' > ' + selector;
+                    selector = geneSelector(parent, addID, exact) + ' > ' + selector;
                 }
             }
         }
@@ -1163,9 +1444,10 @@
             _GM_xmlhttpRequest({
                 url: url,
                 method: 'GET',
-                timeout: 20000,
+                timeout: 1000000,
                 headers: {
-                    'accept': 'application/json,text/html'
+                    'accept': 'application/json,text/html',
+                    'Referer': url,
                 },
                 onload: function(res) {
                     let json = null;
@@ -1344,6 +1626,10 @@
             if (includeSel) {
                 let include = getElement(includeSel, doc);
                 if (!include) {
+                    if (doc !== document) {
+                        getBody(doc).scrollTop = 9999999;
+                        doc.documentElement.scrollTop = 9999999;
+                    }
                     return false;
                 }
             }
@@ -1372,13 +1658,13 @@
         runWait(cb) {
             let checkEval = null, waitTime = 0;
             if (this.curSiteRule.waitElement) {
-                checkEval = doc => {
-                    return this.waitElement(doc);
+                checkEval = async doc => {
+                    return await this.waitElement(doc);
                 };
             } else if(this.curSiteRule.wait) {
                 if (isNaN(this.curSiteRule.wait)) {
                     try {
-                        checkEval = (typeof this.curSiteRule.wait === 'function') ? this.curSiteRule.wait : Function("doc", '"use strict";' + this.curSiteRule.wait);
+                        checkEval = (typeof this.curSiteRule.wait === 'function') ? this.curSiteRule.wait : new AsyncFunction("doc", '"use strict";' + this.curSiteRule.wait);
                     } catch(e) {
                         debug(e);
                     }
@@ -1479,7 +1765,7 @@
                         let waitTime = 500, checkEval, maxCheckTimes = 50;
                         if (isNaN(r.wait)) {
                             try {
-                                checkEval = (typeof r.wait === 'function') ? r.wait : Function("doc",'"use strict";' + r.wait);
+                                checkEval = (typeof r.wait === 'function') ? r.wait : AsyncFunction("doc",'"use strict";' + r.wait);
                             } catch(e) {
                                 debug(e, 'Error when checkeval');
                             }
@@ -1492,8 +1778,8 @@
                                 setRule(r);
                                 return;
                             }
-                            setTimeout(() => {
-                                if (!self.ruleMatchReady(r) || (checkEval && !checkEval(document))) {
+                            setTimeout(async() => {
+                                if (!self.ruleMatchReady(r) || (checkEval && !await checkEval(document))) {
                                     checkReady();
                                 } else {
                                     setRule(r);
@@ -1537,11 +1823,14 @@
 
             if (rulesData.customFirst) {
                 if (checkCustomRules()) return;
+                await sleep(1);
                 if (checkHpRules()) return;
             } else {
                 if (checkHpRules()) return;
+                await sleep(1);
                 if (checkCustomRules()) return;
             }
+            await sleep(1);
 
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
@@ -1557,7 +1846,7 @@
                     await sleep(1000);
                 }
                 setTimeout(() => {
-                    let end = r + 25;
+                    let end = r + 20;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
@@ -1667,8 +1956,9 @@
                                 self.refreshing = false;
                                 let checkEles = getAllElements(refreshByClickSel, document);
                                 for (let i = 0; i < checkEles.length; i++) {
-                                    if (checkEles[i] === e.target) {
-                                        urlChanged = true;
+                                    let curEle = checkEles[i];
+                                    if (curEle === e.target || curEle.contains(e.target)) {
+                                        ruleParser.urlChanged();
                                         isPause = true;
                                         if (!ruleParser.nextLinkHref) isLoading = false;
                                         break;
@@ -1689,10 +1979,14 @@
             if (!ele.offsetParent && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
                 return {h: 0, w: 0};
             }
-            let h = ele.scrollHeight;
+            if (ele.children && ele.children.length === 1 && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
+                ele = ele.children[0];
+            }
+            let h = ele.scrollHeight, w;
             if (eleStyle.overflow === "hidden") {
                 h = ele.offsetHeight;
-            }
+                w = ele.offsetWidth;
+            } else w = parseInt(ele.offsetWidth || ele.scrollWidth);
             if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
                 h = ele.parentNode.scrollHeight;
             }
@@ -1722,7 +2016,7 @@
             if (h && minOffsetTop !== maxNum && minOffsetTop > 0) {
                 h -= minOffsetTop;
             }
-            return {h: h, w: parseInt(ele.offsetWidth || ele.scrollWidth)};
+            return {h: h, w: w};
         }
 
         checkTargetChildren(ele, curWin, articleNum, curHeight) {
@@ -1731,7 +2025,7 @@
                 let paStyle = curWin.getComputedStyle(ele.parentNode);
                 let paDisplay = paStyle.display;
                 let paOverflow = paStyle.overflow;
-                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection === "row" && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
+                pf = (paDisplay.indexOf('flex') !== -1 && paStyle.flexDirection.indexOf("row") === 0 && paStyle.flexWrap !== "wrap") || compareNodeName(ele.parentNode, ["ul"]) || paDisplay.indexOf('grid') !== -1 || paOverflow === "hidden";
             }
             let curStyle = curWin.getComputedStyle(ele);
             if (ele.children.length > 1) {
@@ -1742,22 +2036,21 @@
                     for (let i in ele.childNodes) {
                         let child = ele.childNodes[i];
                         if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
-                            return "";
+                            hasText = true;
+                            break;
                         }
                     }
-                    if (!hasText) {
-                        let gridArea = curStyle.gridArea;
-                        if (gridArea && gridArea !== "auto" && gridArea !== "auto / auto / auto / auto") {
-                            return ">*";
+                    let gridArea = curStyle.gridArea;
+                    if (gridArea && gridArea !== "auto" && gridArea !== "auto / auto / auto / auto") {
+                        return ">*";
+                    } else {
+                        let middleChild = ele.children[parseInt(ele.children.length / 2)];
+                        if ((curStyle.display === 'flex' && curStyle.flexDirection.indexOf("row") === 0 && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && curStyle.display !== "table-cell" && (rulesData.opacity !== 0 || hasText) && !pf)) {
+                            return "";
+                        } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
+                            return "";
                         } else {
-                            let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                            if ((curStyle.display === 'flex' && curStyle.flexDirection === "row" && curStyle.flexWrap !== "wrap") || (curStyle.float === "none" && rulesData.opacity !== 0 && !pf)) {
-                                return "";
-                            } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || compareNodeName(ele, ["ul"]) || curHeight === 0) {
-                                return "";
-                            } else {
-                                return ">*";
-                            }
+                            return ">*";
                         }
                     }
                 }
@@ -1768,7 +2061,7 @@
         }
 
         getPageElement(doc, curWin, dontFind) {
-            if (doc === document && this.docPageElement && document.documentElement.contains(this.docPageElement[0])) {
+            if (doc === document && this.docElementValid()) {
                 return this.docPageElement;
             }
             let pageElement = null;
@@ -1809,10 +2102,14 @@
                     }
                 }
                 if (this.curSiteRule.smart && pageElement && pageElement.length && curWin && curWin !== _unsafeWindow) {
-                    let parent = pageElement[0].parentNode;
-                    let loading = parent.querySelector('[class*=loading]');
-                    if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
+                    if (pageElement.length === 1 && !pageElement[0].src && pageElement[0].innerHTML.trim() === "") {
                         pageElement = null;
+                    } else {
+                        let parent = pageElement[0].parentNode;
+                        let loading = parent.querySelector('[class*=loading]');
+                        if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
+                            pageElement = null;
+                        }
                     }
                 }
             }
@@ -1842,7 +2139,7 @@
                 if (!body) return null;
                 let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
                 let curHeight = bodyHeight, curWidth = 0;
-                let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                 let windowWidth = window.innerWidth || document.documentElement.clientWidth;
                 let needCheckNext = (doc == document && this.initNext), nextLeftPos = 0;
                 if (needCheckNext && this.initNext.getBoundingClientRect) {
@@ -1898,7 +2195,7 @@
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
-                        if (/^H\d$/i.test(curNode.nodeName) && curNode.offsetParent) {
+                        if (ele !== body && /^H\d$/i.test(curNode.nodeName) && curNode.offsetParent) {
                             curMaxEle = null;
                             break;
                         }
@@ -1915,7 +2212,7 @@
                         let validSize = self.getValidSize(curNode, curWin);
                         let h = validSize.h;
                         let w = validSize.w;
-                        if (isNaN(h) || isNaN(w)) continue;
+                        if (isNaN(h) || isNaN(w) || !h || !w) continue;
                         isHori = Math.abs(preOffsetTop - curNode.offsetTop) <= 20 ? true : (preOffsetTop === -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop === curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         /*if (isHori && nextLeftPos && curMaxEle && curWidth > 500 && curHeight > 500) {
@@ -1940,9 +2237,9 @@
                         let isMax = false;
                         if (isHori) {
                             if (curMaxEle) {
-                                if (curWidth < w) {
+                                if (w > curWidth && (windowWidth>>1) > curWidth) {
                                     isMax = true;
-                                } else if (curWidth < w + 300 && curMaxArea < a) {
+                                } else if (w + 300 > curWidth && a > curMaxArea) {
                                     isMax = true;
                                 }
                             }
@@ -1959,7 +2256,12 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < (windowHeight>>1) || !ele.contains(self.initNext)) {
+                                if (!needCheckNext || h < (windowHeight>>1)) {
+                                    continue;
+                                }
+                                if (!ele.contains(self.initNext)) {
+                                    continue;
+                                } else if (!curNode.contains(self.initNext) && h < curHeight >> 1) {
                                     continue;
                                 }
                             }
@@ -1970,8 +2272,13 @@
                             preOffsetTop = curNode.offsetTop;
                         }
                     }
-                    if (curMaxEle && curHeight / bodyHeight <= 0.18) {
-                        let article = doc.querySelectorAll(mainSel);
+                    let curHeightPercent = curHeight / bodyHeight;
+                    if (curMaxEle && curHeightPercent <= 0.18) {
+                        let article;
+                        for (let i = 0; i < mainSel.length; i++) {
+                            article = doc.querySelectorAll(mainSel[i]);
+                            if (article && article.length === 1) break;
+                        }
                         if (article && article.length === 1) {
                             article = article[0];
                             let childrenEnd = self.checkTargetChildren(article, curWin, articleNum, curHeight);
@@ -1981,7 +2288,7 @@
                         }
                         curMaxEle = null;
                     }
-                    if (curMaxEle) {
+                    if (curMaxEle && (!compareNodeName(curMaxEle, ["ul"]) || curHeightPercent > 0.8)) {
                         let sameClassNum = 0, hasDifferent = false;
                         if (curMaxEle.className) {
                             for(i = 0; i < ele.children.length; i++) {
@@ -2020,22 +2327,30 @@
                             ele = img;
                         }
                     }
-                    self.curSiteRule.pageElement = geneSelector(ele);
                     let childrenEnd = self.checkTargetChildren(ele, curWin, articleNum, curHeight);
                     if (childrenEnd) {
-                        self.curSiteRule.pageElement += childrenEnd;
+                        self.curSiteRule.pageElement = geneSelector(ele) + childrenEnd;
                         ele = ele.children;
                     } else {
+                        if (ele.scrollHeight === 0 && ele.parentNode.children.length === 1) {
+                            ele = ele.parentNode;
+                        }
+                        self.curSiteRule.pageElement = geneSelector(ele);
                         ele = [ele];
                     }
                     debug(self.curSiteRule.pageElement, 'Page element');
                     return ele;
                 }
                 pageElement = checkElement(body);
-                if (pageElement && pageElement.length > 0 && self.initNext) {
-                    let lastBottom = getElementBottom(pageElement[pageElement.length - 1]);
+                if (doc === document && pageElement && pageElement.length > 0 && self.initNext) {
+                    let posEle = pageElement[pageElement.length - 1];
+                    while (posEle && !posEle.offsetParent) {
+                        posEle = posEle.previousElementSibling || posEle.parentNode;
+                    }
+                    if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
+                    let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
-                        debug("Stop as too long between next & page element");
+                        debug("Stop as too long between next & page element, try to enable Force-Join mode.");
                         isPause = true;
                         pageElement = [];
                         sideController.remove();
@@ -2060,37 +2375,6 @@
                     this.openInNewTab(pageElement);
                 }
             }
-            /*
-            if (this.curSiteRule.smart && pageElement && pageElement.length > 0) {
-                let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
-                let video = targetEle.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
-                if (video && doc == document) {
-                    if (video.offsetParent && video.name != 'pagetual-iframe') {
-                        let scrollWidth = video.scrollWidth || video.offsetWidth;
-                        let scrollHeight = video.scrollHeight || video.offsetHeight;
-                        if (/IFRAME/i.test(video.nodeName)) {
-                        } else if (scrollWidth > 100 && scrollHeight > 100) {
-                            let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                            let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                            if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
-                                debug("Disable when large media found");
-                            } else {
-                                video = null;
-                            }
-                        } else {
-                            video = null;
-                        }
-                    } else {
-                        video = null;
-                    }
-                }
-                if (video) {
-                    isPause = true;
-                    this.clearAddedElements();
-                    return null;
-                }
-            }
-            */
             return pageElement;
         }
 
@@ -2240,12 +2524,20 @@
             return /^(javascript|#|$)/.test(href.trim().replace("#p{", "").replace(location.href, ""));
         }
 
-        async querySelectorList(source, list) {
+        async querySelectorList(source, list, defaultView) {
             for (let i = 0; i < list.length; i++) {
                 await sleep(1);
                 let sel = list[i];
-                let result = source.querySelectorAll(sel);
-                if (result.length > 0) return result[result.length - 1];
+                let result = getAllElements(sel, source);
+                if (result.length > 0) {
+                    if (defaultView) {
+                        for (let i = result.length - 1; i >= 0; i--) {
+                            let ele = result[i];
+                            if (isVisible(ele, defaultView)) return ele;
+                        }
+                    }
+                    return result[result.length - 1];
+                }
             }
             return null;
         }
@@ -2257,7 +2549,7 @@
                     return false;
                 }
                 if (e.className) {
-                    if (/slick|slide|gallery/i.test(e.className)) {
+                    if (/slick|slide|gallery|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -2279,7 +2571,7 @@
         }
 
         async getPage(doc, exist) {
-            if (document.documentElement.className.indexOf('discourse') !== -1) return {};
+            if (document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
@@ -2324,12 +2616,14 @@
                 "li.page-current+li>a",
                 "[class^=pag] a[rel=next]",
                 "[class^=Pag] [aria-label=next]",
+                "[aria-label='Next Page']",
                 "[aria-label='Next page']",
                 "[aria-label='next page']",
                 ".pagination-nav__item--next>a",
                 "a.pageright",
                 ".page-numbers.current+a",
                 "a.page-numbers.next",
+                "body [class*=pagination] li.active+span+li>a",
                 "body [class*=pagination] li.active+li>a",
                 "body [class^=pag] .current+a",
                 ".page_current+a",
@@ -2343,6 +2637,7 @@
                 "a.page-next",
                 "a.pages-next",
                 "a.page.right",
+                ".paging>.active+.item",
                 "a#next",
                 ".next>a",
                 ".next>button",
@@ -2352,10 +2647,19 @@
                 ".btn_next:not([disabled])",
                 ".btn-next:not([disabled])",
                 "a#linkNext",
-                "a[class*=page__next]",
-                "[class*=pagination-next]>a"
+                "body a[class*=page__next]",
+                "body [class*=pager]>a.next",
+                "body [class*=pagination-next]>a",
+                "body [class*=pagination-next]>button",
+                "body [class*=page--current]+li>a",
+                "body [class*=Pages]>.curr+a",
+                "body [class*=pagination] .next-btn",
+                ".page>em+a",
+                "[name*=nextPage]",
+                '//button[contains(@class, "Page")][text()="Next"]',
+                '//button[contains(@class, "page")][text()="next"]'
             ];
-            let next = await this.querySelectorList(body, selectorList);
+            let next = await this.querySelectorList(body, selectorList, doc.defaultView);
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
@@ -2397,9 +2701,9 @@
             }
             if (!next) {
                 await sleep(1);
-                let pageDiv = body.querySelector("div.pages>ul");
+                let pageDiv = body.querySelector(".pages>ul,.page_no>ul");
                 if (pageDiv) {
-                    cur = pageDiv.querySelector("li>b");
+                    cur = pageDiv.querySelector("li>b,li>strong");
                     if (cur) next = cur.parentNode.nextElementSibling;
                     if (next) next = next.querySelector("a");
                 }
@@ -2413,7 +2717,7 @@
                 await sleep(1);
                 let pageDiv = body.querySelector(".pagination");
                 if (pageDiv) {
-                    cur = pageDiv.querySelector("[class*=current]");
+                    cur = pageDiv.querySelector("[class*=current],.page-selected");
                     if (cur) next = cur.parentNode.nextElementSibling;
                     if (next) next = next.querySelector("a");
                 }
@@ -2425,10 +2729,10 @@
                     for (let i = pageDivs.length - 1; i >= 0; i--) {
                         let p = pageDivs[i];
                         if (/(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)/i.test(p.title || p.value || '')) {
-                            next = p.querySelector('a') || p;
+                            next = p.querySelector("a,button,[type='button']") || p;
                             break;
                         } else if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test((p.innerText || '').trim())) {
-                            next = p.querySelector('a') || p;
+                            next = p.querySelector("a,button,[type='button']") || p;
                             break;
                         }
                     }
@@ -2440,23 +2744,31 @@
             }
             if (!next) {
                 let isApp = !!body.querySelector("main#app");
-                let aTags = body.querySelectorAll("a,button,[type='button']");
+                let aTags = body.querySelectorAll("a,button,[type='button'],.btn-action");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
                     if (i % 100 === 0) {
                         await sleep(1);
                     }
                     let aTag = aTags[i];
-                    let innerText = (aTag.title || aTag.innerText || aTag.value || '');
-                    if (innerText) {
+                    let title = aTag.title || "";
+                    let value = aTag.value || "";
+                    let innerText = aTag.innerText || "";
+                    if (innerText === "" || (title !== "" && title.length < innerText.length)) {
+                        innerText = title;
+                    }
+                    if (innerText === "" || (value !== "" && value.length < innerText.length)) {
+                        innerText = value;
+                    }
+                    if (innerText !== "") {
                         if (innerText === "§") continue;
                         innerText = innerText.trim();
                         if (innerText.length > 80) continue;
                     }
                     if (!this.verifyElement(aTag)) continue;
                     if (aTag.dataset && aTag.dataset.preview) continue;
-                    let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
-                    if (availableHref && /next\-?(page)?$/i.test(aTag.href)) continue;
+                    let availableHref = aTag.href && aTag.href.length < 250 && !/^(javascript:|#)/.test(aTag.href);
+                    if (availableHref && /next\-?(page)?$|\/video\/|\/vod\/play\//i.test(aTag.href)) continue;
                     if (compareNodeName(aTag.parentNode, ["blockquote"])) continue;
                     if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
                     if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
@@ -2504,8 +2816,9 @@
                     }
                     if (urlWillChange) continue;
                     if (!next4 && availableHref) {
-                        if (aTag.href.indexOf(location.hostname) === -1) continue;
-                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?").toLowerCase();
+                        let aHref = aTag.href.indexOf("http") === 0 ? aTag.href : this.canonicalUri(aTag.href);
+                        if (aHref.indexOf(location.hostname) === -1) continue;
+                        let _aHref = aHref.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
                             if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
@@ -2513,8 +2826,8 @@
                             if (_aHrefTrim == pageNum + 1) {
                                 next4 = aTag;
                             }
-                        } else if (this.curUrl !== aTag.href) {
-                            _aHref = _aHref.replace(/\.s?html?$/i, "");
+                        } else if (this.curUrl !== aHref) {
+                            _aHref = _aHref.replace(/\.s?html?$/i, "").toLowerCase();
                             if (_aHref.indexOf(_url) !== -1) {
                                 let pageTwoMatch = _aHref.replace(_url, "").match(pageTwoReg);
                                 if (pageTwoMatch) {
@@ -2540,7 +2853,7 @@
                                         parent = parent.parentNode;
                                     }
                                 }
-                                if (parent && parent.contains(otherPageEle) && !/^\d+$/.test(otherPageEle.innerText.trim())) {
+                                if (parent && parent.contains(next4) && !/^\d+$/.test(next4.innerText.trim())) {
                                     next4 = null;
                                 }
                             }
@@ -2548,17 +2861,17 @@
                     }
                 }
                 if (next2 && doubtTextReg.test(next2.innerText)) {
-                    next2 = this.verifyNext(next2, doc);
+                    next2 = this.verifyNext(next2, doc, false);
                 }
                 if (nextJs2 && doubtTextReg.test(nextJs2.innerText)) {
-                    nextJs2 = this.verifyNext(nextJs2, doc);
+                    nextJs2 = this.verifyNext(nextJs2, doc, true);
                 }
                 if (next3) {
-                    next3 = this.verifyNext(next3, doc);
+                    next3 = this.verifyNext(next3, doc, false);
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
-            if (!next) {
+            if (!next && location.pathname + location.search !== "/") {
                 next = jsNext || nextJs1 || nextJs2;
                 if (next && next.parentNode.className && next.parentNode.className.indexOf && next.parentNode.className.indexOf('tab') !== -1) next = null;
             }
@@ -2568,8 +2881,14 @@
             return {next:next, canSave:canSave};
         }
 
-        verifyNext(next, doc) {
+        verifyNext(next, doc, isJs) {
             if (!next) return null;
+            if (!isJs) {
+                let href = next.getAttribute("href");
+                if (href && !/\d/.test(next.getAttribute("href"))) {
+                    return null;
+                }
+            }
             if (next.previousElementSibling && compareNodeName(next.previousElementSibling, ["br"])) return null;
             let eles = [];
             if (next.innerText && next.innerText.indexOf("\n") === -1) {
@@ -2821,7 +3140,7 @@
                     }
                     if (doc === document) {
                         if (!this.linkHasHref(nextLink)) {
-                            if (clickedSth || !isVisible(nextLink, _unsafeWindow)) {
+                            if ((clickedSth && this.curSiteRule.smart) || !isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
                                 return null;
                             }
@@ -2832,8 +3151,8 @@
                                     let scrollHeight = video.scrollHeight || video.offsetHeight;
                                     if (compareNodeName(video, ["iframe"])) {
                                     } else if (scrollWidth > 100 && scrollHeight > 100) {
-                                        let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                                        let winHeight = window.innerHeight || document.documentElement.clientHeight;
+                                        let winWidth = window.innerWidth || document.documentElement.clientWidth;
+                                        let winHeight = window.innerHeight || document.documentElement.clientHeight;
                                         if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
                                             debug("Disable when large media found");
                                         } else {
@@ -2871,7 +3190,15 @@
             }
             if (nextLink) {
                 if (!this.checkStopSign(nextLink, doc)) {
-                    if (curPage > 1 && rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+                    if (curPage > 1) {
+                        if (rulesData.lastPageTips) {
+                            showTips(i18n("lastPage"), "", 800);
+                        }
+                        _unsafeWindow.postMessage({
+                            action: "lastPage",
+                            command: 'pagetual'
+                        }, '*');
+                    }
                     return null;
                 }
                 if (this.curSiteRule.action == 3) {
@@ -3070,6 +3397,16 @@
             if (!rulesData.preload) return;
             if (this.curSiteRule.preload === 0) return;
             if (!this.nextLinkHref || this.nextLinkHref == "#") return;
+            if (this.readyStateUnComplete) return;
+            if (document.readyState !== 'complete') {
+                this.readyStateUnComplete = true;
+                let self = this;
+                window.addEventListener("load", e => {
+                    self.readyStateUnComplete = false;
+                    self.preload();
+                });
+                return;
+            }
             let self = this, url = this.nextLinkHref;
             let postParams = url.match(/#p{(.*)}$/);
             if (postParams) {
@@ -3157,7 +3494,12 @@
                     return null;
                 }
                 if (pageElement && pageElement.length > 0) {
-                    var pELast = pageElement[pageElement.length - 1];
+                    let pEIndex = pageElement.length - 1;
+                    let pELast = pageElement[pEIndex];
+                    while(pELast && compareNodeName(pELast, ["link", "meta", "style", "script"])) {
+                        pEIndex--;
+                        pELast = pageElement[pEIndex];
+                    }
                     this.insert = pELast.nextSibling ? pELast.nextSibling : pELast.parentNode.appendChild(document.createTextNode(' '));
                 }
             }
@@ -3323,6 +3665,22 @@
             });
         }
 
+        canListenUrlChange() {
+            if (this.curSiteRule && typeof this.curSiteRule.listenUrlChange === 'undefined' && this.docElementValid()) {
+                return false;
+            }
+            return true;
+        }
+
+        docElementValid() {
+            return (this.docPageElement && document.documentElement.contains(this.docPageElement[0]));
+        }
+
+        urlChanged() {
+            urlChanged = true;
+            this.clearAddedElements();
+        }
+
         initPage(callback) {
             let self = this;
             if (self.initing) return;
@@ -3373,6 +3731,9 @@
                         location.reload();
                     });
                     return;
+                }
+                if (rulesData.sideControllerAlways) {
+                    sideController.setup();
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
                 if (self.curSiteRule.smart) {
@@ -3646,6 +4007,10 @@
                 }
             }
             isLoading = false;
+            _unsafeWindow.postMessage({
+                action: "insert",
+                command: 'pagetual'
+            }, '*');
             return true;
         }
     }
@@ -3690,9 +4055,6 @@
                  opacity: 0.35;
                  transition: opacity .5s ease, background .5s, box-shadow .5s;
              }
-             #pagetual-sideController:hover {
-                 opacity: 1;
-             }
              #pagetual-sideController * {
                  font-weight: bold;
                  font-family: arial;
@@ -3701,6 +4063,7 @@
                  color: black!important;
                  line-height: normal;
                  float: none;
+                 text-align: center;
              }
              #pagetual-sideController.stop {
                  -webkit-filter: invert(100%);
@@ -3714,13 +4077,6 @@
              #pagetual-sideController .pagetual-sideController-btn:hover {
                  transform: scale(1.5);
                  color: red!important;
-             }
-             #pagetual-sideController.minSize {
-                 box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
-                 background: #00000000!important;
-             }
-             #pagetual-sideController.minSize .pagetual-sideController-btn {
-                 opacity: 0;
              }
              #pagetual-sideController #pagetual-sideController-move > svg {
                  transition: transform .3s ease;
@@ -3764,14 +4120,52 @@
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
                  opacity: 0.8;
              }
+             #pagetual-sideController:hover {
+                 opacity: 1;
+             }
+             #pagetual-sideController>.extra {
+                 bottom: 170px;
+                 left: 0px;
+                 width: 40px;
+                 position: absolute;
+             }
+             #pagetual-sideController>.extra>svg {
+                 width: 40px;
+                 height: 30px;
+                 opacity: 0.1;
+                 cursor: pointer;
+                 margin: 0 0 5px 0;
+                 transition: opacity .3s ease;
+             }
+             #pagetual-sideController.minSize>.extra>svg {
+                 opacity: 0;
+             }
+             #pagetual-sideController>.extra>svg:hover {
+                 opacity: 1;
+             }
+             #pagetual-sideController.minSize {
+                 box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
+                 background: #00000000!important;
+                 pointer-events: none;
+             }
+             #pagetual-sideController.minSize #pagetual-sideController-move {
+                 pointer-events: all;
+             }
+             #pagetual-sideController.minSize .pagetual-sideController-btn {
+                 opacity: 0;
+             }
             `;
             let frame = document.createElement("div");
             frame.id = "pagetual-sideController";
             frame.innerHTML = createHTML(`
+                <div class="extra">
+                  <svg id="loadNow" class="pagetual" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("loadNow")}</title><path d="M712.106667 525.653333l-291.413334 247.893334a21.333333 21.333333 0 0 1-14.506666 5.546666 20.053333 20.053333 0 0 1-22.186667-19.2V264.106667a20.053333 20.053333 0 0 1 20.906667-19.2 20.906667 20.906667 0 0 1 14.506666 5.546666l291.413334 247.893334a17.92 17.92 0 0 1 1.28 27.306666zM512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z" fill="#5E5C5C"></path></svg>
+                  <svg id="scroll" class="pagetual" viewBox="0 0 1030 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("sideControllerScroll")}</title><path d="M912 544v82.64C912 846.096 732.912 1024 512 1024S112 846.096 112 626.64V544h800z" fill="#5E5C5C"></path><path d="M478.656 0v43.328a96 96 0 0 1-32.48 71.952c-27.68 24.448-41.968 48.128-42.896 71.04l-0.096 4.352v104c0 24.224 14.512 49.344 43.52 75.312a96 96 0 0 1 31.952 71.52V496H112.032L112 393.712C112 181.648 264.848 8.72 472.352 0.208L478.656 0z" fill="#999999"></path><path d="M534.24 0C747.584 5.232 912 179.504 912 393.728v102.256L534.208 496v-52.912a96 96 0 0 1 33.536-72.88c28.48-24.416 43.2-48.16 44.16-71.2l0.096-4.336v-104c0-24.352-14.928-49.52-44.784-75.488a96 96 0 0 1-33.008-72.432V0z" fill="#5E5C5C"></path></svg>
+                </div>
                 <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
                 <div>
                   <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
-                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg><div id="pagetual-sideController-pagenum"></div></div>
+                  <div id="pagetual-sideController-move"><svg class="pagetual" width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg><div id="pagetual-sideController-pagenum"></div></div>
                   <div id="pagetual-sideController-next" class="pagetual-sideController-btn">∨</div>
                 </div>
                 <div id="pagetual-sideController-bottom" class="pagetual-sideController-btn">⊻</div>
@@ -3783,6 +4177,14 @@
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
             let pagenum = frame.querySelector("#pagetual-sideController-pagenum");
+            let scroll = frame.querySelector("#scroll");
+            let loadNow = frame.querySelector("#loadNow");
+            if (rulesData.sideControllerScroll === false) {
+                scroll.style.display = "none";
+            }
+            if (rulesData.sideControllerLoadNow === false) {
+                loadNow.style.display = "none";
+            }
             if (sideControllerIcon) move.innerHTML = sideControllerIcon;
 
             frame.addEventListener("dblclick", e => {
@@ -3801,6 +4203,42 @@
                     frame.classList.add("minSize");
                 }, 800);
             });
+
+            document.body.addEventListener('touchstart', e => {
+                if (e.target === frame || frame.contains(e.target)) {
+                    frame.classList.remove("minSize");
+                } else {
+                    frame.classList.add("minSize");
+                }
+            });
+
+            scroll.addEventListener("click", e => {
+                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), autoScrollRate)) || 0;
+                autoScroll = parseInt(autoScroll) || 0;
+                if (autoScroll < 0) autoScroll = 0;
+                if (autoScroll && autoScroll != autoScrollRate) {
+                    autoScrollRate = autoScroll;
+                    storage.setItem("autoScrollRate", autoScrollRate);
+                }
+                setListData("autoScroll", location.host + location.pathname, autoScroll);
+                startAutoScroll();
+            }, true);
+
+            loadNow.addEventListener("click", e => {
+                if (autoLoadNum != -1) {
+                    autoLoadNum = -1;
+                    return;
+                }
+                let loadNum = window.prompt(i18n("loadConfirm"), loadNowNum);
+                if (loadNum === "" || loadNum === null) return;
+                loadNum = Math.abs(parseInt(loadNum)) || 0;
+                if (loadNowNum != loadNum) {
+                    loadNowNum = loadNum;
+                    storage.setItem("loadNowNum", loadNowNum);
+                }
+                autoLoadNum = loadNum;
+                nextPage();
+            }, true);
 
             pre.addEventListener("click", e => {
                 let prePageBar = getPageBar().preBar;
@@ -3840,7 +4278,7 @@
 
             bottom.addEventListener("click", e => {
                 if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                    changeStop(true);
+                    changeStop(true, true);
                 }
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 getBody(document).scrollTop = scrollH || 9999999;
@@ -3853,14 +4291,14 @@
             let removeTimer;
             move.addEventListener("click", e => {
                 if (!moving) {
-                    changeStop(!isPause);
+                    changeStop(!isPause, true);
                 }
             }, true);
             move.addEventListener("dblclick", e => {
                 clearTimeout(removeTimer);
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
-                changeStop(!isPause);
+                changeStop(!isPause, true);
                 if (isPause) {
                     ruleParser.hideAddedElements();
                 } else {
@@ -3873,15 +4311,31 @@
                 picker.start();
             };
 
+            let clientX = e => {
+                if (e.type.indexOf('mouse') === 0) {
+                    return e.clientX;
+                } else {
+                    return e.changedTouches[0].clientX;
+                }
+            };
+
+            let clientY = e => {
+                if (e.type.indexOf('mouse') === 0) {
+                    return e.clientY;
+                } else {
+                    return e.changedTouches[0].clientY;
+                }
+            };
+
             let mouseMoveHandler = e => {
                 if (moving) {
                     let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                     let windowWidth = window.innerWidth || document.documentElement.clientWidth;
-                    initX = (e.clientX - 10 + 40) / windowWidth * 100;
-                    initY = (e.clientY - 83 + 83) / windowHeight * 100;
+                    initX = (clientX(e) - 10 + 40) / windowWidth * 100;
+                    initY = (clientY(e) - 83 + 83) / windowHeight * 100;
                     this.frame.style.top = `calc(${initY}% - 83px)`;
                     this.frame.style.left = `calc(${initX}% - 40px)`;
-                } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
+                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 20) {
                     moving = true;
                     clearTimeout(removeTimer);
                 }
@@ -3890,23 +4344,35 @@
                 clearTimeout(removeTimer);
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
+                document.removeEventListener("touchmove", mouseMoveHandler, true);
+                document.removeEventListener("touchend", mouseUpHandler, true);
                 if (moving) {
                     rulesData.sideControllerPos = {x: parseInt(initX), y: parseInt(initY)};
                     storage.setItem("rulesData", rulesData);
                 }
             };
-
-            move.addEventListener("mousedown", e => {
-                initX = e.clientX;
-                initY = e.clientY;
+            let mouseDownHandler = e => {
+                initX = clientX(e);
+                initY = clientY(e);
                 moving = false;
                 clearTimeout(removeTimer);
                 removeTimer = setTimeout(() => {
-                    self.remove();
+                    if (e.type === "touchstart") {
+                        picker.start();
+                    } else {
+                        self.remove();
+                    }
                 }, 1500);
                 document.addEventListener("mousemove", mouseMoveHandler, true);
                 document.addEventListener("mouseup", mouseUpHandler, true);
-            }, true);
+                document.addEventListener("touchmove", mouseMoveHandler, true);
+                document.addEventListener("touchend", mouseUpHandler, true);
+                e.stopPropagation();
+                e.preventDefault();
+            };
+
+            move.addEventListener("mousedown", mouseDownHandler, true);
+            move.addEventListener("touchstart", mouseDownHandler, { passive: false, capture: true });
 
             this.frame = frame;
             this.pagenum = pagenum;
@@ -4129,6 +4595,9 @@
               font-family: Times New Roman;
               overflow: initial;
               user-select: none;
+              line-height: unset;
+              min-width: unset;
+              min-height: unset;
              }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
@@ -4170,15 +4639,16 @@
               left: 10px;
              }
              #pagetual-picker>.logoIcon.showSign>svg>path {
-              fill: gray;
+              fill: gray!important;
              }
              #pagetual-picker textarea{
               display: inline-block;
               width: calc(100% - 65px);
               height: 20px;
-              min-width: 290px;
+              min-width: 250px;
               max-width: calc(65vw - 50px);
               min-height: unset;
+              max-height: unset;
               padding: 6px 12px;
               font-size: 16px;
               font-weight: 400;
@@ -4316,6 +4786,7 @@
              }
              #pagetual-picker.showDetail .tempRule {
               display: inline-block;
+              word-break: break-all;
              }
              #pagetual-picker #saveDetail {
               display: none;
@@ -4425,6 +4896,7 @@
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
                 <button id="autoScroll" class="command" title="${i18n("toggleAutoScroll")}" type="button"></button>
+                <button id="ruleRequest" class="command" title="${i18n("ruleRequest")}" type="button">${i18n("ruleRequest")}</button>
                 <div>
                   <textarea class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
@@ -4491,12 +4963,19 @@
             let addOtherProp = frame.querySelector("#addOtherProp");
             let addNextSelector = frame.querySelector("#addNextSelector");
             let addPageSelector = frame.querySelector("#addPageSelector");
+            let ruleRequestBtn = frame.querySelector("#ruleRequest");
+            ruleRequestBtn.addEventListener("click", e => {
+                _GM_openInTab("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20" + location.hostname + "#" + location.href, {active: true});
+            }, true);
             autoScrollBtn.addEventListener("click", e => {
                 self.close();
-                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
+                autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), autoScrollRate)) || 0;
                 autoScroll = parseInt(autoScroll) || 0;
                 if (autoScroll < 0) autoScroll = 0;
-                else if (autoScroll > 1000) autoScroll = 1000;
+                if (autoScroll && autoScroll != autoScrollRate) {
+                    autoScrollRate = autoScroll;
+                    storage.setItem("autoScrollRate", autoScrollRate);
+                }
                 setListData("autoScroll", location.host + location.pathname, autoScroll);
                 startAutoScroll();
             }, true);
@@ -4615,7 +5094,7 @@
             frame.addEventListener("mouseenter", e => {
                 if (!self.showSign || moving) return;
                 if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
-                self.checkInputSelector();
+                self.checkInputSelector(false);
             });
             frame.addEventListener("mouseleave", e => {
                 if (!self.showSign) {
@@ -4624,13 +5103,17 @@
                     return;
                 }
                 if (moving) return;
-                getBody(document).appendChild(self.mainSignDiv);
+                document.documentElement.appendChild(self.mainSignDiv);
                 self.clearSigns();
             });
             checkBtn.addEventListener("click", e => {
                 self.checkInputSelector();
-                if (this.selectorInput.value) _GM_setClipboard(this.selectorInput.value);
-                showTips(i18n("copied"));
+                if (this.selectorInput.value && self.foundEle) {
+                    debug(self.foundEle);
+                    self.foundEle[0].scrollIntoView({ behavior: "smooth" });
+                    _GM_setClipboard(this.selectorInput.value);
+                    showTips(i18n("copied"));
+                } else showTips("Null");
             });
             xpath.addEventListener("click", e => {
                 if (!selectorInput.value) {
@@ -4639,8 +5122,8 @@
                 }
                 let element = getElement(selectorInput.value, document);
                 let selector = self.getSelectorFromEle(element);
-                self.setSelectorDiv(selector);
                 selectorInput.value = selector;
+                self.setSelectorDiv(selector);
             });
             editBtn.addEventListener("click", e => {
                 rulesData.editTemp = self.getTempRule();
@@ -4721,7 +5204,16 @@
                 delete this.editTemp.type;
                 delete this.editTemp.updatedAt;
             }
-            if (this.selectorInput.value && !this.frame.classList.contains("showDetail")) {
+            if (this.selectorInput.value && (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement)) {
+                if (this.foundEle && this.foundEle.length === 1) {
+                    let foundEleRect = this.foundEle[0].getBoundingClientRect();
+                    if (foundEleRect.height < 100) {
+                        showTips("Next Link", "", 500);
+                        this.editTemp.nextLink = this.selectorInput.value;
+                        return this.editTemp;
+                    }
+                }
+                showTips("Page Element", "", 500);
                 this.editTemp.pageElement = this.selectorInput.value;
             }
             return this.editTemp;
@@ -4753,7 +5245,7 @@
             let signDiv = document.createElement("div");
             this.setImportant(signDiv, "position", "absolute");
             this.setImportant(signDiv, "pointer-events", "none");
-            this.setImportant(signDiv, "z-index", "2147483646");
+            this.setImportant(signDiv, "z-index", "2147483645");
             this.setImportant(signDiv, "background", "rgba(120, 170, 210, 0.6)");
             this.setImportant(signDiv, "transition", "all 0.15s ease-out");
             this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
@@ -4773,25 +5265,26 @@
         }
 
         fillTempRuleTextarea() {
-            if (!this.frame.classList.contains("showDetail")) this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+            if (!this.frame.classList.contains("showDetail") || !this.editTemp || !this.editTemp.pageElement) this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
         }
 
         setSelectorDiv(selector) {
-            this.fillTempRuleTextarea();
             let self = this;
             this.allpath.innerHTML = createHTML("");
-            if (!selector) return;
-            if (this.xpath.checked) {
-                let span = document.createElement("span");
-                span.innerText = selector;
-                span.addEventListener("click", e => {
-                    self.selectorInput.value = selector;
-                    self.checkInputSelector();
-                }, true);
-                this.allpath.appendChild(span);
-            } else {
-                selector.split(">").forEach((item, index) => self.geneSelectorItem(item, index));
+            if (selector) {
+                if (this.xpath.checked) {
+                    let span = document.createElement("span");
+                    span.innerText = selector;
+                    span.addEventListener("click", e => {
+                        self.selectorInput.value = selector;
+                        self.checkInputSelector();
+                    }, true);
+                    this.allpath.appendChild(span);
+                } else {
+                    selector.split(">").forEach((item, index) => self.geneSelectorItem(item, index));
+                }
             }
+            this.checkInputSelector();
         }
 
         geneSelectorItem(item, index) {
@@ -4824,19 +5317,21 @@
             this.allpath.appendChild(span);
         }
 
-        checkInputSelector() {
+        checkInputSelector(fill = true) {
             let self = this;
             this.clearSigns();
             if (!this.selectorInput.value) return;
             let eles = getAllElements(this.selectorInput.value, document);
+            this.foundEle = null;
             if (eles && eles.length > 0) {
+                this.foundEle = eles;
                 eles.forEach(ele => {
                     let sign = self.createSignDiv();
-                    getBody(document).appendChild(sign);
+                    document.documentElement.appendChild(sign);
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
-                this.fillTempRuleTextarea();
+                if (fill) this.fillTempRuleTextarea();
             }
         }
 
@@ -4855,7 +5350,7 @@
                 this.styleEle = _GM_addStyle(this.cssText);
             }
             document.documentElement.appendChild(this.frame);
-            getBody(document).appendChild(this.mainSignDiv);
+            document.documentElement.appendChild(this.mainSignDiv);
             getBody(document).classList.add("pagetual-picker");
 
             this.logoBtn.classList.remove("showSign");
@@ -4881,6 +5376,7 @@
                 pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
             }
             this.setSelectorDiv(pageElementSel);
+            this.fillTempRuleTextarea();
         }
     }
     const picker = new Picker();
@@ -4953,9 +5449,14 @@
             if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                 createEdit();
             } else {
+                let timeout = 30;
                 let checkEditorReady = setInterval(() => {
                     if (typeof _unsafeWindow.JSONEditor !== 'undefined') {
                         createEdit();
+                        clearInterval(checkEditorReady);
+                    } else if (timeout-- <= 0) {
+                        editor = null;
+                        customRulesInput.style.display = "";
                         clearInterval(checkEditorReady);
                     }
                 }, 100);
@@ -4968,15 +5469,71 @@
     function startAutoScroll() {
         clearInterval(autoScrollInterval);
         if (autoScroll <= 0) return;
+        let scrollRange_o = 1;
+        if (autoScroll > 1000) {
+            scrollRange_o = parseInt(autoScroll / 1000);
+        }
+        let devicePixelRatio = window.devicePixelRatio;
+        let scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
+
+        let scrollTarget, body = getBody(document);
+        let checkOverflow = ele => {
+            return ele.scrollHeight !== ele.clientHeight && getComputedStyle(ele).overflowY !== "hidden";
+        };
+        if (document.documentElement.scrollTop || checkOverflow(document.documentElement)) {
+            scrollTarget = document.documentElement;
+        } else if (body.scrollTop || checkOverflow(body)) {
+            scrollTarget = body;
+        } else {
+            let tempEle;
+            let img = body.querySelector('img');
+            if (img) {
+                tempEle = img;
+                while (tempEle && !checkOverflow(tempEle)) {
+                    tempEle = tempEle.parentNode;
+                }
+            }
+            if (!tempEle && document.activeElement) {
+                let tempEle = document.activeElement;
+                while (tempEle && !checkOverflow(tempEle)) {
+                    tempEle = tempEle.parentNode;
+                }
+            }
+            if (tempEle) scrollTarget = tempEle;
+        }
+        scrollTarget = scrollTarget || document.documentElement;
+
         autoScrollInterval = setInterval(() => {
             if (isPause) return;
-            window.scroll(window.scrollX, window.scrollY + 1);
+            if (devicePixelRatio !== window.devicePixelRatio) {
+                devicePixelRatio = window.devicePixelRatio;
+                scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
+            }
+            scrollTarget.scrollTop += scrollRange;
         }, parseInt(1000 / autoScroll));
     }
 
     var inUpdate = false;
     var importHandler, configCon;
     function initConfig(href) {
+        if (location.hostname === "github.com") {
+            if (location.href.indexOf("https://github.com/hoothin/UserScripts/issues/new?labels=Pagetual&template=custom-rule-request.md&title=Request%20Pagetual%20support%20for%20") === 0) {
+                let issue_body = document.getElementById("issue_body");
+                if (!issue_body) return true;
+                issue_body.value = issue_body.value.replace("\n", "\n" + location.hash.slice(1) + "\n");
+                let starButton = document.createElement("a");
+                starButton.href = "https://github.com/hoothin/UserScripts#star";
+                starButton.className = "js-toggler-target rounded-left-2 btn-with-aria-count btn-sm btn";
+                starButton.innerHTML = createHTML('<svg height="16" viewBox="0 0 16 16" version="1.1" width="16" class="octicon octicon-star d-inline-block mr-2"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg><span class="d-inline">Star</span>');
+                starButton.style.float = "right";
+                document.querySelector(".Layout-main>h2").appendChild(starButton);
+                return true;
+            } else if (location.href === "https://github.com/hoothin/UserScripts#star") {
+                let starButton = document.querySelector(".starring-container:not(.on)>.unstarred>form>button");
+                if (starButton) emuClick(starButton);
+                return true;
+            }
+        }
         let isGuidePage = checkGuidePage(href);
         if (!isGuidePage) {
             if (href.indexOf("PagetualGuide") != -1) return true;
@@ -5087,7 +5644,7 @@
                             if (!diff) {
                                 showTips(i18n("errorAlreadyExists"));
                                 setTimeout(() => {
-                                    showTips(i18n("beginUpdate"), "", 30000);
+                                    showTips(i18n("beginUpdate"), "", 50000);
                                     updateRules(() => {
                                         showTips(i18n("updateSucc"));
                                         location.reload();
@@ -5205,21 +5762,27 @@
                   padding: 0!important;
                  }
                  #saveBtn {
-                  width: 60%;
+                  width: 60vw;
                   position: fixed;
                   z-index: 999;
                   bottom: 0;
-                  padding-bottom: 15px;
-                  left: 20%;
+                  left: 20vw;
                   font-size: xx-large;
-                  opacity: 0.8;
+                  opacity: 0.6;
                   cursor: pointer;
-                  -moz-transition:opacity 0.3s ease;
-                  -webkit-transition:opacity 0.3s ease;
-                  transition:opacity 0.3s ease;
+                  -moz-transition:all 0.3s ease;
+                  -webkit-transition:all 0.3s ease;
+                  transition:all 0.3s ease;
                  }
-                 #saveBtn:hover {
+                 #configCon #saveBtn:hover {
                   opacity: 1;
+                  margin-bottom: 0px;
+                 }
+                 #configCon #saveBtn {
+                  margin-bottom: -30px;
+                 }
+                 #configCon.showSave #saveBtn {
+                  margin-bottom: 0px;
                  }
                 `);
                 click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
@@ -5255,6 +5818,17 @@
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
+
+                let newPos, lastPos = 0;
+                window.addEventListener('scroll', function(e) {
+                    newPos = window.scrollY;
+                    if (newPos > lastPos) {
+                        configCon.classList.add("showSave");
+                    } else {
+                        configCon.classList.remove("showSave");
+                    }
+                    lastPos = newPos;
+                });
             } else return false;
         } else return false;
         let ruleBarInsertPos = document.createTextNode(' ');
@@ -5291,7 +5865,7 @@
                 this.item.appendChild(del);
                 this.item.appendChild(url);
                 if (ruleParser.rules) {
-                    url.style.maxWidth = "calc(100% - 140px)";
+                    url.style.maxWidth = "calc(100% - 150px)";
                     url.style.overflow = "hidden";
                     url.style.display = "inline-block";
                     url.style.textOverflow = "ellipsis";
@@ -5367,6 +5941,7 @@
                             break;
                         }
                     }
+                    rulesData.ruleVersion = 0;
                     storage.setItem("rulesData", rulesData);
                     ruleParser.rules = ruleParser.rules.filter(item => {return item.from != this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
@@ -5632,6 +6207,9 @@
         let setConfigPageInput = createCheckbox(i18n("setConfigPage"), false);
         let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
         let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
+        let sideControllerAlwaysInput = createCheckbox(i18n("sideControllerAlways"), rulesData.sideControllerAlways, "h4", sideControllerInput);
+        let sideControllerScrollInput = createCheckbox(i18n("sideControllerScroll"), rulesData.sideControllerScroll !== false, "h4", sideControllerInput);
+        let sideControllerLoadNowInput = createCheckbox(i18n("loadNow"), rulesData.sideControllerLoadNow !== false, "h4", sideControllerInput);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true, "h4", enableHistoryInput);
@@ -5678,14 +6256,14 @@
         let dbClick2StopMetaInput = createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
         let dbClick2StopKeyInput = createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
-        let otherConfigPage = (rulesData.configPage || configPage[0]) != location.href;
+        let otherConfigPage = (rulesData.configPage || configPage[0]) != location.href.replace(/#.*/, "");
         if (!otherConfigPage) {
             setConfigPageInput.parentNode.parentNode.style.display = "none";
         }
 
         updateP.onclick = e => {
             updateFail = false;
-            ruleParser.rules = [];
+            //ruleParser.rules = [];
             showTips(i18n("beginUpdate"), "", 30000);
             updateRules(() => {
                 if (!updateFail) {
@@ -5839,6 +6417,9 @@
                 rulesData.sideControllerPos = false;
             }
             rulesData.sideController = sideControllerInput.checked;
+            rulesData.sideControllerScroll = sideControllerScrollInput.checked;
+            rulesData.sideControllerLoadNow = sideControllerLoadNowInput.checked;
+            rulesData.sideControllerAlways = sideControllerAlwaysInput.checked;
             rulesData.pageElementCss = pageElementCssInput.value;
             rulesData.customCss = customCssInput.value;
             rulesData.upBtnImg = upBtnImgInput.value;
@@ -5913,7 +6494,39 @@
         }
         let allOk = true;
         let preLength = ruleParser.rules.length;
-        function addNextRule() {
+        let fetchVersion = -1;
+        async function needUpdate(url, id) {
+            if (!/^https:\/\/hoothin\.github\.io\/|\/hoothin\/UserScripts\/.*\/Pagetual\/pagetualRules\.json/i.test(url)) {
+                return true;
+            }
+            let rulesLength = ruleParser.rules.reduce((acc, cur) => acc + (cur.from == id ? 1 : 0), 0);
+            if (rulesLength === 0) return true;
+            if (fetchVersion >= 0) {
+                return fetchVersion > (rulesData.ruleVersion || 0);
+            }
+            fetchVersion = await new Promise(resolve => {
+                _GM_xmlhttpRequest({
+                    url: url.replace(/\/\w+\.json/i, "/version"),
+                    method: 'GET',
+                    timeout: 20000,
+                    headers: {
+                        'accept': 'application/json,text/html'
+                    },
+                    onload: function(res) {
+                        let version = parseInt(res.response || res.responseText);
+                        resolve(version || -1);
+                    },
+                    onerror: function(e) {
+                        resolve(-1);
+                    },
+                    ontimeout: function(e) {
+                        resolve(-1);
+                    }
+                });
+            });
+            return fetchVersion > (rulesData.ruleVersion || 0);
+        }
+        async function addNextRule() {
             if (ruleIndex < 0) {
                 let now = new Date().getTime();
                 storage.setItem("ruleLastUpdate", now);
@@ -5930,20 +6543,32 @@
                     });
                 }
                 inUpdate = false;
+                let rulesDataChanged = false;
+                if (fetchVersion >= 0 && rulesData.ruleVersion !== fetchVersion) {
+                    rulesData.ruleVersion = fetchVersion;
+                    rulesDataChanged = true;
+                }
                 if (rulesData.uninited && allOk && ruleUrls.length > 1) {
                     rulesData.uninited = false;
+                    rulesDataChanged = true;
+                }
+                if (rulesDataChanged) {
                     storage.setItem("rulesData", rulesData);
                 }
                 success();
             } else {
                 let rule = ruleUrls[ruleIndex--];
-                ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
-                    if (!json) {
-                        allOk = false;
-                        fail(rule, err);
-                    }
+                if (await needUpdate(rule.url, rule.id)) {
+                    ruleParser.addRuleByUrl(rule.url, rule.id, (json, err) => {
+                        if (!json) {
+                            allOk = false;
+                            fail(rule, err);
+                        }
+                        addNextRule();
+                    });
+                } else {
                     addNextRule();
-                })
+                }
             }
         }
         addNextRule();
@@ -6075,10 +6700,16 @@
             if (rulesData.lang) {
                 setLang(rulesData.lang);
             }
-            if (rulesData.firstRun && rulesData.uninited) {
-                _GM_openInTab(firstRunPage, {active: true});
+            if (rulesData.firstRun) {
                 rulesData.firstRun = false;
                 storage.setItem("rulesData", rulesData);
+                setTimeout(() => {
+                    storage.getItem("rulesData", data => {
+                        if (data.firstRun === false) {
+                            _GM_openInTab(firstRunPage, {active: true});
+                        }
+                    });
+                }, 100);
             }
             _GM_registerMenuCommand(i18n("configure"), () => {
                 _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
@@ -6216,6 +6847,15 @@
 
                 updateDate = await getData("ruleLastUpdate");
 
+                let _loadNowNum = await getData("loadNowNum");
+                if (typeof(_loadNowNum) != "undefined") {
+                    loadNowNum = _loadNowNum;
+                }
+                let _autoScrollRate = await getData("autoScrollRate");
+                if (_autoScrollRate) {
+                    autoScrollRate = _autoScrollRate;
+                }
+
                 author = await getData("author") || "";
 
                 manualPause = !!await getListData("pauseState", location.host);
@@ -6245,11 +6885,11 @@
                     if (forceState == 1) {
                         forceState = 0;
                         showTips(i18n("enableSiteTips"));
-                        changeStop(false);
+                        changeStop(false, true);
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true);
+                        changeStop(true, true);
                         sideController.remove();
                     }
                     setListData("forceState", location.host, forceState);
@@ -6260,10 +6900,13 @@
                     }
                 });
                 _GM_registerMenuCommand(i18n("toggleAutoScroll"), () => {
-                    autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), 50)) || 0;
+                    autoScroll = (autoScroll ? 0 : prompt(i18n("autoScrollRate"), autoScrollRate)) || 0;
                     autoScroll = parseInt(autoScroll) || 0;
                     if (autoScroll < 0) autoScroll = 0;
-                    else if (autoScroll > 1000) autoScroll = 1000;
+                    if (autoScroll && autoScroll != autoScrollRate) {
+                        autoScrollRate = autoScroll;
+                        storage.setItem("autoScrollRate", autoScrollRate);
+                    }
                     setListData("autoScroll", location.host + location.pathname, autoScroll);
                     startAutoScroll();
                 });
@@ -6322,32 +6965,39 @@
             data: postParams,
             overrideMimeType: 'text/html;charset=' + charset,
             headers: headers,
-            timeout: 20000,
+            timeout: 50000,
             onload: async function(res) {
                 if (isPause) return callback(false);
                 var doc = null, response = res.response;
-                let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
+                try {
+                    doc = document.implementation.createHTMLDocument('');
+                    doc.documentElement.innerHTML = response;
+                } catch (e) {
+                    debug('parse error:' + e.toString());
+                }
+                let pageElement = null;
+                let preCode = ruleParser.curSiteRule.pagePre;
                 if (preCode) {
                     try {
+                        let preResult;
                         if (typeof preCode == 'function') {
-                            response = preCode(response);
+                            preResult = await preCode(response, doc);
                         } else if (preCode.length == 2) {
-                            response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
+                            preResult = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
-                            response = Function("response",'"use strict";' + preCode)(response);
+                            preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(response, doc);
+                        }
+                        if (typeof preResult !== "undefined") {
+                            if (typeof preResult === "string") {
+                                doc.documentElement.innerHTML = preResult;
+                            } else pageElement = preResult;
                         }
                     } catch(e) {
                         debug(e);
                     }
                 }
-                try {
-                    doc = document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML = response;
-                    let base = doc.querySelector("base");
-                    ruleParser.basePath = base ? base.href : url;
-                } catch (e) {
-                    debug('parse error:' + e.toString());
-                }
+                let base = doc.querySelector("base");
+                ruleParser.basePath = base ? base.href : url;
                 if (charsetValid && !ruleHeaders) {
                     let equiv = doc.querySelector('[http-equiv="Content-Type"]');
                     if (equiv && equiv.content) {
@@ -6358,13 +7008,19 @@
                         }
                     }
                 }
-                let pageElement = ruleParser.getPageElement(doc);
+                if (pageElement === null) {
+                    pageElement = ruleParser.getPageElement(doc);
+                }
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
                     debug(res.status + " " + url, "Error status");
                     return callback(false);
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
-                    let article = doc.querySelectorAll(mainSel);
+                    let article;
+                    for (let i = 0; i < mainSel.length; i++) {
+                        article = doc.querySelectorAll(mainSel[i]);
+                        if (article && article.length === 1) break;
+                    }
                     if (article && article.length == 1) {
                         article = article[0];
                         ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
@@ -6380,17 +7036,17 @@
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if (ruleParser.curSiteRule.action == 1) {
                         isLoading = true;
-                        requestFromIframe(url, (doc, eles) => {
+                        requestFromIframe(url, async (doc, eles) => {
                             if (eles) {
-                                ruleParser.insertPage(doc, eles, url, callback, true);
+                                await ruleParser.insertPage(doc, eles, url, callback, true);
                             } else isLoading = false;
                         });
                     } else ruleParser.curSiteRule.action = 0;
                 } else if ((ruleParser.curSiteRule.smart || curPage == 1) && !inCors) {
                     ruleParser.curSiteRule.action = 1;
-                    requestFromIframe(url, (doc, eles) => {
+                    requestFromIframe(url, async (doc, eles) => {
                         if (eles) {
-                            ruleParser.insertPage(doc, eles, url, callback, true);
+                            await ruleParser.insertPage(doc, eles, url, callback, true);
                         } else isLoading = false;
                     });
                 } else {
@@ -6438,9 +7094,18 @@
                     });
                 }
                 _GM_registerMenuCommand(i18n("loadNow"), () => {
-                    let loadNum = window.prompt(i18n("loadConfirm"), "1");
+                    if (autoLoadNum != -1) {
+                        autoLoadNum = -1;
+                        return;
+                    }
+                    let loadNum = window.prompt(i18n("loadConfirm"), loadNowNum);
                     if (loadNum === "" || loadNum === null) return;
-                    autoLoadNum = Math.abs(parseInt(loadNum));
+                    loadNum = Math.abs(parseInt(loadNum)) || 0;
+                    if (loadNowNum != loadNum) {
+                        loadNowNum = loadNum;
+                        storage.setItem("loadNowNum", loadNowNum);
+                    }
+                    autoLoadNum = loadNum;
                     nextPage();
                 });
             }
@@ -6500,11 +7165,14 @@
            color: red;
          }
          .pagetual_pageBar a:hover>span {
-           opacity: 1;
+           opacity: 1!important;
          }
          .pagetual_pageBar span.prevScreen,
          .pagetual_pageBar span.nextScreen {
            display: block!important;
+           top: unset !important;
+           padding: unset !important;
+           opacity: 0!important;
          }
          .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -${rulesData.opacity == 1 ? 31 : 30}px!important;
@@ -6517,6 +7185,10 @@
            height: 30px;
            margin-left: calc(50% - 23px);
            display: block!important;
+         }
+         .pagetual_pageBar span.refreshRing>svg {
+           background: white;
+           border-radius: 50%;
          }
          .pagetual_pageBar a:hover>span.refreshRing {
            opacity: 0.3;
@@ -6577,7 +7249,7 @@
            color: #ff6464;
          }
          .pagetual_tipsWords {
-           font-size: 3em;
+           font-size: 50px;
            font-weight: bold;
            font-family: "黑体", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
              "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
@@ -6656,7 +7328,7 @@
         }
     }
     var loadingDiv = document.createElement("div");
-    loadingDiv.style.cssText = "text-indent: initial;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
+    if (loadingDiv.style) loadingDiv.style.cssText = "text-indent: initial;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
 
     const loadingCSS = `font-size: initial; text-indent: unset; display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText) {
@@ -6675,22 +7347,18 @@
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
 
-    var changeStopTimer;
-    function changeStop(stop) {
+    function changeStop(stop, save) {
         isPause = stop;
-        clearTimeout(changeStopTimer);
-        changeStopTimer = setTimeout(() => {
-            [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
-                if (isPause) {
-                    bar.classList.add("stop");
-                } else {
-                    bar.classList.remove("stop");
-                }
-            });
-            if (!isPause) ruleParser.showAddedElements();
-            manualPause = isPause;
-            if (sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
-        }, 350);
+        [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
+            if (isPause) {
+                bar.classList.add("stop");
+            } else {
+                bar.classList.remove("stop");
+            }
+        });
+        if (!isPause) ruleParser.showAddedElements();
+        manualPause = isPause;
+        if (save && sideController.inited) setListData("pauseState", location.host, isPause ? true : "");
     }
 
     function changeHideBar(hide) {
@@ -6704,22 +7372,22 @@
         });
     }
 
-    function isInViewPort(element) {
+    function isInViewPort(element) {
         if (!getBody(document).contains(element)) return false;
-        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-        const {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
             top,
             right,
             bottom,
             left,
-        } = element.getBoundingClientRect();
+        } = element.getBoundingClientRect();
 
-        return (
-            top >= 0 &&
-            left >= 0 &&
-            right <= viewWidth + 1 &&
-            top <= viewHeight * rate &&
+        return (
+            top >= 0 &&
+            left >= 0 &&
+            right <= viewWidth + 1 &&
+            top <= viewHeight * rate &&
             isVisible(element, _unsafeWindow)
         );
     }
@@ -6730,22 +7398,22 @@
         for (let i = 0; i < pageBars.length; i++) {
             let pageBar = pageBars[i];
             if (!pageBar || !getBody(document).contains(pageBar)) continue;
-            let {
+            let {
                 top,
                 right,
                 bottom,
                 left,
-            } = pageBar.getBoundingClientRect();
+            } = pageBar.getBoundingClientRect();
             if (top > 500) {
                 nextBar = pageBar;
                 preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
                 if (pageBar && getBody(document).contains(pageBar)) {
-                    let {
+                    let {
                         top,
                         right,
                         bottom,
                         left,
-                    } = pageBar.getBoundingClientRect();
+                    } = pageBar.getBoundingClientRect();
                     if (top < -500) {
                         preBar = pageBar;
                     } else preBar = (i - 2 >= 0 ? pageBars[i - 2] : null);
@@ -6780,7 +7448,7 @@
                             urlChanging = false;
                         }, 1000);
                     } else {
-                        urlChanged = true;
+                        ruleParser.urlChanged();
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
                         }
@@ -6829,6 +7497,9 @@
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             if (document.hidden) return;
+            if (!ruleParser.canListenUrlChange()) {
+                return;
+            }
             if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
                 urlWillChange = true;
@@ -6880,7 +7551,7 @@
         return scrollH - scrolly - windowHeight;
     }
 
-    let scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
+    let scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler, messageHandler;
     function initListener () {
         document.removeEventListener('scroll', scrollHandler, true);
         document.removeEventListener('wheel', scrollHandler, true);
@@ -6890,7 +7561,8 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
-        let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
+        _unsafeWindow.removeEventListener('message', messageHandler, true);
+        let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0, loadMoreInv;
         if (ruleParser.curSiteRule.smart) {
             loadingMore = false;
         } else if (ruleParser.curSiteRule.loadMore) {
@@ -6925,11 +7597,51 @@
                 nextPage();
             }
         };
+        messageHandler = e => {
+            if (e.data.command === 'pagetual') {
+                let action = e.data.action;
+                let detail = e.data.detail;
+                switch (action) {
+                    case "config":
+                        if (!detail || typeof detail !== 'object') return;
+                        rulesData = {
+                            ...rulesData,
+                            ...detail
+                        }
+                        storage.setItem("rulesData", rulesData);
+                        break;
+                    case "nextPage":
+                        if (detail === "" || detail === null) return;
+                        detail = parseInt(detail) || 0;
+                        if (loadNowNum != detail) {
+                            loadNowNum = detail;
+                        }
+                        autoLoadNum = detail;
+                        nextPage();
+                        break;
+                    case "loadMore":
+                        clearInterval(loadMoreInv);
+                        if (detail === -1) return;
+                        loadmoreBtn = getLoadMore(document, loadmoreBtn);
+                        loadmoreBtn && emuClick(loadmoreBtn);
+                        if (detail === 0) {
+                            loadMoreInv = setInterval(() => {
+                                loadmoreBtn = getLoadMore(document, loadmoreBtn);
+                                loadmoreBtn && emuClick(loadmoreBtn);
+                            }, 500);
+                        }
+                        break;
+                }
+            }
+            return true;
+        }
+        _unsafeWindow.addEventListener('message', messageHandler, true);
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
                 urlChanged = false;
                 loadingMore = false;
+                return;
             }
             if (isPause) return;
             if (!loadingMore) {
@@ -6996,7 +7708,7 @@
                         changeHideBar(!isHideBar);
                     }
                     if (!rulesData.hideBarButNoStop) {
-                        changeStop(!isPause);
+                        changeStop(!isPause, true);
                         showTips(i18n(isPause ? "disable" : "enable"));
                     }
                     if (!isPause) {
@@ -7028,11 +7740,11 @@
                     if (forceState == 1) {
                         forceState = 0;
                         showTips(i18n("enableSiteTips"));
-                        changeStop(false);
+                        changeStop(false, true);
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true);
+                        changeStop(true, true);
                         sideController.remove();
                     }
                     if (!ruleParser.curSiteRule.url) {
@@ -7048,7 +7760,7 @@
         if (ruleParser.curSiteRule.listenHashChange) {
             hashchangeHandler = () => {
                 isPause = true;
-                urlChanged = true;
+                ruleParser.urlChanged();
                 if (!ruleParser.nextLinkHref) isLoading = false;
             };
             window.addEventListener('hashchange', hashchangeHandler, false);
@@ -7110,13 +7822,13 @@
     let hideTipsTimeout;
     function showTips(content, href, time, wordColor, backColor) {
         initView();
-        getBody(document).appendChild(tipsWords);
+        document.documentElement.appendChild(tipsWords);
         tipsWords.style.color = wordColor || 0xFFFFFF;
         tipsWords.style.backgroundColor = backColor || 0x000;
         let _time = 1500;
         if (href) {
             _time = 3500;
-            tipsWords.innerHTML = createHTML(`<a href='${href}'>${content}</a>`);
+            tipsWords.innerHTML = createHTML(`<a href='${href}' target='_blank'>${content}</a>`);
             tipsWords.style.pointerEvents = 'all';
         } else {
             tipsWords.innerHTML = createHTML(content);
@@ -7135,7 +7847,7 @@
         }, 1);
     }
 
-    const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
+    const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|(load|view)\s*more|もっと読み込む)[.…▼\s]*$/i;
     const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
@@ -7168,13 +7880,17 @@
     }
 
     var targetY = -1;
-    function scrollToPageBar(bar){
-        let yOffset = -20;
-        if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
-            yOffset = -ruleParser.curSiteRule.pageBarTop;
+    function scrollToPageBar(bar) {
+        if (window.pageYOffset == 0) {
+            bar.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+        } else {
+            let yOffset = -20;
+            if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
+                yOffset = -ruleParser.curSiteRule.pageBarTop;
+            }
+            targetY = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: targetY, behavior: 'smooth'});
         }
-        targetY = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: targetY, behavior: 'smooth'});
     }
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
@@ -7420,6 +8136,7 @@
                 pageBar.style.lineHeight = "20px";
                 pageBar.style.boxShadow = "";
                 pageBar.style.border = "";
+                pageBar.style.width = "";
                 pageBar.style.maxWidth = "unset";
                 pageBar.style.flex = "auto";
                 let inTd = document.createElement("div");
@@ -7457,17 +8174,17 @@
         });
         downSpan.addEventListener("click", e => {
             if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true);
+                changeStop(true, true);
             }
             pageBar.title = i18n(isPause ? "enable" : "disable");
-            scrollH=Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+            scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
             getBody(document).scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
             e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
-            changeStop(!isPause);
+            changeStop(!isPause, true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
@@ -7625,6 +8342,45 @@
         btn.click();
     }
 
+    function emuInput(input, v) {
+        let result = false;
+        if (!input) return true;
+        let event = new Event('focus', { bubbles: true });
+        input.dispatchEvent(event);
+        let lastValue = input.value;
+        if (input.type == 'file') {
+            let file = v;
+            let blob = new Blob([file], {
+                type: 'text/plain'
+            });
+            file = new File([blob], 'noname.txt', { type: blob.type });
+            let dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            input.files = dataTransfer.files;
+            v = "c:/fakepath/fakefile";
+        } else if (/INPUT/i.test(input.nodeName)) {
+            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            nativeInputValueSetter.call(input, v);
+        } else if (/SELECT/i.test(input.nodeName)) {
+            var nativeSelectValueSetter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
+            nativeSelectValueSetter.call(input, v);
+        } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
+            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+            nativeTextareaValueSetter.call(input, v);
+        } else {
+            input.innerHTML = createHTML(v);
+        }
+        event = new Event('input', { bubbles: true });
+        let tracker = input._valueTracker;
+        if (tracker) {
+            tracker.setValue(lastValue);
+        }
+        input.dispatchEvent(event);
+        event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+        return result;
+    }
+
     var failFromIframe = 0;
     var inCors = false;
     var checkRemoveIntv;
@@ -7670,33 +8426,55 @@
                 }
                 try {
                     let doc = iframe.contentDocument || iframe.contentWindow.document;
-                    let base = doc.querySelector("base");
-                    ruleParser.basePath = base ? base.href : url;
-                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
-                    if (checkEval && !checkEval(doc)) {
-                        setTimeout(() => {
-                            checkIframe();
-                        }, waitTime);
-                        return;
-                    } else if (eles && eles.length > 0) {
-                        await ruleParser.hookUrl(doc);
-                        callback(doc, eles);
-                    } else if (pageEleTryTimes++ < 100) {
-                        getBody(doc).scrollTop = 9999999;
-                        doc.documentElement.scrollTop = 9999999;
+                    if (checkEval && !await checkEval(doc)) {
                         setTimeout(() => {
                             checkIframe();
                         }, waitTime);
                         return;
                     } else {
-                        if (failFromIframe++ > 2) {
-                            failFromIframe = 0;
-                            debug("Stop as failFromIframe");
-                            changeStop(true);
-                            callback(false, false);
+                        let preCode = ruleParser.curSiteRule.pagePre, eles = null;
+                        if (preCode) {
+                            try {
+                                let preResult;
+                                if (typeof preCode == 'function') {
+                                    preResult = await preCode(doc.documentElement.innerHTML, doc);
+                                } else if (preCode.length == 2) {
+                                    preResult = doc.documentElement.innerHTML.replace(new RegExp(preCode[0], "gi"), preCode[1]);
+                                } else {
+                                    preResult = await new AsyncFunction("response", "doc", '"use strict";' + preCode)(doc.documentElement.innerHTML, doc);
+                                }
+                                if (typeof preResult !== "undefined") {
+                                    if (typeof preResult === "string") {
+                                        doc.documentElement.innerHTML = preResult;
+                                    } else eles = preResult;
+                                }
+                            } catch(e) {
+                                debug(e);
+                            }
+                        }
+                        let base = doc.querySelector("base");
+                        ruleParser.basePath = base ? base.href : url;
+                        if (eles === null) eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
+                        if (eles && eles.length > 0) {
+                            await ruleParser.hookUrl(doc);
+                            await callback(doc, eles);
+                        } else if (pageEleTryTimes++ < 100) {
+                            getBody(doc).scrollTop = 9999999;
+                            doc.documentElement.scrollTop = 9999999;
+                            setTimeout(() => {
+                                checkIframe();
+                            }, waitTime);
+                            return;
                         } else {
-                            ruleParser.noValidContent(url);
-                            callback(false, false);
+                            if (failFromIframe++ > 2) {
+                                failFromIframe = 0;
+                                debug("Stop as failFromIframe");
+                                changeStop(true);
+                                callback(false, false);
+                            } else {
+                                ruleParser.noValidContent(url);
+                                callback(false, false);
+                            }
                         }
                     }
                 } catch(e) {
@@ -7731,9 +8509,9 @@
                     return;
                 }
                 if (doc) {
+                    clearInterval(checkReady);
                     try {
                         Function('win', 'iframe', '"use strict";' + code)(iframe.contentWindow, iframe);
-                        clearInterval(checkReady);
                     } catch(e) {
                         debug(e);
                     }
@@ -7756,6 +8534,10 @@
         function returnFalse(log) {
             if (curPage > 1) {
                 if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
+                _unsafeWindow.postMessage({
+                    action: "lastPage",
+                    command: 'pagetual'
+                }, '*');
             } else {
                 sideController.remove();
             }
@@ -7766,6 +8548,25 @@
                 emuIframe.parentNode.removeChild(emuIframe);
                 emuIframe = null;
             }
+        }
+        function cloneStatus() {
+            if (!iframeDoc) return;
+            let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
+            let selectOptions = document.querySelectorAll("select>option");
+            [...inputs].forEach(input => {
+                let sel = geneSelector(input, true, true);
+                let mirrorEle = iframeDoc.querySelector(sel);
+                if (!mirrorEle) return;
+                emuInput(mirrorEle, input.value);
+            });
+            [...selectOptions].forEach(option => {
+                let sel = geneSelector(option, true, true);
+                let mirrorEle = iframeDoc.querySelector(sel);
+                if (!mirrorEle) return;
+                let selected = option.selected;
+                mirrorEle.selected = !!selected;
+                mirrorEle.parentNode.dispatchEvent(new Event('change'));
+            });
         }
         async function checkPage() {
             if (isPause) return loadPageOver();
@@ -7808,7 +8609,7 @@
                         loadmoreEnd = true;
                     }
                 }
-                if (checkEval && !checkEval(iframeDoc)) {
+                if (checkEval && !await checkEval(iframeDoc)) {
                     waitTimes = 50;
                     setTimeout(() => {
                         checkPage();
@@ -7884,6 +8685,13 @@
                 returnFalse("Stop as timeout when emu");
                 return;
             }
+            if (checkEval && !await checkEval(iframeDoc)) {
+                checkTimes = 0;
+                setTimeout(() => {
+                    checkPage();
+                }, waitTime);
+                return;
+            }
             let eles = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true), checkItem;
             if (eles && eles.length > 0) {
                 eles = [].filter.call(eles, ele => {return ele && !compareNodeName(ele, ["style", "script", "meta"])});
@@ -7894,8 +8702,7 @@
                     checkItem = eles[0];
                 }
             }
-            if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
-                if (checkEval) checkTimes = 0;
+            if (!checkItem) {
                 setTimeout(() => {
                     checkPage();
                 }, waitTime);
@@ -7959,18 +8766,25 @@
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
             emuIframe.addEventListener("load", e => {
-                setTimeout(async () => {
-                    try {
-                        iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
-                    } catch(e) {
-                        if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
-                            emuIframe.removeAttribute("sandbox");
-                            meetCors = true;
-                            callback(false, false);
-                        } else {
-                            returnFalse("Stop as cors");
+                try {
+                    iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                } catch(e) {
+                    if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
+                        emuIframe.removeAttribute("sandbox");
+                        meetCors = true;
+                        callback(false, false);
+                        if (ruleParser.curSiteRule.smart) {
+                            ruleParser.findNoNext();
                         }
-                        return;
+                    } else {
+                        returnFalse("Stop as cors");
+                    }
+                    return;
+                }
+                setTimeout(async () => {
+                    if (meetCors && ruleParser.curSiteRule.smart) {
+                        ruleParser.smartRules = ruleParser.smartRules.filter(item => {return item && item.url !== ruleParser.curSiteRule.url;});
+                        storage.setItem("smartRules", ruleParser.smartRules);
                     }
                     meetCors = false;
                     let code = ruleParser.curSiteRule.init;
@@ -7979,6 +8793,15 @@
                             await new AsyncFunction('doc','win','iframe','click', 'enter', 'input', 'sleep', '"use strict";' + code)(iframeDoc, emuIframe.contentWindow, emuIframe, async sel => {await clickAction(sel, iframeDoc)}, async sel => {await enterAction(sel, iframeDoc)}, async (sel, v) =>{await inputAction(sel, v, iframeDoc)}, async time => {await sleep(time)});
                         } catch(e) {
                             debug(e);
+                        }
+                    } else {
+                        let refreshByClickSel = ruleParser.curSiteRule.refreshByClick;
+                        if (iframeDoc && refreshByClickSel) {
+                            let clickBtn = await waitForElement(refreshByClickSel, iframeDoc);
+                            await sleep(500);
+                            cloneStatus();
+                            emuClick(clickBtn, iframeDoc);
+                            await sleep(500);
                         }
                     }
                     if (loaded) return;
@@ -7996,9 +8819,9 @@
                         return;
                     }
                     if (iframeDoc) {
+                        clearInterval(checkReady);
                         try {
                             Function('win', 'iframe', '"use strict";' + code)(emuIframe.contentWindow, emuIframe);
-                            clearInterval(checkReady);
                         } catch(e) {
                             debug(e);
                         }
@@ -8022,20 +8845,20 @@
     var scrollingToResize = false;
 
     function isTouchViewPort(element) {
-        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-        const {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
             top,
             right,
             bottom,
             left,
-        } = element.getBoundingClientRect();
+        } = element.getBoundingClientRect();
 
-        return (
-            top < viewHeight &&
-            left < viewWidth &&
-            right > 0 &&
-            bottom > 0
+        return (
+            top < viewHeight &&
+            left < viewWidth &&
+            right > 0 &&
+            bottom > 0
         );
     }
 
@@ -8047,7 +8870,7 @@
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.smart || forceState === 2) {
             let height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500);
-            if (!iframe.style.height || height - parseInt(iframe.style.height) > window.innerHeight) {
+            if (!iframe.style.height || parseInt(iframe.style.height) === 0 || height - parseInt(iframe.style.height) > window.innerHeight) {
                 iframe.style.height = height + "px";
                 iframe.style.minHeight = iframe.style.height;
             }
@@ -8189,14 +9012,32 @@
                     return;
                 }
                 if (iframeDoc) {
+                    clearInterval(checkReady);
                     try {
                         Function('win', 'iframe', '"use strict";' + code)(curIframe.contentWindow, curIframe);
-                        clearInterval(checkReady);
                     } catch(e) {
                         debug(e);
                     }
                 }
             }, 50);
+        }
+        let waitTime = 300, checkEval;
+        ruleParser.runWait((_checkEval, _waitTime) => {
+            if (_checkEval) {
+                checkEval = _checkEval;
+            }
+            if (_waitTime) {
+                waitTime = _waitTime;
+            }
+        });
+        async function checkIframe() {
+            if (checkEval && !await checkEval(iframeDoc)) {
+                setTimeout(() => {
+                    checkIframe();
+                }, waitTime);
+                return;
+            }
+            loadedHandler();
         }
         curIframe.name = 'pagetual-iframe';
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
@@ -8223,7 +9064,7 @@
                     iframeDoc.head.appendChild(styleEle);
                 }
             }
-            loadedHandler();
+            checkIframe();
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
             }, true);
@@ -8312,8 +9153,6 @@
     }
 
     async function nextPage() {
-        if (typeof ruleParser.curSiteRule.manualMode === 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
-        if (clickMode) return;
         if (isPause || isLoading || forceState === 1) return;
         if (ruleParser.curSiteRule.delay) {
             try {
@@ -8334,14 +9173,20 @@
                 if (curPage === 1) {
                     if (ruleParser.curSiteRule.pinUrl) {
                         setTimeout(() => {isLoading = false;}, 500);
-                    } else if (tryTimes++ < 3) {
+                    } else if (tryTimes++ < 5) {
                         setTimeout(() => {isLoading = false;}, 1000);
                     } else {
                         ruleParser.findNoNext();
                     }
-                } else if (rulesData.lastPageTips && !showedLastPageTips) {
-                    showTips(i18n("lastPage"), "", 800);
+                } else if (!showedLastPageTips) {
+                    if (rulesData.lastPageTips) {
+                        showTips(i18n("lastPage"), "", 800);
+                    }
                     showedLastPageTips = true;
+                    _unsafeWindow.postMessage({
+                        action: "lastPage",
+                        command: 'pagetual'
+                    }, '*');
                 }
                 return;
             }
@@ -8408,13 +9253,13 @@
                         checkAutoLoadNum();
                     });
                 } else if ((forceState === 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
-                    requestFromIframe(nextLink, (doc, eles) => {
+                    requestFromIframe(nextLink, async (doc, eles) => {
                         if (urlChanged || isPause) {
                             loadPageOver();
                             return;
                         }
                         if (eles) {
-                            ruleParser.insertPage(doc, eles, nextLink, () => {
+                            await ruleParser.insertPage(doc, eles, nextLink, () => {
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
                             }, true);

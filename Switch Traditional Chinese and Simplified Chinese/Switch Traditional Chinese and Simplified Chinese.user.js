@@ -6,11 +6,11 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.7.7
-// @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
-// @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
-// @description:ja     簡繁中国語に変換
-// @description:en     Just Switch Traditional Chinese and Simplified Chinese
+// @version      1.2.7.8
+// @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體），顯示漢字對應漢語拼音，自訂任意替換文本
+// @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体），显示汉字对应汉语拼音，自定义任意替换文本
+// @description:ja     ウェブページ上の簡体字中国語と繁体字中国語を自由に変換し、中国語の文字にひらがなを表示し、任意の文字を置き換えることができます。
+// @description:en     Convert between simplified and traditional Chinese characters on any webpage, display the Pinyin for the Chinese characters, customize text replacement.
 // @author       hoothin
 // @match        *://*/*
 // @grant        GM_setValue
@@ -594,13 +594,11 @@
         '挺好的':'滿好的',
         '牛逼':'厲害',
         '左拐':'左轉',
-        '估计':'大概',
         '竖的':'直的',
         '让一下':'借過',
         '凉水':'冰水',
         '打包':'外帶',
         '外卖':'外送',
-        '地道':'道地',
         '很火':'很紅',
         '宾馆':'飯店',
         '旅馆':'賓館',
@@ -660,7 +658,6 @@
         '剩余':'賸餘',
         '胡同':'衚衕',
         '个旧':'箇舊',
-        '个旧':'箇舊縣',
         '朱砂':'硃砂',
         '知识产权':'智慧財產權'
     };
@@ -694,7 +691,6 @@
 
     var lang = navigator.appName == "Netscape"?navigator.language:navigator.userLanguage;
     lang = lang.toLowerCase();
-    //此處為補丁，因爲考慮到港澳臺繁體可能各有不同
     switch(lang){
         case "zh-tw":
             /*sc2tc["只"]=[
@@ -1355,7 +1351,7 @@
             let autoInput = createCheckbox('總是自動切換', auto);
             let notificationInput = createCheckbox('切換成功通知', notification);
             let enablePinyinInput = createCheckbox('啟用拼音顯示', !disablePinyin);
-            let keyCallNotSaveInput = createCheckbox('用快捷鍵切換時不記錄選擇', keyCallNotSave);
+            let keyCallNotSaveInput = createCheckbox('用快速鍵切換時不記憶選擇', keyCallNotSave);
 
             let defaultSimple = document.createElement('select');
             let cnOption = document.createElement('option');
@@ -1383,7 +1379,7 @@
             shortcutCon.style.alignItems = 'center';
             let shortcutTitle = document.createElement('h3');
             shortcutTitle.style.margin = '5px 0';
-            shortcutTitle.innerText = '繁簡切換快捷鍵：';
+            shortcutTitle.innerText = '繁簡切換快速鍵：';
             shortcutCon.appendChild(shortcutTitle);
             let shortcutInput = document.createElement('input');
             shortcutInput.style.height = '20px';
@@ -1412,7 +1408,7 @@
             pinyinShortcutCon.style.alignItems = 'center';
             let pinyinShortcutTitle = document.createElement('h3');
             pinyinShortcutTitle.style.margin = '5px 0';
-            pinyinShortcutTitle.innerText = '顯示拼音快捷鍵：';
+            pinyinShortcutTitle.innerText = '顯示拼音快速鍵：';
             pinyinShortcutCon.appendChild(pinyinShortcutTitle);
             let pinyinShortcutInput = document.createElement('input');
             pinyinShortcutInput.style.height = '20px';
@@ -1486,7 +1482,7 @@
 
             let customTermTitle = document.createElement('h3');
             customTermTitle.style.margin = '5px 0';
-            customTermTitle.innerText = '自定義簡繁用語轉換（可透過通配符設置生效網址範圍）：';
+            customTermTitle.innerText = '自訂簡繁用語轉換（可透過通配符設定生效網址範圍）：';
 
             let addNewGlob1 = document.createElement('button');
             addNewGlob1.innerText = '添加生效網站';
@@ -1558,7 +1554,7 @@
 
             let customIlliteracyTitle = document.createElement('h3');
             customIlliteracyTitle.style.margin = '5px 0';
-            customIlliteracyTitle.innerText = '通用字詞轉換（可透過通配符設置生效網址範圍）：';
+            customIlliteracyTitle.innerText = '通用字詞轉換（可透過通配符設定生效網址範圍）：';
             let addNewGlob2 = document.createElement('button');
             addNewGlob2.innerText = '添加生效網站';
             addNewGlob2.addEventListener("click", function(e) {
@@ -1650,7 +1646,7 @@
             });
             let buttonCon = document.createElement('div');
             let saveBtn = document.createElement('button');
-            saveBtn.innerText = '保存設置';
+            saveBtn.innerText = '保存設定';
             saveBtn.style.display = 'block';
             saveBtn.style.fontSize = 'x-large';
             saveBtn.style.fontWeight = 'bold';
@@ -1723,7 +1719,7 @@
                 storage.setItem('sc2tcCombTree', "");
                 storage.setItem('tc2scCombTree', "");
                 storage.setItem('fuckIlliteracyTree', "");
-                alert('保存設置成功！');
+                alert('保存設定成功！');
                 location.reload();
             });
             buttonCon.appendChild(saveBtn);
@@ -1756,7 +1752,7 @@
             baseCon.appendChild(testTitle);
             let testInput = document.createElement('textarea');
             testInput.style.width = '100%';
-            testInput.setAttribute('placeholder', "輸入文字后，按下快捷鍵");
+            testInput.setAttribute('placeholder', "輸入文字后，按下快速鍵");
             testInput.onclick = e => {
                 if (!testInput.style.height) {
                     testInput.style.height = "80vh";
@@ -1885,8 +1881,7 @@
             sc2tcCombTree = values.sc2tcCombTree;
             tc2scCombTree = values.tc2scCombTree;
         } else {
-            for(let key in sc2tcComb){
-                let value=sc2tcComb[key];
+            function makeCombTree(key, value) {
                 let curTree=sc2tcCombTree;
                 for(let i=0;i<key.length;i++){
                     let newTree={};
@@ -1916,6 +1911,16 @@
                     }else{
                         curTree=branch;
                     }
+                }
+            }
+            for(let key in sc2tcComb){
+                let value=sc2tcComb[key];
+                if (Array.isArray(value)) {
+                    value.forEach(v => {
+                        makeCombTree(key, v);
+                    });
+                } else {
+                    makeCombTree(key, value);
                 }
             }
             storage.setItem("sc2tcCombTree", sc2tcCombTree);
