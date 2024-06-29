@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6.9
+// @version      0.7.3
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -13,6 +13,7 @@
 (function() {
     'use strict';
 
+    const enable1024sDelay = true;
     const defaultReply = "1024 感謝分享";
     var helper = {
         addCss: function(css) {
@@ -140,7 +141,7 @@
                 });
                 $('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
             }
-            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 50px; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child { height: 200px; }');
+            helper.addCss('div#main>form[name="FORM"] { position: fixed; bottom: 0; left: 0; background: #f9f9ec; white-space: nowrap; } form[name="FORM"] tbody>tr:last-child { height: 0px; display: block; overflow: hidden; transition: height 0.5s ease; } form[name="FORM"]:hover tbody>tr:last-child,form[name="FORM"]:focus-within tbody>tr:last-child { height: 200px; }');
             var submitBtn = $('form[name="FORM"] .btn[name="Submit"]');
             var textarea = $('form[name="FORM"] [name="atc_content"]');
             if (submitBtn.length && textarea.length) {
@@ -153,9 +154,7 @@
                     var $tLike = $(".t_like");
                     if ($tLike.length) {
                         var $tLikeClone = $tLike.clone();
-                        if (!$tLike.isInViewport()) {
-                            $("#conttpc").prepend($tLikeClone);
-                        }
+                        $("#conttpc").prepend($tLikeClone);
 
                         $(window).on("resize scroll", function() {
                             if ($tLike.isInViewport()) {
@@ -191,6 +190,7 @@
                     quickReply.attr('title', replyStr + "（右击修改）");
                     var formTitle = $("form td.h>b").text();
                     function setCountdown() {
+                        if (!enable1024sDelay) return;
                         quickReply.attr("disabled", true);
                         quickReply.css("background", "initial");
                         var leftTime = parseInt((lastReplyTime - Date.now()) / 1000 + 1025);
@@ -223,7 +223,9 @@
                             $("form td.h").css("background", "");
                         }, 2000);
                     }
+                    let rushSuccess = false;
                     function replySuccess() {
+                        rushSuccess = true;
                         lastReplyTime = Date.now();
                         $.cookie('lastReplyTime', lastReplyTime, { expires: 7, path: '/' });
                         if (isCheckIn) {
@@ -264,6 +266,8 @@
                             success: function (res) {
                                 if (res.indexOf("發貼完畢點擊進入主題列表") == -1) {
                                     replyFail();
+                                    alert($(res).find("ol").text() || $(res).find("center").text());
+                                    quickReply.removeAttr("disabled");
                                 } else {
                                     replySuccess();
                                 }
@@ -277,28 +281,39 @@
                     if (isCheckIn && isRushTime()) {
                         let reachRushMinute = false;
                         var rushReply = $( `<input style="margin-left: 10px" class="btn" type="button" value="定時搶簽">` );
+                        function requestRush(gap) {
+                            if (rushSuccess) return;
+                            submitReply();
+                            setInterval(() => {
+                                if (!rushSuccess) {
+                                    requestRush(gap);
+                                }
+                            }, gap);
+                        }
                         function checkRush(timeGap) {
                             setTimeout(() => {
                                 let date = new Date();
                                 if (date.getHours() == 0) {
                                     textarea.val("今日签到");
                                     submitReply();
-                                    let rushTimes = 10;
+                                    let rushTimes = 5;
                                     let rushTimer = setInterval(() => {
                                         if (--rushTimes > 0) {
-                                            submitReply();
+                                            requestRush(100);
                                         } else {
                                             clearInterval(rushTimer);
                                             rushReply.val("搶簽結束");
                                         }
-                                    }, 1);
+                                    }, 5);
                                 } else {
                                     if (reachRushMinute) {
-                                        if (date.getSeconds() > 57) {
+                                        if (date.getSeconds() == 59) {
+                                            checkRush(1);
+                                        } else if (date.getSeconds() > 57) {
                                             checkRush(5);
                                         } else if (date.getSeconds() > 50) {
                                             checkRush(500);
-                                        } else if (date.getSeconds() > 30) {
+                                        } else {
                                             checkRush(1000);
                                         }
                                     } else if (date.getHours() == 23 && date.getMinutes() == 59) {
@@ -310,11 +325,12 @@
                                 }
                             }, timeGap);
                         }
-                        rushReply.insertAfter( "form .btn" );
+                        rushReply.insertAfter( "form .btn:last-child" );
                         rushReply.click(function() {
                             checkRush(5000);
                             rushReply.attr("disabled", true);
                             rushReply.val("搶簽中……");
+                            rushSuccess = false;
                         });
                     }
                     document.FORM.onsubmit = function(event) {

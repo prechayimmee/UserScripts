@@ -1,6 +1,6 @@
-[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.11](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
+[☯️](https://greasyfork.org/scripts/438684 "Install from greasyfork")東方永頁機 [v.1.9.37.65](https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js "Latest version")
 ==
-*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !* [**📖Guide**](https://pagetual.hoothin.com/ "Wiki site for pagetual")
+*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
 <a name="otherconfig" title="For restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧CONFIGURATION PAGE🔧</strong></a>
 
@@ -50,6 +50,81 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
   }
 ]
 ```
+
+ <details>
+<summary><h3>Pagetual User-defined rules cases</h3></summary>
+     
++ [TerenceCK pagetualRules](https://github.com/TerenceCK/pagetualRules/blob/main/happymh.json)
++ [Liu's-Pagetual-Rule](https://github.com/JPLiu/TestFiles/blob/main/UserScripts/Pagetual/Liu's-Pagetual-Rule.json)
++ [skofkyo pagetualRules_EX](https://github.com/skofkyo/AutoPager/blob/main/pagetualRules_EX.json)
++ [MovByte eToolsPagetual](https://gist.github.com/MovByte/a585456490d2e1c8ca815871db0887f7)
+ </details>
+
+ <details>
+<summary>
+<h3>Call functionality from other extensions</h3>
+</summary>
+
+1. **Immediately load next page**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "nextPage"
+detail: The number of pages to turn, 0 for unlimited, -1 to stop
+```
+
+> For example:
+```
+window.postMessage({ action: 'nextPage', command: 'patetual', detail: 5 }, '*');
+```
+
+2. **Set configuration**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "config"
+detail: The configuration item to be changed
+```
+
+> For example:
+```
+window.postMessage({ action: 'config', command: 'patetual', detail: {enableWhiteList: true} }, '*');
+```
+
+3. **Click load more button**
+
+> Please send the following message body:
+```
+command: "pagetual"
+action: "loadMore"
+detail: null by default, 0 for unlimited checking load more button, -1 to stop
+```
+
+> For example:
+```
+window.postMessage({ action: 'loadMore', command: 'patetual', detail: 0 }, '*');
+```
++ **Receive messages**
+
+> When the next page is inserted, the following message body will be sent:
+```
+{
+  action: 'insert',
+  command: 'patetual'
+}
+```
+
+> When the last page has been reached, the following message body will be sent:
+```
+{
+  action: 'lastPage',
+  command: 'patetual'
+}
+```
+
+ </details>
 
 name
 --

@@ -1,11 +1,13 @@
 起點等都推薦用這個腳本[【小說】下載腳本](https://github.com/dodying/UserJs/tree/master/novel/novelDownloader)，遇到沒人願意適配的小站再考慮我的腳本。
 
+勿用于版權站，如造成侵權或對象站點損失，後果自負。
+
 輕量級抓取腳本，用於下載網頁小説或其他文字內容，理論上通用於任何靜態寫入正文的小說網站、論壇、貼吧等而無需規則。
 
 腳本會自動檢索頁面中的主要內容並下載（<del>省得複製完gal攻略還要手動逐條刪除「某某某13級頭銜水龍王發表於X年X月X日來自XX客戶端」</del>）。
 如果位於小說目錄頁會遍歷所有章節並排序拼接後存為TXT文檔。
 
-[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts)
+[![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts#StarMe) ⭐[Star Me](https://github.com/hoothin/UserScripts#StarMe)
 
 ---
 
@@ -14,13 +16,15 @@
 + 按下 `CTRL+F9` 或點擊命令菜單
 + 按下 `SHIFT+CTRL+F9` 忽略目錄，僅下載當前頁
 
-若是遇到下載出錯的站點，可隨意提交issue至[Github](https://github.com/hoothin/UserScripts/issues)
+若是遇到下載出錯的站點，可隨意提交 issue 至 [Github](https://github.com/hoothin/UserScripts/)。請幫我點亮 Star !
 
 *對你有幫助的話，可透過 [![i](https://static.afdiancdn.com/favicon.ico) 愛發電](https://afdian.net/a/hoothin) 或者 [![i](https://ko-fi.com/favicon-32x32.png) Ko-fi](https://ko-fi.com/hoothin) 請我喝一杯奶茶。歡迎加入 [💬Discord 群組](https://discord.com/invite/keqypXC6wD)。*
 
 ![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
 [怠惰小説下載器 ZIP 擴充](https://greasyfork.org/scripts/476943) 下載時分章節保存 TXT 並打包為 ZIP
+
+[圖片驗證碼辨識](https://github.com/hoothin/ImgCodeCheck) 開啟`保留內文圖片的網址`後配合 ZIP 擴充可自動轉換圖片文字，詳閱[愛發電](https://afdian.net/p/c7fc3abc8e8411ee9b1852540025c377)
 
 ## 怠惰心法
 <del>名喚怠惰，實為勤勉</del>
@@ -79,15 +83,12 @@
   - 透過程式碼生成
     `a.links@@@@@@next:{return await getNextElement()}` 可以用多層 `{}` 來避免程式碼中出現大括號產生的問題
 
-### 💰付費咨詢
-看完自設教程還是搞不定也可選擇付費咨詢。非版權站，且服務器沒有爬蟲限制的，可[聯絡我](mailto:rixixi@gmail.com)指導規則編寫，$10/￥50 一次
-
 <a id="example"></a>
 ### 自定義下載範例，打開目錄頁點擊【自定義下載】粘貼後使用，僅爲規則實例引導，有出入請自行修改
 + [📕po18](https://www.po18.tw/books/755779/articles)
 > 章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  ``` css
-.l_chaptname>a @@ articles @@ articlescontent
+.l_chaptname>a@@articles@@articlescontent
  ```
  > 如果需要下載已購買的vip章節，用這個規則
  ``` javascript
@@ -96,7 +97,7 @@
 + [📕pixiv](https://www.pixiv.net/novel/series/7807554)
 > p站小說的章節選擇器為`main>section ul>li div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta裡，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
  ``` javascript
-main>section ul>li div>a @@@@@@ var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
+main>section ul>li div>a@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
 + [📕紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)
 > 這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載
@@ -112,7 +113,7 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  .chapter-table>a@@@@@@fetch(data.querySelector("div.box-border>script").innerHTML.match(/\/chapter\/(.*?)"/)[0]) .then(response => response.text()) .then(d => {eval("window.txtObj="+d.match(/_txt_call\((.*)\);/)[1]);for(k in txtObj.replace){txtObj.content=txtObj.content.replaceAll(txtObj.replace[k],k)}cb(unescape(txtObj.content.replace(/&#x(.*?);/g,'%u$1')));});return false;
  ```
 + [📕某乎](https://www.某乎.com/xen/market/remix/paid_column/1465280726219968513)
-> 此頁章節沒有連結，使用以下規則可獲取章節連結，僅可下載免費可見内容，付費内容請自充會員
+> 此頁章節沒有連結，使用以下規則可獲取章節連結，僅可下載免費可見内容，付費内容請自充會員。具體操作請自行摸索，後果自負。
  ``` javascript
  [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=`https://${location.host}/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
  ```
@@ -172,7 +173,7 @@ body>>let title="俞亮/時光",chs=[];item.querySelectorAll("ul.list>li>a").for
  ``` css
  a.chapter-item
  ```
-> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若有變動不再跟進。
+> 礙於法律問題，不會給出具體規則。只因爲有朋友詢問，所以手癢分析了一下，給出相關思路以供技術研究，請勿來問我要現成規則。後期如若有變動不再跟進。具體操作請自行摸索，後果自負。
 > 首先，某瓣的内頁只有部分内容是明文，全文被加密了。每次訪問内頁，它會先檢索本地存儲中是否存在密文，如果不存在的話就去抓取密文，密文為 digest 的 sha256 加密得到。
 > 因此步驟如下，首先調用 article_v2/get_reader_data, 透過表單形式提供當前章節的 aid（即爲 chapter 后的數字串），獲取 json.data 即爲密文，然後透過上方的解密方法獲取正文。正文位於 posts[0].contents 中，遍歷后讀取 data.text[0].content 拼接。
 > 解密方法如下：
@@ -214,6 +215,11 @@ function decode(t) {
 > 簡單的分頁，可以使用簡化規則，傳入内分頁的選擇器，其餘交給脚本自動處理。
 ``` javascript
 .list-group-item>div>a.text-decoration-none@@@@@@next:{[aria-label='后一页']+a}
+```
++ [📕又一個頂點小説網](https://www.booktxts.com/book/77/77540/2.html)
+> 首先遍歷目錄，生成實際鏈接，再分析頁内代碼，調用網站自身的解密函數解密内容，最後分析下一頁鏈接，把分頁内容補上。
+``` javascript
+.yanqing_list>li>a>>item.href=item.getAttribute('onclick').replace(/.*\((.*)\)/, location.href.replace(/\d+\.html/,'').replace('/book/','/books/')+'$1.html');return item;@@@@@@let content='';let anylize=doc=>{let contentTags=doc.body.innerHTML.match(/<script>document\.writeln\(qsbs\.bb\('(.*?)'\)\);<\/script>/g);if(!contentTags)return cb(content);contentTags.forEach(c=>{content+=qsbs.bb(c.replace("<script>document.writeln(qsbs.bb('",'').replace("'));</script>",'')).replace(/<.?p>/g,'')+'\n'}); let nextLink=doc.querySelector('.read_btn>a:last-child'); if(/\_\d+\.html/.test(nextLink.href)){ let fetchNext=()=>{return fetch(nextLink.href).then(res => res.text()).then(d=>{let _doc = document.implementation.createHTMLDocument(''); _doc.documentElement.innerHTML = d;anylize(_doc);})}; fetchNext().catch(e=>{fetchNext()}); }else{cb(content);} };let script=document.createElement('script');script.src='https://www.booktxts.com/yanqing/pc/js/yueduqsbs.js';script.type = "text/javascript";document.body.appendChild(script);script.onload=e=>{anylize(doc);};return false;
 ```
 
 ### 測試網頁

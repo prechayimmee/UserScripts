@@ -4,11 +4,11 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3
-// @description  Fetch and download main textual content from the current page, provide special support for novels
-// @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
-// @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
-// @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
+// @version      2.8.3.7
+// @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
+// @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
+// @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
+// @description:ja     軽量なWebスクレイピングスクリプト。ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
 // @author       hoothin
 // @match        http://*/*
 // @match        https://*/*
@@ -220,12 +220,12 @@ if (window.top != window.self) {
     'use strict';
     var indexReg=/^(\w.*)?PART\b|^Prologue|^(\w.*)?Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*[·言章]|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+[\s\.、,，）\-_：:][^\d#\.]|^(\d|\s|\.)*[第（]?\s*[\d〇零一二两三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/^\s*(下一[页頁张張]|next\s*page|次のページ)/i;
-    var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
+    var lang=navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
     var processFunc, nextPageFunc;
-    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-    var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
+    const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
+    var win=(typeof unsafeWindow=='undefined'?window:unsafeWindow);
     switch (lang){
         case "zh-CN":
         case "zh-SG":
@@ -245,8 +245,9 @@ if (window.top != window.self) {
                 abort:"跳过此章",
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
-                downThreadNum:"设置同时下载的线程数",
+                downThreadNum:"设置同时下载的线程数，负数为单线程下载间隔",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
+                maxDlPerMin:"每分钟最大下载数",
                 reSortDefault:"默认按页面中位置排序章节",
                 reverseOrder:"反转章节排序",
                 saveBtn:"保存设置",
@@ -272,6 +273,7 @@ if (window.top != window.self) {
                 downloadCustomShortcut:"自定义下载"
             };
             break;
+        case "zh":
         case "zh-TW":
         case "zh-HK":
             i18n={
@@ -290,8 +292,9 @@ if (window.top != window.self) {
                 abort:"跳過此章",
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
-                downThreadNum:"設置同時下載的綫程數",
+                downThreadNum:"設置同時下載的綫程數，負數為單線程下載間隔",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
+                maxDlPerMin:"每分鐘最大下載數",
                 reSortDefault:"預設依頁面中位置排序章節",
                 reverseOrder:"反轉章節排序",
                 saveBtn:"儲存設定",
@@ -317,6 +320,67 @@ if (window.top != window.self) {
                 downloadCustomShortcut:"自設下載"
             };
             break;
+        case "ar":
+        case "ar-AE":
+        case "ar-BH":
+        case "ar-DZ":
+        case "ar-EG":
+        case "ar-IQ":
+        case "ar-JO":
+        case "ar-KW":
+        case "ar-LB":
+        case "ar-LY":
+        case "ar-MA":
+        case "ar-OM":
+        case "ar-QA":
+        case "ar-SA":
+        case "ar-SY":
+        case "ar-TN":
+        case "ar-YE":
+            i18n={
+                fetch: "تحميل",
+                info: "المصدر: #t#\nتم تنزيل الـ TXT بواسطة 'DownloadAllContent'",
+                error: "فشل في تحميل الفصل الحالي",
+                downloading: "......%s تحميل<br>صفحات متبقية %s صفحات تم تحميلها، هناك %s",
+                complete: "صفحات في المجموع %s اكتمل! حصلت على",
+                del: "لتجاهل CSS تعيين محددات",
+                custom: "تحميل مخصص",
+                customInfo: "لروابط الفصول sss إدخال الروابط أو محددات",
+                reSort: "إعادة الترتيب حسب العنوان",
+                reSortUrl: "إعادة الترتيب حسب الروابط",
+                setting: "فتح الإعدادات",
+                searchRule: "قاعدة البحث",
+                abort: "إيقاف",
+                save: "حفظ",
+                saveAsMd: "Markdown حفظ كـ",
+                downThreadNum: "تعيين عدد الخيوط للتحميل",
+                customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
+                maxDlPerMin:"الحد الأقصى لعدد التنزيلات في الدقيقة",
+                reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
+                reverseOrder: "عكس ترتيب الفصول",
+                saveBtn: "حفظ الإعدادات",
+                saveOk: "تم الحفظ",
+                nextPage: "التحقق من الصفحة التالية في الفصل",
+                nextPageReg: "مخصص للصفحة التالية RegExp",
+                retainImage: "الاحتفاظ بعنوان الصورة إذا كانت هناك صور في النص",
+                minTxtLength: "المحاولة مرة أخرى عندما يكون طول المحتوى أقل من هذا",
+                showFilterList: "عرض نافذة التصفية والترتيب قبل التحميل",
+                ok: "موافق",
+                close: "إغلاق",
+                dacSortByPos: "الترتيب حسب الموقع",
+                dacSortByUrl: "الترتيب حسب الرابط",
+                dacSortByName: "الترتيب حسب الاسم",
+                reverse: "عكس الاختيار",
+                dacUseIframe: "لتحميل المحتوى (بطيء) iframe استخدام",
+                dacSaveAsZip: "zip حفظ كـ",
+                dacSetCustomRule: "تعديل القواعد",
+                dacAddUrl: "إضافة فصل",
+                dacStartDownload: "تحميل المحدد",
+                downloadShortcut: "تحميل الفصل",
+                downloadSingleShortcut: "تحميل صفحة واحدة",
+                downloadCustomShortcut: "تحميل مخصص"
+            };
+            break;
         default:
             i18n={
                 fetch:"Download",
@@ -334,8 +398,9 @@ if (window.top != window.self) {
                 abort:"Abort",
                 save:"Save",
                 saveAsMd:"Save as Markdown",
-                downThreadNum:"Set threadNum for download",
+                downThreadNum:"Set threadNum for download, negative means interval of single thread",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
+                maxDlPerMin:"Maximum number of downloads per minute",
                 reSortDefault: "Default sort by position in the page",
                 reverseOrder:"Reverse chapter ordering",
                 saveBtn:"Save Setting",
@@ -611,6 +676,7 @@ if (window.top != window.self) {
                     float: initial;
                     background-image: initial;
                     height: fit-content;
+                    color: black;
                 }
                 #filterListContainer.customRule .dacCustomRule {
                     display: flex;
@@ -747,18 +813,60 @@ if (window.top != window.self) {
         document.body.appendChild(shadowContainer);
         let shadow = shadowContainer.attachShadow({ mode: "open" });
         shadow.appendChild(txtDownContent);
-        txtDownContent.innerHTML=createHTML(`
-            <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-191px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-                <div id="txtDownWords" style="position:absolute;width:275px;height: 90px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
+        txtDownContent.innerHTML = createHTML(`
+            <style>
+            #txtDownContent>div{
+              font-size:16px;
+              color:#333333;
+              width:362px;
+              height:110px;
+              position:fixed;
+              left:50%;
+              top:50%;
+              margin-top:-25px;
+              margin-left:-191px;
+              z-index:100000;
+              background-color:#ffffff;
+              border:1px solid #afb3b6;
+              border-radius:10px;
+              opacity:0.95;
+              filter:alpha(opacity=95);
+              box-shadow:5px 5px 20px 0px #000;
+            }
+            #txtDownWords{
+              position:absolute;
+              width:275px;
+              height: 90px;
+              max-height: 90%;
+              border: 1px solid #f3f1f1;
+              padding: 8px;
+              border-radius: 10px;
+              overflow: auto;
+            }
+            #txtDownQuit{
+              width: 30px;height: 30px;border-radius: 30px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;
+            }
+            #txtDownQuit>span{
+              height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;background: initial; float: initial;
+            }
+            #txtDownQuit+div{
+              position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px;
+            }
+            #txtDownQuit+div>button{
+              background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;overflow: hidden;
+            }
+            </style>
+            <div>
+                <div id="txtDownWords">
                     Analysing......
                 </div>
-                <div id="txtDownQuit" style="width: 30px;height: 30px;border-radius: 30px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
-                    <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;background: initial; float: initial;">╳</span>
+                <div id="txtDownQuit">
+                    <span>╳</span>
                 </div>
-                <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
-                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 16px;">${getI18n('abort')}</button>
-                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;">${getI18n('save')}</button>
-                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;overflow: hidden;" title="${getI18n('saveAsMd')}">Markdown</button>
+                <div>
+                    <button id="abortRequest" style="display:none;">${getI18n('abort')}</button>
+                    <button id="tempSaveTxt">${getI18n('save')}</button>
+                    <button id="saveAsMd" title="${getI18n('saveAsMd')}">Markdown</button>
                 </div>
             </div>`);
         txtDownWords=txtDownContent.querySelector("#txtDownWords");
@@ -773,11 +881,11 @@ if (window.top != window.self) {
     function saveContent() {
         if (win.downloadAllContentSaveAsZip && saveAsZip) {
             win.downloadAllContentSaveAsZip(rCats, i18n.info.replace("#t#", location.href), content => {
-                saveAs(content, document.title + ".zip");
+                saveAs(content, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".zip");
             });
         } else {
             var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, document.title + ".txt");
+            saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".txt");
         }
     }
 
@@ -800,7 +908,7 @@ if (window.top != window.self) {
                 txt += '\n\n'+cat;
             });
             var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, document.title+".md");
+            saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".md");
         }
     }
 
@@ -841,10 +949,13 @@ if (window.top != window.self) {
             }
         }
         rCats=[];
+        const minute=60000;
         var minTxtLength=GM_getValue("minTxtLength") || 100;
         var customTitle=GM_getValue("customTitle");
         var disableNextPage=!!GM_getValue("disableNextPage");
         var customNextPageReg=GM_getValue("nextPageReg");
+        var maxDlPerMin=GM_getValue("maxDlPerMin") || 0;
+        var dlCount=0;
         if (customNextPageReg) {
             try {
                 innerNextPage = new RegExp(customNextPageReg);
@@ -856,6 +967,21 @@ if (window.top != window.self) {
         // var j=0,rCats=[];
         var downIndex=0,downNum=0,downOnce=function(wait){
             if(downNum>=aEles.length)return;
+            if(maxDlPerMin){
+                if(dlCount===-1){
+                    setTimeout(() => {
+                        downOnce(wait);
+                    }, minute);
+                    return;
+                }else if(dlCount>=maxDlPerMin){
+                    dlCount=-1;
+                    setTimeout(() => {
+                        dlCount=0;
+                        downOnce(wait);
+                    }, minute);
+                    return;
+                }else dlCount++;
+            }
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
             let request=(aTag, curIndex)=>{
@@ -951,7 +1077,7 @@ if (window.top != window.self) {
                                 downNum--;
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + validTimes * 1000);
                                 return;
                             }
                             if (wait) {
@@ -965,7 +1091,7 @@ if (window.top != window.self) {
                             if(tryTimes++ < 5){
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + tryTimes * 1000);
                                 return;
                             }
                             downIndex++;
@@ -978,12 +1104,12 @@ if (window.top != window.self) {
                             } else downOnce();
                         },
                         ontimeout: function(e) {
-                            console.warn("timeout: times="+tryTimes+" url="+aTag.href);
+                            console.warn("timeout: times="+(tryTimes+1)+" url="+aTag.href);
                             //console.log(e);
                             if(tryTimes++ < 5){
                                 setTimeout(() => {
                                     requestDoc();
-                                }, 500);
+                                }, Math.random() * 500 + tryTimes * 1000);
                                 return;
                             }
                             downIndex++;
@@ -998,7 +1124,7 @@ if (window.top != window.self) {
                     });
                 };
                 if (useIframe) {
-                    let iframe = document.createElement('iframe'), inited = false;
+                    let iframe = document.createElement('iframe'), inited = false, failedTimes = 0;
                     iframe.name = 'pagetual-iframe';
                     iframe.width = '100%';
                     iframe.height = '1000';
@@ -1009,7 +1135,7 @@ if (window.top != window.self) {
                         if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
                         if (inited) return;
                         inited = true;
-                        function checkIframe() {
+                        async function checkIframe() {
                             try {
                                 let doc = iframe.contentDocument || iframe.contentWindow.document;
                                 if (!doc || !doc.body) {
@@ -1020,11 +1146,47 @@ if (window.top != window.self) {
                                 }
                                 doc.body.scrollTop = 9999999;
                                 doc.documentElement.scrollTop = 9999999;
-                                if (!processFunc && validTimes++ > 5) {
+                                if (!processFunc && validTimes++ > 5 && failedTimes++ < 2) {
                                     iframe.src = iframe.src;
                                     validTimes = 0;
                                     inited = false;
                                     return;
+                                }
+                                let base = doc.querySelector("base");
+                                let nextPages = !disableNextPage && !processFunc && await checkNextPage(doc, base ? base.href : aTag.href);
+                                if (nextPages) {
+                                    if (!nextPages.length) nextPages = [nextPages];
+                                    nextPages.forEach(nextPage => {
+                                        var inArr=false;
+                                        for(var ai=0;ai<aEles.length;ai++){
+                                            if(aEles[ai].href==nextPage.href){
+                                                inArr=true;
+                                                break;
+                                            }
+                                        }
+                                        if(!inArr){
+                                            nextPage.innerText=aTag.innerText+"\t>>";
+                                            aEles.push(nextPage);
+                                            let targetIndex = curIndex;
+                                            for(let a=0;a<insertSigns.length;a++){
+                                                let signs=insertSigns[a],breakSign=false;
+                                                if(signs){
+                                                    for(let b=0;b<signs.length;b++){
+                                                        let sign=signs[b];
+                                                        if(sign==curIndex){
+                                                            targetIndex=a;
+                                                            breakSign=true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if(breakSign)break;
+                                            }
+                                            let insertSign = insertSigns[targetIndex];
+                                            if(!insertSign)insertSigns[targetIndex] = [];
+                                            insertSigns[targetIndex].push(aEles.length-1);
+                                        }
+                                    });
                                 }
                                 if (customTitle) {
                                     try {
@@ -1038,7 +1200,7 @@ if (window.top != window.self) {
                                 }
                                 downIndex++;
                                 downNum++;
-                                let validData = processDoc(curIndex, aTag, doc, "", true);
+                                let validData = processDoc(curIndex, aTag, doc, "", failedTimes < 2);
                                 if (!validData) {
                                     downIndex--;
                                     downNum--;
@@ -1179,19 +1341,6 @@ if (window.top != window.self) {
             downOnce(-downThreadNum * 1000);
             if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
         }
-
-        /*for(let i=0;i<aEles.length;i++){
-            let aTag=aEles[i];
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: aTag.href,
-                overrideMimeType:"text/html;charset="+document.charset,
-                onload: function(result) {
-                    var doc = getDocEle(result.responseText);
-                    processDoc(i, aTag, doc);
-                }
-            });
-        }*/
     }
 
     function canonicalUri(src, baseUrl) {
@@ -1249,6 +1398,7 @@ if (window.top != window.self) {
 
     function getPageContent(doc, cb, url){
         if(!doc)return i18n.error;
+        if(doc.body && !doc.body.children.length)return doc.body.innerText;
         if(processFunc){
             return processFunc(doc, cb, url);
         }
@@ -1532,7 +1682,7 @@ if (window.top != window.self) {
                     })
                     exmpEles.forEach(e=>{
                         var cssSelStr="a",pa=e.parentNode,excludeTxt=excludeTxts[e];
-                        if(e.className)cssSelStr+="."+CSS.escape(e.className);
+                        if(e.className)cssSelStr+="."+CSS.escape(e.className.replace(/\s+/g, ".")).replace(/\\\./g, '.');
                         while(pa && pa.nodeName!="BODY"){
                             cssSelStr=pa.nodeName+">"+cssSelStr;
                             pa=pa.parentNode;
@@ -1619,6 +1769,11 @@ if (window.top != window.self) {
                             iframeInit = iframeInit[1];
                         }
                     }
+                }
+                let charsetMatch = evalCode.match(/^charset:{(.+?)}/);
+                if (charsetMatch) {
+                    charset = charsetMatch[1];
+                    evalCode = evalCode.replace(charsetMatch[0], "");
                 }
                 let nextMatch = evalCode.match(/^next:(\{+)/);
                 if (nextMatch) {
@@ -1850,6 +2005,9 @@ if (window.top != window.self) {
         downloadShortcutInput.setAttribute("readonly", "true");
         downloadSingleShortcutInput.setAttribute("readonly", "true");
         downloadCustomShortcutInput.setAttribute("readonly", "true");
+        downloadShortcutInput.style.cursor = "cell";
+        downloadSingleShortcutInput.style.cursor = "cell";
+        downloadCustomShortcutInput.style.cursor = "cell";
         let keydonwHandler = e => {
             if (e.key) {
                 if (e.key == "Backspace") {
@@ -1868,6 +2026,7 @@ if (window.top != window.self) {
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
         let downThreadNum = createOption(i18n.downThreadNum, GM_getValue("downThreadNum") || "20", "number");
+        let maxDlPerMin = createOption(i18n.maxDlPerMin, GM_getValue("maxDlPerMin") || "0", "number");
         let customTitle = createOption(i18n.customTitle, GM_getValue("customTitle") || "");
         customTitle.setAttribute("placeHolder", "title");
         let minTxtLength = createOption(i18n.minTxtLength, GM_getValue("minTxtLength") || "100", "number");
@@ -1880,10 +2039,10 @@ if (window.top != window.self) {
         reSortUrl.name = "sort";
         contentSort.name = "sort";
         let reverse = createOption(i18n.reverseOrder, !!GM_getValue("reverse"), "checkbox");
-        let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
         let disableNextPage = !!GM_getValue("disableNextPage");
         let nextPage = createOption(i18n.nextPage, !disableNextPage, "checkbox");
         let nextPageReg = createOption(i18n.nextPageReg, GM_getValue("nextPageReg") || "");
+        let retainImage = createOption(i18n.retainImage, !!GM_getValue("retainImage"), "checkbox");
         nextPageReg.setAttribute("placeHolder", "^\\s*(下一[页頁张張]|next\\s*page|次のページ)");
         if (disableNextPage) {
             nextPageReg.parentNode.style.display = "none";
@@ -1897,8 +2056,9 @@ if (window.top != window.self) {
         insertPos.parentNode.insertBefore(saveBtn, insertPos);
         saveBtn.onclick = e => {
             GM_setValue("selectors", delSelector.value || "");
-            GM_setValue("downThreadNum", downThreadNum.value || 20);
-            GM_setValue("minTxtLength", minTxtLength.value || 100);
+            GM_setValue("downThreadNum", parseInt(downThreadNum.value || 20));
+            GM_setValue("maxDlPerMin", parseInt(maxDlPerMin.value || 20));
+            GM_setValue("minTxtLength", parseInt(minTxtLength.value || 100));
             GM_setValue("customTitle", customTitle.value || "");
             if (reSortUrl.checked) {
                 GM_setValue("contentSortUrl", true);
@@ -1925,15 +2085,6 @@ if (window.top != window.self) {
 
     function setDel(){
         GM_openInTab(configPage + "#操作說明", {active: true});
-        /*var selValue=GM_getValue("selectors");
-        var selectors=prompt(i18n.del,selValue?selValue:"");
-        GM_setValue("selectors",selectors);
-        selValue=GM_getValue("downThreadNum");
-        var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
-        GM_setValue("downThreadNum",downThreadNum);
-        var sortByUrl=window.confirm(i18n.reSortUrl);
-        GM_setValue("contentSortUrl",sortByUrl);
-        if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));*/
     }
 
     function checkKey(shortcut1, shortcut2) {
