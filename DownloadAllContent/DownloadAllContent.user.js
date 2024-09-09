@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.8.3.7
+// @version      2.8.3.13
 // @description  Lightweight web scraping script. Fetch and download main textual content from the current page, provide special support for novels
 // @description:zh-CN  通用网站内容爬虫抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容爬蟲抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -246,6 +246,7 @@ if (window.top != window.self) {
                 save:"保存当前",
                 saveAsMd:"存为 Markdown",
                 downThreadNum:"设置同时下载的线程数，负数为单线程下载间隔",
+                enableTouch:"在移动端按→↓←↑的方向滑动屏幕画正方形立即开始下载",
                 customTitle:"自定义章节标题，输入内页文字对应选择器",
                 maxDlPerMin:"每分钟最大下载数",
                 reSortDefault:"默认按页面中位置排序章节",
@@ -293,6 +294,7 @@ if (window.top != window.self) {
                 save:"保存當前",
                 saveAsMd:"存爲 Markdown",
                 downThreadNum:"設置同時下載的綫程數，負數為單線程下載間隔",
+                enableTouch:"在行動端按→↓←↑的方向滑動螢幕畫方立即開始下載",
                 customTitle:"自訂章節標題，輸入內頁文字對應選擇器",
                 maxDlPerMin:"每分鐘最大下載數",
                 reSortDefault:"預設依頁面中位置排序章節",
@@ -338,47 +340,49 @@ if (window.top != window.self) {
         case "ar-TN":
         case "ar-YE":
             i18n={
-                fetch: "تحميل",
-                info: "المصدر: #t#\nتم تنزيل الـ TXT بواسطة 'DownloadAllContent'",
-                error: "فشل في تحميل الفصل الحالي",
-                downloading: "......%s تحميل<br>صفحات متبقية %s صفحات تم تحميلها، هناك %s",
-                complete: "صفحات في المجموع %s اكتمل! حصلت على",
-                del: "لتجاهل CSS تعيين محددات",
-                custom: "تحميل مخصص",
-                customInfo: "لروابط الفصول sss إدخال الروابط أو محددات",
-                reSort: "إعادة الترتيب حسب العنوان",
-                reSortUrl: "إعادة الترتيب حسب الروابط",
-                setting: "فتح الإعدادات",
-                searchRule: "قاعدة البحث",
-                abort: "إيقاف",
-                save: "حفظ",
-                saveAsMd: "Markdown حفظ كـ",
-                downThreadNum: "تعيين عدد الخيوط للتحميل",
-                customTitle: "تخصيص عنوان الفصل، إدخال المحدد في الصفحة الداخلية",
-                maxDlPerMin:"الحد الأقصى لعدد التنزيلات في الدقيقة",
-                reSortDefault: "الترتيب الافتراضي حسب الموقع في الصفحة",
-                reverseOrder: "عكس ترتيب الفصول",
-                saveBtn: "حفظ الإعدادات",
-                saveOk: "تم الحفظ",
-                nextPage: "التحقق من الصفحة التالية في الفصل",
-                nextPageReg: "مخصص للصفحة التالية RegExp",
-                retainImage: "الاحتفاظ بعنوان الصورة إذا كانت هناك صور في النص",
-                minTxtLength: "المحاولة مرة أخرى عندما يكون طول المحتوى أقل من هذا",
-                showFilterList: "عرض نافذة التصفية والترتيب قبل التحميل",
-                ok: "موافق",
-                close: "إغلاق",
-                dacSortByPos: "الترتيب حسب الموقع",
-                dacSortByUrl: "الترتيب حسب الرابط",
-                dacSortByName: "الترتيب حسب الاسم",
-                reverse: "عكس الاختيار",
-                dacUseIframe: "لتحميل المحتوى (بطيء) iframe استخدام",
-                dacSaveAsZip: "zip حفظ كـ",
-                dacSetCustomRule: "تعديل القواعد",
-                dacAddUrl: "إضافة فصل",
-                dacStartDownload: "تحميل المحدد",
-                downloadShortcut: "تحميل الفصل",
-                downloadSingleShortcut: "تحميل صفحة واحدة",
-                downloadCustomShortcut: "تحميل مخصص"
+                encode: true,
+                fetch: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                info: "%D8%A7%D9%84%D9%85%D8%B5%D8%AF%D8%B1:%20#t#%0A%D8%AA%D9%85%20%D8%AA%D9%86%D8%B2%D9%8A%D9%84%20%D8%A7%D9%84%D9%80%20TXT%20%D8%A8%D9%88%D8%A7%D8%B3%D8%B7%D8%A9%20'DownloadAllContent'",
+                error: "%D9%81%D8%B4%D9%84%20%D9%81%D9%8A%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A",
+                downloading: "......%25s%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%3Cbr%3E%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%85%D8%AA%D8%A8%D9%82%D9%8A%D8%A9%20%25s%20%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%AA%D9%85%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%D9%87%D8%A7%D8%8C%20%D9%87%D9%86%D8%A7%D9%83%20%25s",
+                complete: "%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%25s%20%D8%A7%D9%83%D8%AA%D9%85%D9%84!%20%D8%AD%D8%B5%D9%84%D8%AA%20%D8%B9%D9%84%D9%89",
+                del: "%D9%84%D8%AA%D8%AC%D8%A7%D9%87%D9%84%20CSS%20%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D9%85%D8%AD%D8%AF%D8%AF%D8%A7%D8%AA",
+                custom: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D9%85%D8%AE%D8%B5%D8%B5",
+                customInfo: "%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%81%D8%B5%D9%88%D9%84%20sss%20%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A3%D9%88%20%D9%85%D8%AD%D8%AF%D8%AF%D8%A7%D8%AA",
+                reSort: "%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B9%D9%86%D9%88%D8%A7%D9%86",
+                reSortUrl: "%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7",
+                setting: "%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA",
+                searchRule: "%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A8%D8%AD%D8%AB",
+                abort: "%D8%A5%D9%8A%D9%82%D8%A7%D9%81",
+                save: "%D8%AD%D9%81%D8%B8",
+                saveAsMd: "Markdown%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
+                downThreadNum: "%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AE%D9%8A%D9%88%D8%B7%20%D9%84%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                enableTouch: "On%20the%20mobile%20device,%20slide%20the%20screen%20in%20the%20direction%20of%20%E2%86%92%E2%86%93%E2%86%90%E2%86%91%20to%20draw%20a%20square%20will%20start%20downloading%20immediately",
+                customTitle: "%D8%AA%D8%AE%D8%B5%D9%8A%D8%B5%20%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D9%81%D8%B5%D9%84%D8%8C%20%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%AE%D9%84%D9%8A%D8%A9",
+                maxDlPerMin: "%D8%A7%D9%84%D8%AD%D8%AF%20%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89%20%D9%84%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AA%D9%86%D8%B2%D9%8A%D9%84%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D9%82%D9%8A%D9%82%D8%A9",
+                reSortDefault: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D8%A7%D9%81%D8%AA%D8%B1%D8%A7%D8%B6%D9%8A%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                reverseOrder: "%D8%B9%D9%83%D8%B3%20%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%A7%D9%84%D9%81%D8%B5%D9%88%D9%84",
+                saveBtn: "%D8%AD%D9%81%D8%B8%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA",
+                saveOk: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AD%D9%81%D8%B8",
+                nextPage: "%D8%A7%D9%84%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
+                nextPageReg: "%D9%85%D8%AE%D8%B5%D8%B5%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20RegExp",
+                retainImage: "%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%81%D8%A7%D8%B8%20%D8%A8%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A5%D8%B0%D8%A7%20%D9%83%D8%A7%D9%86%D8%AA%20%D9%87%D9%86%D8%A7%D9%83%20%D8%B5%D9%88%D8%B1%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%86%D8%B5",
+                minTxtLength: "%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D9%88%D9%84%D8%A9%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89%20%D8%B9%D9%86%D8%AF%D9%85%D8%A7%20%D9%8A%D9%83%D9%88%D9%86%20%D8%B7%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20%D9%87%D8%B0%D8%A7",
+                showFilterList: "%D8%B9%D8%B1%D8%B6%20%D9%86%D8%A7%D9%81%D8%B0%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D9%82%D8%A8%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                ok: "%D9%85%D9%88%D8%A7%D9%81%D9%82",
+                close: "%D8%A5%D8%BA%D9%84%D8%A7%D9%82",
+                dacSortByPos: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                dacSortByUrl: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7",
+                dacSortByName: "%D8%A7%D9%84%D8%AA%D8%B1%D8%AA%D9%8A%D8%A8%20%D8%AD%D8%B3%D8%A8%20%D8%A7%D9%84%D8%A7%D8%B3%D9%85",
+                reverse: "%D8%B9%D9%83%D8%B3%20%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1",
+                dacUseIframe: "%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20(%D8%A8%D8%B7%D9%8A%D8%A1)%20iframe%20%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85",
+                dacSaveAsZip: "zip%20%D8%AD%D9%81%D8%B8%20%D9%83%D9%80",
+                dacSetCustomRule: "%D8%AA%D8%B9%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                dacAddUrl: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%81%D8%B5%D9%84",
+                dacStartDownload: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF",
+                downloadShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B5%D9%84",
+                downloadSingleShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%B5%D9%81%D8%AD%D8%A9%20%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
+                downloadCustomShortcut: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D9%85%D8%AE%D8%B5%D8%B5"
             };
             break;
         default:
@@ -399,6 +403,7 @@ if (window.top != window.self) {
                 save:"Save",
                 saveAsMd:"Save as Markdown",
                 downThreadNum:"Set threadNum for download, negative means interval of single thread",
+                enableTouch:"On the mobile device, slide the screen in the direction of →↓←↑ to draw a square will start downloading immediately",
                 customTitle: "Customize the chapter title, enter the selector on inner page",
                 maxDlPerMin:"Maximum number of downloads per minute",
                 reSortDefault: "Default sort by position in the page",
@@ -427,8 +432,15 @@ if (window.top != window.self) {
             };
             break;
     }
+    if (i18n.encode) {
+        for (let k in i18n) {
+            if (k != "encode") {
+                i18n[k] = decodeURI(i18n[k]);
+            }
+        }
+    }
     var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[],useIframe=false,iframeSandbox=false,iframeInit=false;
-    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer;
+    var filterListContainer,txtDownContent,txtDownWords,txtDownQuit,dacLinksCon,dacUseIframe,shadowContainer,downTxtShadowContainer;
 
     const escapeHTMLPolicy = (win.trustedTypes && win.trustedTypes.createPolicy) ? win.trustedTypes.createPolicy('dac_default', {
         createHTML: (string, sink) => string
@@ -515,7 +527,7 @@ if (window.top != window.self) {
             filterListContainer = document.createElement("div");
             filterListContainer.id = "filterListContainer";
             filterListContainer.innerHTML = createHTML(`
-                <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 99998; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
+                <div id="dacFilterBg" style="height: 100%; width: 100%; position: fixed; top: 0; z-index: 2147483646; opacity: 0.3; filter: alpha(opacity=30); background-color: #000;"></div>
                 <div id="filterListBody">
                     <div class="dacCustomRule">
                     ${i18n.custom}
@@ -771,7 +783,7 @@ if (window.top != window.self) {
                     left: 50%;
                     top: 10%;
                     margin-left: -300px;
-                    z-index: 99998;
+                    z-index: 2147483646;
                     background-color: #ffffff;
                     border: 1px solid #afb3b6;
                     border-radius: 10px;
@@ -788,6 +800,7 @@ if (window.top != window.self) {
             `);
             dacLinksCon = filterListContainer.querySelector("#dacLinksCon");
             shadowContainer = document.createElement("div");
+            shadowContainer.id = "download-all-content";
             document.body.appendChild(shadowContainer);
             let shadow = shadowContainer.attachShadow({ mode: "open" });
             shadow.appendChild(listStyle);
@@ -805,27 +818,28 @@ if (window.top != window.self) {
     function initTxtDownDiv() {
         if (txtDownContent) {
             txtDownContent.style.display = "";
+            document.body.appendChild(downTxtShadowContainer);
             return;
         }
         txtDownContent = document.createElement("div");
         txtDownContent.id = "txtDownContent";
-        let shadowContainer = document.createElement("div");
-        document.body.appendChild(shadowContainer);
-        let shadow = shadowContainer.attachShadow({ mode: "open" });
+        downTxtShadowContainer = document.createElement("div");
+        document.body.appendChild(downTxtShadowContainer);
+        let shadow = downTxtShadowContainer.attachShadow({ mode: "open" });
         shadow.appendChild(txtDownContent);
         txtDownContent.innerHTML = createHTML(`
             <style>
             #txtDownContent>div{
               font-size:16px;
               color:#333333;
-              width:362px;
+              width:342px;
               height:110px;
               position:fixed;
               left:50%;
               top:50%;
               margin-top:-25px;
-              margin-left:-191px;
-              z-index:100000;
+              margin-left:-171px;
+              z-index:2147483647;
               background-color:#ffffff;
               border:1px solid #afb3b6;
               border-radius:10px;
@@ -884,7 +898,7 @@ if (window.top != window.self) {
                 saveAs(content, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".zip");
             });
         } else {
-            var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + document.title + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info.replace("#t#", location.href) + "\r\n\r\n" + rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|\r\n,]/g, "_") + ".txt");
         }
     }
@@ -1125,6 +1139,14 @@ if (window.top != window.self) {
                 };
                 if (useIframe) {
                     let iframe = document.createElement('iframe'), inited = false, failedTimes = 0;
+                    let loadtimeout;
+                    let loadIframe = src => {
+                        iframe.src = src;
+                        clearTimeout(loadtimeout);
+                        loadtimeout = setTimeout(() => {
+                            iframe.src = src;
+                        }, 20000);
+                    };
                     iframe.name = 'pagetual-iframe';
                     iframe.width = '100%';
                     iframe.height = '1000';
@@ -1135,6 +1157,7 @@ if (window.top != window.self) {
                         if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
                         if (inited) return;
                         inited = true;
+                        clearTimeout(loadtimeout);
                         async function checkIframe() {
                             try {
                                 let doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -1147,7 +1170,7 @@ if (window.top != window.self) {
                                 doc.body.scrollTop = 9999999;
                                 doc.documentElement.scrollTop = 9999999;
                                 if (!processFunc && validTimes++ > 5 && failedTimes++ < 2) {
-                                    iframe.src = iframe.src;
+                                    loadIframe(iframe.src);
                                     validTimes = 0;
                                     inited = false;
                                     return;
@@ -1240,7 +1263,7 @@ if (window.top != window.self) {
                             }
                         }
                     }, 50);
-                    iframe.src = aTag.href;
+                    loadIframe(aTag.href);
                     document.body.appendChild(iframe);
                     return [curIndex, null, aTag.href];
                 } else {
@@ -1339,7 +1362,6 @@ if (window.top != window.self) {
             }
         } else {
             downOnce(-downThreadNum * 1000);
-            if (downIndex < aEles.length - 1 && downIndex < downThreadNum - 1) downIndex++;
         }
     }
 
@@ -1512,6 +1534,7 @@ if (window.top != window.self) {
                         cStr+=content.replace(/[\uFEFF\xA0 ]+/g," ").replace(/([^\r]|^)\n([^\r]|$)/gi,"$1\r\n$2");
                     }
                     if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|IMG)$/.test(childNode.nodeName))cStr+="\r\n";
+                    else if(childNode.nextSibling && /^P$/.test(childNode.nextSibling.nodeName))cStr+="\r\n";
                 }
                 if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
             }
@@ -1848,6 +1871,54 @@ if (window.top != window.self) {
     var downloadSingleShortcut = GM_getValue("downloadSingleShortcut") || {ctrlKey: true, shiftKey: true, altKey: false, metaKey: false, key: 'F9'};
     var downloadCustomShortcut = GM_getValue("downloadCustomShortcut") || {ctrlKey: true, shiftKey: false, altKey: true, metaKey: false, key: 'F9'};
 
+    var enableTouch = GM_getValue("enableTouch");
+    if (enableTouch) {
+        const minLength = 256, tg = 0.5, atg = 2;
+        var lastX, lastY, signs, lastSign;
+        function tracer(e) {
+            let curX = e.changedTouches[0].clientX, curY = e.changedTouches[0].clientY;
+            let distanceX = curX - lastX, distanceY = curY - lastY;
+            let distance = distanceX * distanceX + distanceY * distanceY;
+            if (distance > minLength) {
+                lastX = curX;
+                lastY = curY;
+                let direction = "";
+                let slope = Math.abs(distanceY / distanceX);
+                if (slope > atg) {
+                    if (distanceY > 0) {
+                        direction = "↓";
+                    } else {
+                        direction = "↑";
+                    }
+                } else if (slope < tg) {
+                    if (distanceX > 0) {
+                        direction = "→";
+                    } else {
+                        direction = "←";
+                    }
+                }
+                if (direction && lastSign != direction) {
+                    signs += direction;
+                    lastSign = direction;
+                }
+            }
+        }
+        document.addEventListener("touchstart", function(e) {
+            lastX = e.changedTouches[0].clientX;
+            lastY = e.changedTouches[0].clientY;
+            lastSign = signs = "";
+            document.addEventListener("touchmove", tracer, false);
+        }, false);
+        document.addEventListener("touchend", function(e) {
+            document.removeEventListener("touchmove", tracer, false);
+            if (signs == "→↓←↑") {
+                e.stopPropagation();
+                e.preventDefault();
+                startCustom();
+            }
+        }, false);
+    }
+
     if (location.origin + location.pathname == configPage) {
         let exampleNode = document.getElementById("example");
         if (!exampleNode) return;
@@ -2022,6 +2093,7 @@ if (window.top != window.self) {
         downloadShortcutInput.addEventListener("keydown", keydonwHandler);
         downloadSingleShortcutInput.addEventListener("keydown", keydonwHandler);
         downloadCustomShortcutInput.addEventListener("keydown", keydonwHandler);
+        let enableTouchInput = createOption(i18n.enableTouch, !!enableTouch, "checkbox");
 
         let delSelector = createOption(i18n.del, GM_getValue("selectors") || "");
         delSelector.setAttribute("placeHolder", ".mask,.ksam");
@@ -2071,6 +2143,7 @@ if (window.top != window.self) {
                 GM_setValue("contentSort", false);
             }
             GM_setValue("reverse", reverse.checked);
+            GM_setValue("enableTouch", enableTouchInput.checked);
             GM_setValue("retainImage", retainImage.checked);
             GM_setValue("showFilterList", showFilterList.checked);
             GM_setValue("disableNextPage", !nextPage.checked);
@@ -2093,7 +2166,7 @@ if (window.top != window.self) {
 
     function startCustom() {
         var customRules = GM_getValue("DACrules_" + document.domain);
-        var urls = window.prompt(i18n.customInfo, customRules ? customRules : "https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        var urls = window.prompt(i18n.customInfo + ":\nhttps://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html", customRules || "");
         if (urls) {
             customDown(urls);
         }

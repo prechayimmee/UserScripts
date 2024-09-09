@@ -12,10 +12,10 @@
 // @description:ja       オンラインで画像を強力に閲覧できるツール。ポップアップ表示、拡大・縮小、回転、一括保存などの機能を自動で実行できます
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2024.6.26.2
+// @version              2024.9.9.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
-// @homepage             https://www.hoothin.com
+// @homepage             https://github.com/hoothin/UserScripts/tree/master/Picviewer%20CE%2B
 // @supportURL           https://github.com/hoothin/UserScripts/issues
 // @connect              www.google.com
 // @connect              www.google.com.hk
@@ -46,8 +46,8 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://update.greasyfork.org/scripts/6158/23710/GM_config%20CN.js
-// @require              https://update.greasyfork.org/scripts/438080/1400550/pvcep_rules.js
-// @require              https://update.greasyfork.org/scripts/440698/1399329/pvcep_lang.js
+// @require              https://update.greasyfork.org/scripts/438080/1444371/pvcep_rules.js
+// @require              https://update.greasyfork.org/scripts/440698/1427239/pvcep_lang.js
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.meta.js
 // @match                *://*/*
@@ -57,7 +57,7 @@
 // @exclude              *://mega.*/*
 // @exclude              *://*.mega.*/*
 // @exclude              *://onedrive.live.com/*
-// @run-at               document-body
+// @run-at               document-end
 // @created              2011-6-15
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
@@ -65,7 +65,7 @@
 
 if (window.top != window.self) {
     try {
-        if (window.self.innerWidth < 250 || window.self.innerHeight < 250) {
+        if ((window.self.innerWidth && window.self.innerWidth < 250) || (window.self.innerHeight && window.self.innerHeight < 250)) {
             return;
         }
     } catch(e) {
@@ -12029,6 +12029,7 @@ ImgOps | https://imgops.com/#b#`;
                     method: (option && option.method) || 'GET',
                     url: url.trim(),
                     data: (option && option.body) || '',
+                    cookie: cookie,
                     headers: (option && option.headers) || {
                         referer: url,
                         origin: url,
@@ -12100,10 +12101,18 @@ ImgOps | https://imgops.com/#b#`;
          3: i18n("urlAndText")
         */
         type = parseInt(type || 0);
-        if (name) name = name.split("\n")[0].replace(/.*?\/\/[^\/]+\//, "").replace(/\?.*/, "");
-        if (!url.replace) url = "";
+        if (name) name = name.split("\n")[0].replace(/.*?\/\/[^\/]+\//, "").replace(/\?.*/, "").replace(/^data:.*/, "");
+        if (!url.replace || url.indexOf("data:") === 0) url = "";
         url = url.replace(/.*?\/\/[^\/]+\//, "");
-        let nameFromUrl = "";
+        let nameFromUrl = url.match(/.*([^\/\?\=\&]+)\.\w{2,5}(\?|@|$).*/, "$1");
+        nameFromUrl = nameFromUrl ? nameFromUrl[1] : "";
+        if (/\=&/.test(nameFromUrl)) {
+            nameFromUrl = "";
+        } else {
+            try {
+                nameFromUrl = decodeURIComponent(nameFromUrl);
+            } catch (e) {}
+        }
         let ext;
         if (_ext && /^\w{2,5}$/.test(_ext)) {
             ext = "." + _ext;
@@ -12111,14 +12120,6 @@ ImgOps | https://imgops.com/#b#`;
             ext = url.match(/(\.\w{2,5})(\?|@|$)/);
             if (ext) {
                 ext = ext[1];
-                nameFromUrl = url.replace(/.*\/([^\/\?]+?)\.\w{2,5}(\?|@|$).*/, "$1");
-                if (/\=&/.test(nameFromUrl)) {
-                    nameFromUrl = "";
-                } else {
-                    try {
-                        nameFromUrl = decodeURIComponent(nameFromUrl);
-                    } catch (e) {}
-                }
             }
         }
         switch (type) {
@@ -12179,7 +12180,7 @@ ImgOps | https://imgops.com/#b#`;
         urlToBlob(url, (blob, ext) => {
             if(blob){
                 try {
-                    saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
+                    saveAs(blob, document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type, ext));
                 } catch(e) {
                     console.log(e);
                 }
@@ -12187,7 +12188,7 @@ ImgOps | https://imgops.com/#b#`;
         });
     } : (url, name, type) => {
         url = canonicalUri(url);
-        name = document.title + " - " + getRightSaveName(url, name, type);
+        name = document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " + getRightSaveName(url, name, type);
         let urlSplit = ["", ""];
         if (url.split) {
             urlSplit = url.split("/");
@@ -12225,6 +12226,7 @@ ImgOps | https://imgops.com/#b#`;
         };
         img.src = dataurl;
     }
+    var cookie;
     function urlToBlob(url, cb, forcePng, tryTimes = 0) {
         tryTimes++;
         if (tryTimes > 3) {
@@ -12240,8 +12242,10 @@ ImgOps | https://imgops.com/#b#`;
                 referer: location.href,
                 accept: "*/*"
             },
+            cookie: cookie,
             onload: function(d) {
                 let blob = d.response;
+                if (!blob.type) return urlToBlob(url, cb, forcePng, tryTimes);
                 let ext = blob.type.replace(/.*image\/([\w\-]+).*/, "$1");
                 let conversion = formatDict.get(ext);
                 if (canvas && (conversion || forcePng)) {
@@ -12269,21 +12273,6 @@ ImgOps | https://imgops.com/#b#`;
             },
             ontimeout: function(){
                 urlToBlob(url, cb, forcePng, tryTimes);
-            }
-        });
-    }
-    function downloadImg(url, name, type, errCb) {
-        urlToBlob(url, (blob, ext) => {
-            if(blob){
-                try {
-                    saveAs(blob, document.title + " - " + getRightSaveName(url, name, type, ext));
-                } catch(e) {
-                    _GM_download(url, name, type);
-                    if (errCb) errCb();
-                }
-            }else{
-                _GM_download(url, name, type);
-                if (errCb) errCb();
             }
         });
     }
@@ -12467,7 +12456,7 @@ ImgOps | https://imgops.com/#b#`;
 
         var matchedRule,
             _URL=location.href.slice(0, 500);
-        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
+        const lazyImgAttr = ["data-lazy-src", "org_src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc", "data-preview"];
         var tprules = [
             function(a) {
                 if (this.currentSrc && !this.src) this.src = this.currentSrc;
@@ -12762,6 +12751,22 @@ ImgOps | https://imgops.com/#b#`;
                 }
             });
             unsafeWindow.URL.createObjectURL = createObjectURLProxy;
+        }
+
+        function downloadImg(url, name, type, errCb) {
+            urlToBlob(url, (blob, ext) => {
+                if(blob){
+                    try {
+                        saveAs(blob, (prefs.saveNameAddTitle ? document.title.replace(/[\*\/:<>\?\\\|]/g, "") + " - " : "") + getRightSaveName(url, name, type, ext));
+                    } catch(e) {
+                        _GM_download(url, name, type);
+                        if (errCb) errCb();
+                    }
+                }else{
+                    _GM_download(url, name, type);
+                    if (errCb) errCb();
+                }
+            });
         }
 
         function getBlob(url) {
@@ -13563,7 +13568,14 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
                     '<div class="pv-gallery-range-box"><input type="range" id="minsizeW" min="0" max="100" value="0" title="Width" /> <span id="minsizeWSpan">0px</span> '+
-                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height" /> <span id="minsizeHSpan">0px</span></div>'+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height" /> <span id="minsizeHSpan">0px</span>'+
+                    '<select id="pinSize">'+
+                    '<option value="" disabled selected>'+i18n("size")+'</option>'+
+                    '<option value="0">'+i18n("all")+'</option>'+
+                    '<option value="512x512">'+i18n("bigSize")+'</option>'+
+                    '<option value="0-256x0-256">'+i18n("iconSize")+'</option>'+
+                    '</select>'+
+                    '</div>'+
                     '<span class="pv-gallery-head-left-lock-icon" title="'+i18n("lockSizeTip")+'"></span>'+
                     '<span class="pv-gallery-head-left-filter-icon" title="'+i18n("urlFilterTip")+'"></span>'+
                     '</span>'+
@@ -13615,7 +13627,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-slide-show">'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("slideGapTip")+'">'+
-                    '<input data-prefs="interval" step="1" min="1" type="number" value="5" />'+
+                    '<input class="pv-gallery-head-command-drop-list-slide-show-interval" data-prefs="interval" step="1" min="1" type="number" value="5" />'+
                     '<span>'+i18n("slideGap")+'</span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideBackTip")+'">'+
@@ -13658,6 +13670,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="postImagesToAria2" title="'+i18n("post2Aria2")+'">'+i18n("post2Aria2")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="cookie">Cookie</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item">'+
@@ -13810,32 +13823,65 @@ ImgOps | https://imgops.com/#b#`;
                 this.hideBodyStyle=hideBodyStyle;
                 hideBodyStyle.textContent=`body>*:not([class^="pv-"]) img,body>img{display:none}`;
 
-                var sizeInputH=container.querySelector("#minsizeH");
-                var sizeInputW=container.querySelector("#minsizeW");
+                var sizeInputH = container.querySelector("#minsizeH");
+                var sizeInputW = container.querySelector("#minsizeW");
                 this.sizeInputH = sizeInputH;
                 this.sizeInputW = sizeInputW;
-                sizeInputW.oninput=function(){self.changeMinView();};
-                sizeInputH.oninput=function(){self.changeMinView();};
-                container.querySelector("#minsizeWSpan").onclick=function(){
-                    var minsizeW=window.prompt("Width:",sizeInputW.value);
-                    if(!minsizeW)return;
-                    sizeInputW.value=minsizeW;
+                sizeInputW.oninput = function(){self.changeMinView();};
+                sizeInputH.oninput = function(){self.changeMinView();};
+                container.querySelector("#minsizeWSpan").onclick = function(){
+                    var minsizeW = window.prompt("Width:",sizeInputW.value);
+                    if (!minsizeW) return;
+                    sizeInputW.value = minsizeW;
                     self.changeMinView();
                 };
-                container.querySelector("#minsizeHSpan").onclick=function(){
-                    var minsizeH=window.prompt("Height:",sizeInputH.value);
-                    if(!minsizeH)return;
-                    sizeInputH.value=minsizeH;
+                container.querySelector("#minsizeHSpan").onclick = function(){
+                    var minsizeH = window.prompt("Height:",sizeInputH.value);
+                    if (!minsizeH) return;
+                    sizeInputH.value = minsizeH;
                     self.changeMinView();
                 };
-                var headMaxLock=container.querySelector(".pv-gallery-head-left-lock-icon");
-                headMaxLock.onclick=function(){
-                    if(self.lockMaxSize){
-                        self.lockMaxSize=null;
+                var pinSize = container.querySelector("#pinSize");
+                pinSize.addEventListener('change', function(e) {
+                    let arr = e.target.value.split("x");
+                    if (arr.length !== 2) {
+                        self.lockMaxSize = null;
+                        sizeInputH.value = 0;
+                        sizeInputW.value = 0;
                         self.changeMinView();
-                        headMaxLock.style.filter="";
-                        headMaxLock.title=i18n("lockSizeTip");
-                    }else{
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                        return;
+                    }
+                    let wArr = arr[0].split("-");
+                    let hArr = arr[1].split("-");
+                    let minW = parseInt(wArr[0]);
+                    let maxW = parseInt(wArr[1] || 0);
+                    let minH = parseInt(hArr[0]);
+                    let maxH = parseInt(hArr[1] || 0);
+                    sizeInputH.value = minH;
+                    sizeInputW.value = minW;
+                    if (maxW && maxH) {
+                        self.lockMaxSize = {w: maxW, h: maxH};
+                        headMaxLock.style.filter = "brightness(5)";
+                        headMaxLock.title = maxW + " x " + maxH;
+                    } else {
+                        self.lockMaxSize = null;
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                    }
+                    self.changeMinView();
+                });
+                this.pinSize = pinSize;
+                this.sizeMap = {};
+                var headMaxLock = container.querySelector(".pv-gallery-head-left-lock-icon");
+                headMaxLock.onclick = function() {
+                    if (self.lockMaxSize) {
+                        self.lockMaxSize = null;
+                        self.changeMinView();
+                        headMaxLock.style.filter = "";
+                        headMaxLock.title = i18n("lockSizeTip");
+                    } else {
                         var maxsizeW, maxsizeH;
                         maxsizeW = window.prompt("Max Width:", sizeInputW.max);
                         if(maxsizeW) {
@@ -13918,6 +13964,7 @@ ImgOps | https://imgops.com/#b#`;
                     'head-command-drop-list-others',
                     'head-command-drop-list-share',
                     'head-command-drop-list-slide-show',
+                    'head-command-drop-list-slide-show-interval',
                     'head-command-drop-list-collect',
                     'head-command-drop-list-search',
 
@@ -14257,9 +14304,10 @@ ImgOps | https://imgops.com/#b#`;
                 }, true);
 
 
+                let defaultSlideShowInterval = storage.getItem('slideShowInterval') || 5000;
                 var slideShow={
                     opts:{
-                        interval:5000,
+                        interval:defaultSlideShowInterval,
                         wait:true,
                         backward:false,
                         skipErrorImg:true,
@@ -14321,6 +14369,11 @@ ImgOps | https://imgops.com/#b#`;
                         this.countdownTimer=setInterval(function(){
                             _self.setCountdown(interval - (Date.now()-startTime));
                         },100);
+
+                        if (interval && interval !== defaultSlideShowInterval) {
+                            defaultSlideShowInterval = interval;
+                            storage.setItem('slideShowInterval', interval);
+                        }
                     },
                     stop:function(){
                         this.setCountdown(this.opts.interval);
@@ -14346,6 +14399,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 slideShow.setCountdown(slideShow.opts.interval);
                 this.slideShow=slideShow;
+                eleMaps['head-command-drop-list-slide-show-interval'].value = parseInt(slideShow.opts.interval / 1000) || 5;
 
                 let filterIcon = container.querySelector(".pv-gallery-head-left-filter-icon");
                 function filterUrl() {
@@ -14473,6 +14527,50 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     return saveParams;
                 }
+                self.openImages = (e) => {
+                    let fileInput = document.createElement("input");
+                    fileInput.type = "file";
+                    fileInput.accept = "image/*,video/*,audio/*";
+                    fileInput.setAttribute("multiple", "");
+                    if (e && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+                        fileInput.setAttribute("directory", "");
+                        fileInput.setAttribute("webkitdirectory", "");
+                    }
+                    fileInput.addEventListener("change", e => {
+                        const files = e.target.files;
+                        if (files.length) {
+                            for (var i = 0; i < files.length; i++) {
+                                let file = files.item(i);
+                                file = files[i];
+                                let src = URL.createObjectURL(file);
+                                let media;
+                                if (file.type.indexOf("image") === 0) {
+                                    media = document.createElement('img');
+                                } else if (file.type.indexOf("audio") === 0) {
+                                    media = document.createElement('audio');
+                                    src = "audio:" + src;
+                                } else if (file.type.indexOf("video") === 0) {
+                                    media = document.createElement('video');
+                                    src = "video:" + src;
+                                } else continue;
+                                media.title = file.name;
+                                var result = {
+                                    src: src,
+                                    type: 'force',
+                                    imgSrc: src,
+                                    noActual:true,
+                                    description: file.name,
+                                    img: media
+                                };
+                                self.data.push(result);
+                                self._appendThumbSpans([result]);
+                            }
+                            self.loadThumb();
+                            self.changeSizeInputReset();
+                        }
+                    }, false);
+                    fileInput.click();
+                };
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',async function(e){
                     if(e.button!=0)return;//左键
@@ -14576,6 +14674,9 @@ ImgOps | https://imgops.com/#b#`;
                         case 'copyImages':
                             self.copyImages(true);
                             break;
+                        case 'cookie':
+                            cookie = prompt("Set Cookie", cookie || "");
+                            break;
                         case 'scrollToEndAndReload':
                             var checkbox = target.parentNode.querySelector("input");
                             if(target.nodeName.toUpperCase()=="LABEL"){
@@ -14608,46 +14709,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.maximizeSidebar();
                             break;
                         case 'openImages':
-                            {
-                                let fileInput = document.createElement("input");
-                                fileInput.type = "file";
-                                fileInput.accept = "image/*,video/*,audio/*";
-                                fileInput.setAttribute("multiple","");
-                                fileInput.addEventListener("change", e => {
-                                    const files = e.target.files;
-                                    if (files.length) {
-                                        for (var i = 0; i < files.length; i++) {
-                                            let file = files.item(i);
-                                            file = files[i];
-                                            let src = URL.createObjectURL(file);
-                                            let media;
-                                            if (file.type.indexOf("image") === 0) {
-                                                media = document.createElement('img');
-                                            } else if (file.type.indexOf("audio") === 0) {
-                                                media = document.createElement('audio');
-                                                src = "audio:" + src;
-                                            } else {
-                                                media = document.createElement('video');
-                                                src = "video:" + src;
-                                            }
-                                            media.title = file.name;
-                                            var result = {
-                                                src: src,
-                                                type: 'force',
-                                                imgSrc: src,
-                                                noActual:true,
-                                                description: file.name,
-                                                img: media
-                                            };
-                                            self.data.push(result);
-                                            self._appendThumbSpans([result]);
-                                        }
-                                        self.loadThumb();
-                                        self.changeSizeInputReset();
-                                    }
-                                }, false);
-                                fileInput.click();
-                            }
+                            self.openImages(e);
                             break;
                         case 'addImageUrls':
                             let urls = window.prompt(i18n('addImageUrls') + ": White space to split multi-image, '[01-09]' to generate nine urls from 01 to 09, '$http://xxx' to fetch images from page","https://xxx.xxx/pic-[20-99].jpg https://xxx.xxx/pic-[01-10].png");
@@ -14818,6 +14880,7 @@ ImgOps | https://imgops.com/#b#`;
                     var target=e.target;
                     //e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
+                        if (e.deltaX === 0 && e.deltaY === 0) return;
                         let distance=self.thumbSpanOuterSize;
 
                         if(e.deltaY<0 || e.deltaX<0){//向上滚
@@ -14829,8 +14892,8 @@ ImgOps | https://imgops.com/#b#`;
                         if(e.deltaY!=0){//y轴
                             if(self.img && self.img.classList.contains('pv-gallery-img_zoom-out')){//图片可以缩小时，滚动图片，否则切换图片。
                                 if(e.deltaY < 0){
-                                    distance=-distance;
-                                };
+                                    distance=-Math.max(distance, -e.deltaY);
+                                }else distance=Math.max(distance, e.deltaY);
                                 if(eleMaps['img-scrollbar-h'].contains(target)){//如果在横向滚动条上。
                                     imgScrollbarH.scrollBy(distance);
                                 }else{
@@ -14843,8 +14906,8 @@ ImgOps | https://imgops.com/#b#`;
                             };
                         }else{//x轴
                             if(e.deltaX < 0){
-                                distance=-distance;
-                            };
+                                distance=-Math.max(distance, -e.deltaX);
+                            }else distance=Math.max(distance, e.deltaX);
                             imgScrollbarH.scrollBy(distance);
                         }
                     }
@@ -15635,6 +15698,14 @@ ImgOps | https://imgops.com/#b#`;
                         var spanMark=self._spanMarkPool[item.src];
                         if(spanMark && !spanMark.dataset.naturalSize && item.naturalWidth && item.naturalHeight){
                             spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
+                            let key = item.naturalWidth + "x" + item.naturalHeight;
+                            self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                            if (self.sizeMap[key] === 2) {
+                                let option = document.createElement("option");
+                                option.innerText = key;
+                                option.value = item.naturalWidth + "-" + item.naturalWidth + "x" + item.naturalHeight + "-" + item.naturalHeight;
+                                self.pinSize.appendChild(option);
+                            }
                         }
                         if(!self.filterImage(item.naturalWidth || item.sizeW, item.naturalHeight || item.sizeH, item.src)){
                             item.parentNode.style.display="none";
@@ -15897,8 +15968,25 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     };
                     imgSpan.className = "maximizeChild";
-                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
-                    let img=imgSpan.querySelector("img");
+                    let innerHTML = "";
+                    let thumbSrc = dataset(node, 'thumbSrc');
+                    let mode = matchedRule.getMode(thumbSrc);
+                    switch (mode) {
+                        case "video":
+                            let extra = "";
+                            if (thumbSrc.indexOf('.mkv') !== -1) extra = 'type="video/mp4"';
+                            else if (thumbSrc.indexOf('.m3u8') !== -1) extra = 'type="application/vnd.apple.mpegurl"';
+                            innerHTML = '<video data-src="' + dataset(node, 'src') + '" muted controls loop src="' + thumbSrc.replace(/^video:/, "") + '" ' + extra + ' ></video>';
+                            break;
+                        case "audio":
+                            innerHTML = '<img data-src="' + dataset(node, 'src') + '" src="' + prefs.icons.video + '" />';
+                            break;
+                        default:
+                            innerHTML = '<img data-src="' + dataset(node, 'src') + '" src="' + thumbSrc + '" />';
+                            break;
+                    }
+                    imgSpan.innerHTML = createHTML(innerHTML);
+                    let img=imgSpan.querySelector("img,video");
                     let xhr = dataset(node, 'xhr') !== 'stop' && self.getPropBySpanMark(node, "xhr");
                     let getXhr = async () => {
                         let result = await new Promise((resolve) => {
@@ -15937,6 +16025,7 @@ ImgOps | https://imgops.com/#b#`;
                         imgSpan.addEventListener('getxhr', getXhrHandler);
                     }
                     imgSpan.addEventListener("click", async function(e) {
+                        e.preventDefault();
                         self.selectViewmore(imgSpan, curNode.dataset.src);
                         let loadError = e => {
                             let i = document.createElement("img");
@@ -16016,7 +16105,7 @@ ImgOps | https://imgops.com/#b#`;
                     let defaultDl=()=>{
                         self.addDlSpan(img, imgSpan, curNode, e=>{
                             e.stopPropagation();
-                            _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
+                            downloadImg(curNode.dataset.src, curNode.title, prefs.saveName);
                             return true;
                         });
                     };
@@ -16066,6 +16155,9 @@ ImgOps | https://imgops.com/#b#`;
                     this.closeViewMore();
                     this.bricksInstance.resize(false);
                 }else{
+                    if (this.img && this.img.pause) {
+                        this.img.pause();
+                    }
                     maximizeContainer.style.minHeight = "100%";
                     maximizeContainer.parentNode.style.display = "block";
                     document.head.appendChild(this.hideBodyStyle);
@@ -16376,6 +16468,9 @@ ImgOps | https://imgops.com/#b#`;
                     mediaSrc = mediaSrc.replace(/^audio:/, "");
                 }
                 if (media) {
+                    if (this.eleMaps['sidebar-toggle'].style.visibility == 'hidden') {
+                        media.autoplay = false;
+                    }
                     media.src = mediaSrc;
                     let loaded = function() {
                         var index = allLoading.indexOf(src);
@@ -16500,6 +16595,7 @@ ImgOps | https://imgops.com/#b#`;
                     img.style.backgroundImage = `url(${thumb})`;
                 }
 
+                var self=this;
                 if(error){
                     let relatedImg=relatedThumb.querySelector("img");
                     if(!relatedImg)return;
@@ -16507,17 +16603,26 @@ ImgOps | https://imgops.com/#b#`;
                         this.imgError=true;
                         this.img.style.display='none';
                         this.eleMaps['img_broken'].style.display='inline-block';
+                        dataset(relatedThumb,'naturalSize',JSON.stringify({w: 0, h: 0}));
                     }else{
                         var srcs=dataset(relatedThumb, 'srcs');
                         if(srcs && srcs.length>0)srcs=srcs.split(",");
-                        var self=this;
                         this.img.onload=function(){
-                            var imgNaturalSize={
+                            imgNaturalSize={
                                 h:this.naturalHeight,
                                 w:this.naturalWidth,
                             };
 
                             self.imgNaturalSize=imgNaturalSize;
+                            dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
+                            let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
+                            self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                            if (self.sizeMap[key] === 2) {
+                                let option = document.createElement("option");
+                                option.innerText = key;
+                                option.value = imgNaturalSize.w + "-" + imgNaturalSize.w + "x" + imgNaturalSize.h + "-" + imgNaturalSize.h;
+                                self.pinSize.appendChild(option);
+                            }
                             self.fitToScreen();
                         }
                         if(srcs && srcs.length>0){
@@ -16535,6 +16640,14 @@ ImgOps | https://imgops.com/#b#`;
                     this.eleMaps['img_broken'].style.display='';
                     if(!dataset(relatedThumb,'naturalSize')){
                         dataset(relatedThumb,'naturalSize',JSON.stringify(imgNaturalSize));
+                        let key = imgNaturalSize.w + "x" + imgNaturalSize.h;
+                        self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                        if (self.sizeMap[key] === 2) {
+                            let option = document.createElement("option");
+                            option.innerText = key;
+                            option.value = imgNaturalSize.w + "-" + imgNaturalSize.w + "x" + imgNaturalSize.h + "-" + imgNaturalSize.h;
+                            self.pinSize.appendChild(option);
+                        }
                     };
                 };
 
@@ -16801,6 +16914,20 @@ ImgOps | https://imgops.com/#b#`;
                     if(!spanMark){
                         spanMark = document.createElement("span");
                         try{
+                            if (item.noActual && item.img && item.img.naturalHeight && item.img.naturalWidth) {
+                                spanMark.dataset.naturalSize = JSON.stringify({
+                                    h: item.img.naturalHeight,
+                                    w: item.img.naturalWidth,
+                                });
+                                let key = item.img.naturalWidth + "x" + item.img.naturalHeight;
+                                self.sizeMap[key] = (self.sizeMap[key] || 0) + 1;
+                                if (self.sizeMap[key] === 2) {
+                                    let option = document.createElement("option");
+                                    option.innerText = key;
+                                    option.value = item.img.naturalWidth + "-" + item.img.naturalWidth + "x" + item.img.naturalHeight + "-" + item.img.naturalHeight;
+                                    self.pinSize.appendChild(option);
+                                }
+                            }
                             spanMark.className="pv-gallery-sidebar-thumb-container";
                             spanMark.dataset.index=index;
                             spanMark.dataset.type=item.type;
@@ -17360,6 +17487,7 @@ ImgOps | https://imgops.com/#b#`;
                     method: 'GET',
                     url: url,
                     headers:{"Referer": + url},
+                    cookie: cookie,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(d) {
                         let html = document.implementation.createHTMLDocument('');
@@ -17665,6 +17793,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var bgReg = /.*?url\(\s*["']?(.+?)["']?\s*\)([^'"]|$)/i;
                 var body = getBody(document);
+                var linkMedias = [];
                 function anylizeEle(total, node) {
                     if (/^iframe$/i.test(node.nodeName)) {
                         if (node.name == "pagetual-iframe") return total;
@@ -17718,8 +17847,15 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     } else if (/^a$/i.test(node.nodeName)) {
                         if (imageReg.test(node.href)) {
-                            node.src = node.href;
-                            total.push(node);
+                            let src = node.href;
+                            if (/[&\?]url\=/.test(src)) {
+                                src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                                try {
+                                    src = decodeURIComponent(src);
+                                } catch (e) {}
+                            }
+                            node.src = src;
+                            linkMedias.push(node);
                         }
                     }
                     if (node.shadowRoot) {
@@ -17822,7 +17958,19 @@ ImgOps | https://imgops.com/#b#`;
                 var imgs = Array.from(body.querySelectorAll('*')).concat([body]).reduceRight((total, node) => {
                     return anylizeEle(total, node);
                 }, []);
-                imgs = imgs.reverse();
+                [].forEach.call(document.head.querySelectorAll("link[rel*='icon']"), node => {
+                    if (imageReg.test(node.href)) {
+                        node.src = node.href;
+                        linkMedias.push(node);
+                    }
+                });
+                [].forEach.call(document.head.querySelectorAll('meta[itemprop="image"]'), node => {
+                    if (imageReg.test(node.content)) {
+                        node.src = node.content;
+                        linkMedias.push(node);
+                    }
+                });
+                imgs = imgs.reverse().concat(linkMedias.reverse());
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     if (img.parentNode) {
@@ -18064,6 +18212,7 @@ ImgOps | https://imgops.com/#b#`;
                     font-size: 14px;\
                     display: initial;\
                     flex-direction: row;\
+                    user-select: none;\
                     }\
                     /*点击还原的工具条*/\
                     span.pv-gallery-maximize-trigger{\
@@ -18104,6 +18253,18 @@ ImgOps | https://imgops.com/#b#`;
                     background:transparent no-repeat center;\
                     background-image:url("'+prefs.icons.loadingCancle+'");\
                     }\
+                    .pv-gallery-maximize-container+p{\
+                    position: fixed;\
+                    width: 100%;\
+                    z-index: 2;\
+                    text-align: center;\
+                    pointer-events: none;\
+                    margin-bottom: 45px;\
+                    left: 0;\
+                    bottom: 0;\
+                    opacity: 0;\
+                    transition: all .3s ease;\
+                    }\
                     @media only screen and (max-width: 600px) {\
                      .pv-gallery-maximize-container>.maximizeChild{\
                      width:calc(50vw - 5px);\
@@ -18140,10 +18301,10 @@ ImgOps | https://imgops.com/#b#`;
                      white-space: nowrap;\
                      }\
                      span.pv-gallery-sidebar-toggle-content {\
-                     font-size: 30px!important;\
+                     font-size: 25px!important;\
                      }\
                      span.pv-gallery-sidebar-toggle {\
-                     height: 30px!important;\
+                     height: 25px!important;\
                      opacity: 0.6;\
                      border-radius: 0!important;\
                      }\
@@ -18151,14 +18312,17 @@ ImgOps | https://imgops.com/#b#`;
                      opacity: 0!important;\
                      }\
                      .pv-gallery-maximize-container{\
-                     margin-top: 200px;\
+                     margin-top: 30px;\
                      }\
                      .pv-gallery-sidebar-viewmore.showmore{\
-                     transform: scale(3.5);\
-                     bottom: 50px;\
+                     transform: scale(1.5);\
+                     bottom: 10px;\
                      }\
                      .pv-gallery-maximize-container span>p{\
-                     opacity: 0.6;\
+                     opacity: 0.3;\
+                     }\
+                     .pv-gallery-maximize-container+p{\
+                     opacity: 0.2;\
                      }\
                      span.pv-gallery-head-command-close {\
                      position: fixed!important;\
@@ -18267,6 +18431,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-flex;\
                     justify-content: center;\
                     align-items: center;\
+                    }\
+                    .pv-gallery-range-box>#pinSize{\
+                    margin: 0 5px;\
                     }\
                     .pv-gallery-range-box>span{\
                     padding: 0 5px 0 5px;\
@@ -18781,18 +18948,6 @@ ImgOps | https://imgops.com/#b#`;
                     opacity: 1;\
                     background-color:#000000;\
                     }\
-                    .pv-gallery-maximize-container+p{\
-                    position: fixed;\
-                    width: 100%;\
-                    z-index: 2;\
-                    text-align: center;\
-                    pointer-events: none;\
-                    margin-bottom: 45px;\
-                    left: 0;\
-                    bottom: 0;\
-                    opacity: 0;\
-                    transition: all .3s ease;\
-                    }\
                     .pv-gallery-maximize-container+p:hover,.pv-gallery-maximize-container.checked+p:hover{\
                     opacity: 1;\
                     }\
@@ -18862,8 +19017,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-block;\
                     vertical-align: middle;\
                     text-align: center;\
-                    background-color: rgba(40, 40, 40, 0.8);\
+                    background-color: rgba(40, 40, 40, 0.5);\
                     border: 5px solid #000000;\
+                    font-size: 0px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover{\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
@@ -19382,7 +19538,21 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             }
 
-                            dataset(ele,'preloaded','true')
+                            dataset(ele,'preloaded','true');
+                            if (!dataset(ele,'naturalSize') && this.naturalHeight && this.naturalWidth) {
+                                dataset(ele,'naturalSize', JSON.stringify({
+                                    h: this.naturalHeight,
+                                    w: this.naturalWidth,
+                                }));
+                                let key = this.naturalWidth + "x" + this.naturalHeight;
+                                self.oriThis.sizeMap[key] = (self.oriThis.sizeMap[key] || 0) + 1;
+                                if (self.oriThis.sizeMap[key] === 2) {
+                                    let option = document.createElement("option");
+                                    option.innerText = key;
+                                    option.value = this.naturalWidth + "-" + this.naturalWidth + "x" + this.naturalHeight + "-" + this.naturalHeight;
+                                    self.oriThis.pinSize.appendChild(option);
+                                }
+                            }
                             self.container.appendChild(this);
                             self.preload();
                         },
@@ -20088,12 +20258,14 @@ ImgOps | https://imgops.com/#b#`;
                         debug(self);
                         return;
                     }
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
                         _GM_openInTab(self.img.src, {active:false});
                     } else {
                         downloadImg(self.img.src, (self.data.img.title || self.data.img.alt), prefs.saveName);
                     }
-                });
+                }, true);
 
                 //关闭
                 var closeButton=container.querySelector('.pv-pic-window-close');
@@ -20436,9 +20608,12 @@ ImgOps | https://imgops.com/#b#`;
                 compareSlider.style.left = percent + "%";
                 let compareSliderButton = document.createElement("button");
                 let self = this;
-                let upTimer;
+                let upTimer, initLeft;
                 let mouseMoveHandler = e => {
-                    clearTimeout(upTimer);
+                    if (upTimer && Math.abs(initLeft - e.pageX) > 10) {
+                        clearTimeout(upTimer);
+                        upTimer = null;
+                    }
                     if (compareSliderButton.style.display == "") {
                         document.removeEventListener("mousemove", mouseMoveHandler);
                         document.removeEventListener("touchmove", mouseMoveHandler);
@@ -20455,6 +20630,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 let beginSlide = e => {
                     compareSliderButton.style.display = "none";
+                    initLeft = e.pageX;
                     clearTimeout(upTimer);
                     upTimer = setTimeout(() => {
                         self.compareBox.appendChild(parent);
@@ -20642,6 +20818,7 @@ ImgOps | https://imgops.com/#b#`;
                     box-shadow: 0 0 10px 5px rgba(0,0,0,0.35);\
                     box-sizing: content-box;\
                     display: initial;\
+                    background: #00000080;\
                     }\
                     .pv-pic-window-container span {\
                     background-image: initial;\
@@ -20981,6 +21158,7 @@ ImgOps | https://imgops.com/#b#`;
                     overflow-x: hidden;\
                     overscroll-behavior: contain;\
                     -ms-scroll-chaining: contain;\
+                    scrollbar-color: initial;\
                     }\
                     .pv-pic-window-scroll>.pv-pic-window-scrollSign {\
                     display: block;\
@@ -20988,6 +21166,12 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-scroll>.pv-pic-window-close,\
                     .pv-pic-window-scroll>.pv-pic-window-max {\
                     display: none;\
+                    }\
+                    .pv-pic-window-black>.pv-pic-window-imgbox>img {\
+                    background: black!important;\
+                    }\
+                    .pv-pic-window-white>.pv-pic-window-imgbox>img {\
+                    background: white!important;\
                     }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
@@ -22277,6 +22461,16 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
+                        if (selectedTool === "hand" && !this.moving) {
+                            if (this.imgWindow.classList.contains("pv-pic-window-black")) {
+                                this.imgWindow.classList.remove("pv-pic-window-black");
+                                this.imgWindow.classList.add("pv-pic-window-white");
+                            } else if (this.imgWindow.classList.contains("pv-pic-window-white")) {
+                                this.imgWindow.classList.remove("pv-pic-window-white");
+                            } else {
+                                this.imgWindow.classList.add("pv-pic-window-black");
+                            }
+                        }
                         this.moving=false;
                         if(e.ctrlKey && e.target.nodeName.toUpperCase()=='IMG'){
                             e.preventDefault();
@@ -22286,6 +22480,7 @@ ImgOps | https://imgops.com/#b#`;
                     case 'touchstart':{
                         if(!this.focused){//如果没有focus，先focus
                             this.focus();
+                            this.moving=true;
                             this.keepScreenInside();
                         };
 
@@ -23676,6 +23871,9 @@ ImgOps | https://imgops.com/#b#`;
                 xhr,
                 description; // 图片的注释
             var imgCStyle = unsafeWindow.getComputedStyle(img);
+            if (/^link$/i.test(img.nodeName)) {
+                imgCStyle = {height:64, width:64};
+            }
             if (!/IMG/i.test(img.nodeName) && imgCStyle && imgCStyle.backgroundImage && imgCStyle.backgroundImage != "none") {
                 let sh = imgCStyle.height, sw = imgCStyle.width;
                 if (!img.offsetWidth) sw = 10;
@@ -23688,13 +23886,24 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 imgCStyle = {height:sh, width:sw};
             }
-            var imgCS={
-                h: parseFloat(imgCStyle.height)||img.height||img.offsetHeight,
-                w: parseFloat(imgCStyle.width)||img.width||img.offsetWidth,
+            var imgCS = {
+                h: parseFloat(imgCStyle.height) || img.height || img.offsetHeight,
+                w: parseFloat(imgCStyle.width) || img.width || img.offsetWidth,
             };
+            if (imgCS.h === 0 && imgCS.w === 0) {
+                for (let i = 0; i < imgPE.length; i++) {
+                    if (imgPE[i].offsetHeight) {
+                        imgCS = {
+                            h: imgPE[i].offsetHeight,
+                            w: imgPE[i].offsetWidth
+                        };
+                        break;
+                    }
+                }
+            }
             var imgAS={//实际尺寸。
-                h:img.naturalHeight||imgCS.h,
-                w:img.naturalWidth||imgCS.w,
+                h:img.naturalHeight > 1 ? img.naturalHeight : imgCS.h,
+                w:img.naturalWidth > 1 ? img.naturalWidth : imgCS.w,
             };
             if(!src && matchedRule.rules.length>0){// 通过高级规则获取.
                 // 排除
@@ -23735,6 +23944,12 @@ ImgOps | https://imgops.com/#b#`;
             if(/^IMG$/i.test(img.nodeName) && !src && iPASrc){//链接可能是一张图片...
                 if(iPASrc!=img.src && imageReg.test(iPASrc)){
                     src=iPASrc;
+                    if (/[&\?]url\=/.test(src)) {
+                        src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                        try {
+                            src = decodeURIComponent(src);
+                        } catch (e) {}
+                    }
                 }
                 if(src)type='scale';
             }
@@ -23812,7 +24027,7 @@ ImgOps | https://imgops.com/#b#`;
             if (url.indexOf('.video') !== -1 || url.indexOf('video:') === 0)
                 return true;
 
-            url = url.replace(/.gif(\?width=\d*&|\?)format=mp4/, '.mp4?');
+            url = url.replace(/.gif(\?width=\d*&|\?)format=mp4/, '.mp4?').replace(/\/$/, "");
             if (url.lastIndexOf('?') > 0)
                 url = url.substring(0, url.lastIndexOf('?'));
             const ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
@@ -23825,6 +24040,7 @@ ImgOps | https://imgops.com/#b#`;
         function isAudioLink(url) {
             if (url.indexOf('.audio') !== -1 || url.indexOf('audio:') === 0)
                 return true;
+            url = url.replace(/\/$/, "");
             if (url.lastIndexOf('?') > 0)
                 url = url.substring(0, url.lastIndexOf('?'));
             const ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
@@ -24115,7 +24331,7 @@ ImgOps | https://imgops.com/#b#`;
                         newSrc = rule.getImage.call(target || img, a, p, rule);
                     } else newSrc = null;
                     if (!base64Img && rule.r && img.src) {
-                        if (!newSrc) newSrc = img.src;
+                        if (!newSrc) newSrc = img.currentSrc || img.src;
                         newSrc = this.replaceByRule(newSrc, rule);
                     }
                     if (newSrc && newSrc.length > 0 && newSrc != (img.currentSrc || img.src)) {
@@ -24197,12 +24413,15 @@ ImgOps | https://imgops.com/#b#`;
                                     flashEle(targetImg);
                                 },0);
                             };
-                            window.postMessage({
-                                messageID:messageID,
-                                command:'navigateToImg',
-                                exist:exist,
-                                to:data.from,
-                            },'*');
+                            if (data.from) {
+                                window.postMessage({
+                                    messageID:messageID,
+                                    command:'navigateToImg',
+                                    exist:exist,
+                                    to:data.from,
+                                    index:data.index
+                                },'*');
+                            }
                         }break;
                         case 'sendFail':{
                             frameSentData=frameSentSuccessData;
@@ -24665,7 +24884,7 @@ ImgOps | https://imgops.com/#b#`;
                         for (let i = 0; i < checkLen; i++) {
                             let ele = elements[i];
                             if (!ele) continue;
-                            if (/img/i.test(ele.nodeName)) {
+                            if (/^img$/i.test(ele.nodeName)) {
                                 target = ele;
                                 result = null;
                                 found = true;
@@ -24821,10 +25040,17 @@ ImgOps | https://imgops.com/#b#`;
                     target = null;
                 }
                 if (target) {
+                    let src = target.href;
+                    if (/[&\?]url\=/.test(src)) {
+                        src = src.replace(/.*[&\?]url\=(.*?)(&.*|$)/, "$1");
+                        try {
+                            src = decodeURIComponent(src);
+                        } catch (e) {}
+                    }
                     result = {
-                        src: target.href,
+                        src: src,
                         type: "link",
-                        imgSrc: target.href,
+                        imgSrc: src,
                         noActual:true,
                         img: target,
                         description: target.title
@@ -24904,12 +25130,16 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
-        var checkFloatBarTimer;
+        var checkFloatBarTimer, initMouse = false;
         function globalMouseoverHandler(e) {
             if (galleryMode) return;//库模式全屏中......
             if (e.target == ImgWindowC.overlayer) return;
             let canPreview = checkPreview(e);
             if (e.type == "mousemove") {
+                if (!initMouse) {
+                    initMouse = true;
+                    return;
+                }
                 if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
                     if (canPreview) {
                         uniqueImgWinInitX = e.clientX;
@@ -24928,6 +25158,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (target.nodeName.toUpperCase() != 'IMG') return;
                 }
             }
+            if (!initMouse) return;
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
                 if (!e || !e.target || !e.target.parentNode) return;
@@ -24937,7 +25168,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         var selectionClientRect, selectionStr, selectionChanging = false;
-        document.addEventListener('selectionchange', (e) => {
+        document.addEventListener('selectionchange', e => {
             if (selectionChanging) return;
             selectionChanging = true;
             setTimeout(() => {
@@ -24951,6 +25182,10 @@ ImgOps | https://imgops.com/#b#`;
                     selectionClientRect = null;
                 }
             }, 300);
+        });
+
+        document.addEventListener('visibilitychange', e => {
+            initMouse = false;
         });
 
         async function input(sel, v) {
@@ -25124,6 +25359,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function keydown(event) {
+
             //if (ImgWindowC.showing) return;
             if (gallery && gallery.shown) return;
             if (inputActive(document)) {
@@ -25554,6 +25790,11 @@ ImgOps | https://imgops.com/#b#`;
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.download
                 },
+                'floatBar.disableKeySites': {
+                    label: i18n("disableKeySites"),
+                    type: 'textarea',
+                    "default": prefs.floatBar.disableKeySites
+                },
 
                 // 放大镜
                 'magnifier.radius': {
@@ -25917,6 +26158,11 @@ ImgOps | https://imgops.com/#b#`;
                     "default": (prefs.saveName || 0),
                     title: i18n("saveNameTip"),
                 },
+                'saveNameAddTitle': {
+                    label: i18n("saveNameAddTitle"),
+                    type: 'checkbox',
+                    "default": !!prefs.saveNameAddTitle
+                },
                 'debug': {
                     label: i18n("debug"),
                     type: 'checkbox',
@@ -26009,9 +26255,9 @@ ImgOps | https://imgops.com/#b#`;
                                         },
                                         {
                                             node: "a",
-                                            text: "Star Me on Github",
+                                            text: "Star Me on 🐱Github",
                                             attr: {
-                                                href: "https://github.com/hoothin/UserScripts#StarMe",
+                                                href: "https://github.com/hoothin/UserScripts",
                                                 target: "_blank"
                                             }
                                         },
@@ -26075,7 +26321,7 @@ ImgOps | https://imgops.com/#b#`;
                                             node: "a",
                                             text: "爱发电",
                                             attr: {
-                                                href: "https://afdian.net/@hoothin",
+                                                href: "https://afdian.com/@hoothin",
                                                 target: "_blank"
                                             }
                                         }
@@ -26190,11 +26436,24 @@ ImgOps | https://imgops.com/#b#`;
             if (viewMore == "1") {
                 gallery.maximizeSidebar();
             }
-        } else if (location.hostname == "github.com" && location.href == "https://github.com/hoothin/UserScripts#StarMe") {
-            let starButton = document.querySelector(".starring-container:not(.on)>.unstarred>form>button");
-            if (starButton) emuClick(starButton);
+            let imgCon = gallery.eleMaps['img-content'], waitingDouble = false, openImageTimer;
+            imgCon.addEventListener('click', e => {
+                if (e.target == imgCon) {
+                    clearTimeout(openImageTimer);
+                    if (waitingDouble) {
+                        waitingDouble = false;
+                        gallery.openImages({altKey: true});
+                        return;
+                    }
+                    waitingDouble = true;
+                    openImageTimer = setTimeout(() => {
+                        waitingDouble = false;
+                        gallery.openImages(e);
+                    }, 300);
+                }
+            }, true);
         } else if (prefs.gallery.autoOpenSites) {
-            var sitesArr=prefs.gallery.autoOpenSites.split("\n");
+            let sitesArr=prefs.gallery.autoOpenSites.split("\n");
             for(let s=0;s<sitesArr.length;s++){
                 let siteReg=sitesArr[s].trim();
                 let autoViewMore=siteReg[0]=="@";
@@ -26210,7 +26469,20 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         // 注册按键
-        document.addEventListener('keydown', keydown, true);
+        let disableKey = false;
+        if (prefs.floatBar.disableKeySites) {
+            let sitesArr = prefs.floatBar.disableKeySites.split("\n");
+            for(let s = 0; s < sitesArr.length; s++) {
+                let siteReg = sitesArr[s].trim();
+                if (new RegExp(siteReg).test(_URL)) {
+                    disableKey = true;
+                    break;
+                }
+            }
+        }
+        if (!disableKey) {
+            document.addEventListener('keydown', keydown, true);
+        }
 
         let canImport = false;
         for (let i = 0; i < ruleImportHost.length; i++) {
@@ -26561,6 +26833,22 @@ ImgOps | https://imgops.com/#b#`;
         switchSearch();
     }
 
-    init2();
+    if (window.top != window.self) {
+        if (window.self.innerWidth === 0 && window.self.innerHeight === 0) {
+            if (document.readyState !== "complete") {
+                window.addEventListener('load', e => {
+                    setTimeout(() => {
+                        if (window.self.innerWidth > 250 && window.self.innerHeight > 250) {
+                            init2();
+                        }
+                    }, 500);
+                });
+            }
+        } else {
+            init2();
+        }
+    } else {
+        init2();
+    }
 
 })(this,window,document,(typeof unsafeWindow=='undefined'? window : unsafeWindow));

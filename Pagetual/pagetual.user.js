@@ -4,16 +4,18 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @name:ko      東方永頁機
+// @name:pt-BR   Pagetual
 // @name:ru      Pagetual
 // @name:de      Pagetual
 // @name:es      Pagetual
 // @name:fr      Pagetual
 // @name:it      Pagetual
 // @namespace    hoothin
-// @version      1.9.37.65
+// @version      1.9.37.98
 // @description  Perpetual pages - powerful auto-pager script. Auto fetching next paginated web pages and inserting into current page for infinite scroll. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
+// @description:pt-BR  Páginas infinitas - um poderoso script de paginação automática. Carrega automaticamente as próximas páginas da web paginadas e as insere na página atual para rolagem infinita. Suporta milhares de sites sem nenhuma regra.
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
 // @description:ko     페이지가 매겨진 다음 웹 페이지를 자동으로 로드하고 현재 페이지에 삽입합니다. 규칙 없이 수천 개의 웹 사이트를 지원합니다.
 // @description:ru     Автоматическая подгрузка следующих страниц и вставка их содержимого в текущую страницу. Поддерживает тысячи сайтов даже с настройками по умолчанию.
@@ -45,12 +47,13 @@
 // @grant        GM.deleteValue
 // @grant        GM.info
 // @grant        GM.setClipboard
+// @homepage     https://github.com/hoothin/UserScripts/tree/master/Pagetual
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
 // @connect      ghproxy.com
 // @connect      hoothin.github.io
-// @run-at       document-idle
+// @run-at       document-end
 // @connect      *
 // @contributionURL      https://ko-fi.com/hoothin
 // @contributionAmount   1
@@ -60,7 +63,6 @@
 
 (function() {
     'use strict';
-
     const pauseVideo = () => {
         setTimeout(() => {
             [].forEach.call(document.querySelectorAll("video"), video => {
@@ -90,10 +92,10 @@
             }
         }
         if (getComputedStyle(document.documentElement).display === 'none') {
-          document.documentElement.style.display = 'block';
+            document.documentElement.style.display = 'block';
         }
         if (document.body && getComputedStyle(document.body).display === 'none') {
-          document.body.style.display = 'block';
+            document.body.style.display = 'block';
         }
         return;
     }
@@ -101,7 +103,9 @@
     if (window.top !== window.self) {
         try {
             if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
-                return;
+                if (window.top.location.origin !== window.self.location.origin) {
+                    return;
+                }
             }
         } catch(e) {
             return;
@@ -112,43 +116,44 @@
     const lang = navigator.appName === "Netscape" ? navigator.language : navigator.userLanguage;
     const langData = [
         {
+            // English translation update by github.com/https433, admin@abby0666.xyz.
             name: "English",
             match: ["en"],
             lang: {
-                enableDebug: "Enable debug output",
+                enableDebug: "Enable debug output to console",
                 updateNotification: "Notification after rules updated",
-                disable: "Disable",
+                disable: "Temporarily disable",
                 disableSite: "Toggle disabled state",
-                disableSiteTips: "Disabled on this site",
-                enableSiteTips: "Enabled on this site",
-                enable: "Enable",
-                toTop: "To Top",
-                toBottom: "To Bottom",
-                current: "Current Page",
+                disableSiteTips: "Disabled on this site.",
+                enableSiteTips: "Enabled on this site.",
+                enable: "Enable automatic page turning",
+                toTop: "Back to Top.",
+                toBottom: "Go to Bottom.",
+                current: "Current Page.",
                 forceIframe: "Force to join next page",
                 cancelForceIframe: "Cancel Force join",
-                configure: "Configure",
-                firstUpdate: "Click here to initialize the rules",
+                configure: "Configure Pagetual",
+                firstUpdate: "Click here to initialize the default rule list",
                 update: "Update online rules",
                 click2update: "Click to update rules from url now",
                 loadNow: "Load next automatically",
-                loadConfirm: "How much pages do you want to load? (0 means infinite)",
+                loadConfirm: "How many pages do you want to load? (0 means infinite)",
                 noNext: "No next link found, please create a new rule",
                 passSec: "Updated #t# seconds ago",
                 passMin: "Updated #t# minutes ago",
                 passHour: "Updated #t# hours ago",
                 passDay: "Updated #t# days ago",
-                cantDel: "Can't delete buildin rules",
+                cantDel: "Can't delete builtin rules",
                 confirmDel: "Are you sure you want to delete this rule?",
                 updateSucc: "Update succeeded",
-                beginUpdate: "Begin update, wait a minute please",
-                customUrls: "Import Pagetual or AutoPagerize rule url, One url per line",
+                beginUpdate: "Begin update, wait a moment please",
+                customUrls: "Import Pagetual or AutoPagerize rule url, one url per line.",
                 customRules: "Input custom rules. <a href='#t#'>✍️Contribute rules</a>",
                 save: "Save",
                 loadingText: "Shojo Now Loading...",
                 opacity: "Opacity",
                 opacityPlaceholder: "0: hide spacer",
-                hideBar: "Hide the paging spacer",
+                hideBar: "Hide the pagnation spacer",
                 hideBarButNoStop: "Hide but not stop",
                 dbClick2Stop: "Double-click on the blank space to pause",
                 sortTitle: "Sorting takes effect after the next rule update",
@@ -158,20 +163,20 @@
                 inputPageNum: "Enter page number to jump",
                 enableHistory: "Write browsing history after page turning",
                 enableHistoryAfterInsert: "Write browsing history immediately after splicing, otherwise write after browsing",
-                contentVisibility: "Automatically switch contentVisibility to improve rendering performance",
+                contentVisibility: "Automatically switch content-visibility to improve rendering performance",
                 initRun: "Turn pages immediately after opening",
                 preload: "Preload next page for speeding up",
-                click2ImportRule: "Click to import base rules link, then wait until the update is complete: ",
+                click2ImportRule: "Click to import base rules link, and then wait until the update is complete: ",
                 forceAllBody: "Join full body of page?",
                 openInNewTab: "Open urls of additions in new tab",
-                importSucc: "Import completed",
+                importSucc: "Import complete",
                 import: "Import",
-                editCurrent: "Edit rule for current",
-                editBlacklist: "Edit the blacklist urls, line by line, Support ? * for wildcard",
+                editCurrent: "Edit rule for current website",
+                editBlacklist: "Edit the url blacklist, one entry per line, Supports [?,*] wildcarding.",
                 upBtnImg: "Icon of back to top",
                 downBtnImg: "Icon of go to footer",
                 sideControllerIcon: "Icon of sidebar",
-                loadingTextTitle: "Loading text",
+                loadingTextTitle: "Loading",
                 dbClick2StopCtrl: "Ctrl key",
                 dbClick2StopAlt: "Alt key",
                 dbClick2StopShift: "Shift key",
@@ -182,15 +187,15 @@
                 firstAlert: "You have not imported the base rule, please select the appropriate rule to import",
                 picker: "Pagetual page element picker",
                 closePicker: "Close Pagetual picker",
-                pickerPlaceholder: "Element selector, Leave empty if you have no idea",
+                pickerPlaceholder: "Element selector, (Advanced users only, leave blank otherwise)",
                 pickerCheck: "Check selector and copy",
                 switchSelector: "Click to switch element",
                 gotoEdit: "Go to edit rule with current selector",
-                manualMode: "Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
+                manualMode: "Disable splicing, manually advance next page using the right arrow key (or dispatch event 'pagetual.next')",
                 clickMode: "Disable splicing, automatically click the next page when scrolling to the end of the page",
                 pageBarMenu: "Click the center of the page bar to open the picker menu",
                 nextSwitch: "Switch next link",
-                arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
+                arrowToScroll: "Press left arrow to scroll back and right arrow to advance page",
                 sideController: "Display the paging control bar in the sidebar",
                 sideControllerScroll: "Scroll toggle",
                 sideControllerAlways: "Always show",
@@ -208,22 +213,22 @@
                 page: "Page ",
                 prevPage: "Prev page",
                 nextPage: "Next page",
-                errorRulesMustBeArray: "Rules must be a Array!",
-                errorJson: "JSON error, check again!",
+                errorRulesMustBeArray: "Rules must be an Array!",
+                errorJson: "JSON error, Check again!",
                 editSuccess: "Edit successfully",
-                errorWrongUrl: "Wrong url, check again!",
-                errorAlreadyExists: "Already exists!",
+                errorWrongUrl: "Wrong url, Check again!",
+                errorAlreadyExists: "A rule already exists!",
                 settingsSaved: "The settings are saved, refresh to view",
-                iframe: "Iframe",
-                dynamic: "Dynamic",
-                reloadPage: "Edit completed, reload page now?",
+                iframe: "Forced split by iframe",
+                dynamic: "Dynamic loading",
+                reloadPage: "Edit completed, reload now?",
                 copied: "Copied",
-                noValidContent: "No valid content detected, Captcha action may be required, click to view",
-                outOfDate: "The script is outdated, update to the latest version in time!",
+                noValidContent: "No valid content detected, a Captcha may be present",
+                outOfDate: "The script is outdated, update to the latest version please.",
                 hideBarTips: "Hide the pagination bar, toggle immersive experience",
                 setConfigPage: "Set current page as the default configuration page",
                 wedata2github: "Change the wedata address to the mirror address in the github repository",
-                addOtherProp: "Add rule property",
+                addOtherProp: "Add rule properties",
                 addNextSelector: "Add selector content as nextLink",
                 addPageSelector: "Add selector content as pageElement",
                 propName: "Enter rule property name",
@@ -235,7 +240,131 @@
             }
         },
         {
-            //Translated by SrKalopsia (srkalopsia@gmail.com).
+            // Traduzido por Thiago Ramos (thiagojramos@outlook.com).
+            name: "Português (Brasil)",
+            match: ["pt", "pt-BR"],
+            lang: {
+                enableDebug: "Ativar log de depuração no console.",
+                updateNotification: "Notificar após a atualização das regras",
+                disable: "Desativar temporariamente.",
+                disableSite: "Rolagem infinita: Ativar / Desativar.",
+                disableSiteTips: "Desabilitado neste site.",
+                enableSiteTips: "Ativado neste site.",
+                enable: "Ativar rolagem automática de página.",
+                toTop: "Voltar ao Topo.",
+                toBottom: "Ir para o Rodapé.",
+                current: "Página Atual.",
+                forceIframe: "Forçar inclusão da próxima página",
+                cancelForceIframe: "Cancelar Inclusão Forçada",
+                configure: "Configurar o Pagetual",
+                firstUpdate: "Clique aqui para inicializar a lista de regras padrão",
+                update: "Atualizar regras online",
+                click2update: "Clique para atualizar as regras da URL agora",
+                loadNow: "Carregar mais páginas automaticamente",
+                loadConfirm: "Quantas páginas você deseja carregar? (0 = infinitas)",
+                noNext: "Nenhum link para a próxima página encontrado. Crie uma nova regra.",
+                passSec: "Atualizado há #t# segundos",
+                passMin: "Atualizado há #t# minutos",
+                passHour: "Atualizado há #t# horas",
+                passDay: "Atualizado há #t# dias",
+                cantDel: "Não é possível excluir as regras internas",
+                confirmDel: "Tem certeza que deseja excluir esta regra?",
+                updateSucc: "Atualização concluída com sucesso",
+                beginUpdate: "Iniciando atualização. Aguarde um momento, por favor.",
+                customUrls: "Importar URLs de regras do Pagetual ou AutoPagerize, uma URL por linha.",
+                customRules: "Inserir regras personalizadas. <a href='#t#'>✍️Contribuir com regras</a>",
+                save: "Salvar",
+                loadingText: "Carregando...",
+                opacity: "Opacidade",
+                opacityPlaceholder: "0: ocultar espaçador",
+                hideBar: "Ocultar o espaçador de paginação",
+                hideBarButNoStop: "Ocultar, mas não parar",
+                dbClick2Stop: "Clique duplo no espaço em branco para pausar",
+                sortTitle: "A classificação terá efeito após a próxima atualização da regra",
+                autoRun: "Ativar automaticamente (modo de lista negra)",
+                autoLoadNum: "Número de páginas para pré-carregar",
+                turnRate: "Mudar para a próxima página quando estiver a menos de 【X】 vezes a altura da página do rodapé",
+                inputPageNum: "Digite o número da página para pular",
+                enableHistory: "Gravar histórico de navegação após virar a página",
+                enableHistoryAfterInsert: "Gravar histórico de navegação imediatamente após a inclusão, caso contrário, gravar após a navegação",
+                contentVisibility: "Alternar automaticamente a visibilidade do conteúdo para melhorar o desempenho de renderização",
+                initRun: "Virar páginas imediatamente após a abertura",
+                preload: "Pré-carregar a próxima página para acelerar",
+                click2ImportRule: "Clique para importar o link com as regras básicas e aguarde até que a atualização seja concluída: ",
+                forceAllBody: "Incluir o corpo inteiro da página?",
+                openInNewTab: "Abrir URLs de adições em uma nova guia",
+                importSucc: "Importação concluída",
+                import: "Importar",
+                editCurrent: "Editar regra para o site atual.",
+                editBlacklist: "Editar a lista negra de URLs, uma entrada por linha, suporta curingas [?,*].",
+                upBtnImg: "Ícone de voltar ao topo",
+                downBtnImg: "Ícone de ir para o rodapé",
+                sideControllerIcon: "Ícone da barra lateral",
+                loadingTextTitle: "Carregando.",
+                dbClick2StopCtrl: "Tecla Ctrl",
+                dbClick2StopAlt: "Tecla Alt",
+                dbClick2StopShift: "Tecla Shift",
+                dbClick2StopMeta: "Tecla Meta",
+                dbClick2StopKey: "Tecla de Atalho",
+                pageElementCss: "Estilo CSS personalizado para os elementos da página principal",
+                customCss: "CSS completo personalizado",
+                firstAlert: "Você não importou a regra básica. Selecione a regra apropriada para importar.",
+                picker: "Seletor de elementos de página do Pagetual",
+                closePicker: "Fechar seletor do Pagetual",
+                pickerPlaceholder: "Seletor de elemento (apenas para usuários avançados, deixe em branco caso contrário)",
+                pickerCheck: "Verificar seletor e copiar",
+                switchSelector: "Clique para alternar o elemento",
+                gotoEdit: "Ir para editar regra com o seletor atual",
+                manualMode: "Desativar inclusão automática. Avançar manualmente para a próxima página usando a tecla de seta para a direita (ou enviar o evento 'pagetual.next')",
+                clickMode: "Desativar inclusão automática. Clicar automaticamente na próxima página ao rolar até o final da página",
+                pageBarMenu: "Clique no centro da barra de páginas para abrir o menu do seletor",
+                nextSwitch: "Alternar link 'próximo'",
+                arrowToScroll: "Pressione as setas para navegar: esquerda para voltar, direita para avançar página",
+                sideController: "Exibir a barra de controle de paginação na barra lateral",
+                sideControllerScroll: "Alternar rolagem",
+                sideControllerAlways: "Sempre mostrar",
+                hideLoadingIcon: "Ocultar animação de carregamento",
+                hideBarArrow: "Ocultar seta da barra de páginas",
+                duplicate: "Pagetual duplicado instalado! Verifique seu gerenciador de scripts.",
+                forceStateIframe: "Incorporar página inteira como iframe",
+                forceStateDynamic: "Carregar conteúdo dinâmico via iframe",
+                forceStateDisable: "Desativar rolagem de páginas neste site",
+                autoScrollRate: "Velocidade de rolagem (1 a 1000)",
+                disableAutoScroll: "Parar Rolagem Automática",
+                enableAutoScroll: "Ativar Rolagem Automática",
+                toggleAutoScroll: "Alternar Rolagem Automática",
+                ruleRequest: "Solicitar Regra",
+                page: "Página ",
+                prevPage: "Página anterior",
+                nextPage: "Próxima página",
+                errorRulesMustBeArray: "As regras devem ser um Array!",
+                errorJson: "Erro de JSON! Verifique novamente.",
+                editSuccess: "Edição feita com sucesso!",
+                errorWrongUrl: "URL incorreta! Verifique novamente.",
+                errorAlreadyExists: "Já existe uma regra!",
+                settingsSaved: "As configurações foram salvas. Atualize para visualizar.",
+                iframe: "Divisão forçada por iframe.",
+                dynamic: "Carregamento dinâmico.",
+                reloadPage: "Edição concluída. Deseja recarregar agora?",
+                copied: "Copiado",
+                noValidContent: "Nenhum conteúdo válido detectado. Um Captcha pode estar presente.",
+                outOfDate: "O script está desatualizado, atualize para a versão mais recente.",
+                hideBarTips: "Ocultar a barra de paginação, mudar para experiência imersiva",
+                setConfigPage: "Definir a página atual como a página de configuração padrão",
+                wedata2github: "Alterar o endereço do Wedata para o endereço espelho no repositório do GitHub",
+                addOtherProp: "Adicionar propriedades de regra",
+                addNextSelector: "Adicionar conteúdo do seletor como nextLink",
+                addPageSelector: "Adicionar conteúdo do seletor como pageElement",
+                propName: "Digite o nome da propriedade da regra",
+                propValue: "Digite o valor da propriedade da regra",
+                customFirst: "Ignorar cache para regras personalizadas locais",
+                rulesExample: "Exemplo de Regras",
+                lastPage: "Última página atingida",
+                lastPageTips: "Mostrar dicas ao atingir a última página"
+            }
+        },
+        {
+            // Translated by SrKalopsia (srkalopsia@gmail.com).
             name: "Español",
             match: ["es", "es-ES"],
             lang: {
@@ -359,129 +488,128 @@
             }
         },
         {
-            //Translated by Prankster 199 (vfggf95565).
+            // Translated by Prankster 199 (vfggf95565).
             name: "Arabic",
             match: ["ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE"],
+            encode: true, // In Firefox, Arabic characters may cause issues.
             lang: {
-                enableDebug: "تمكين تصحيح الأخطاء",
-                updateNotification: "إشعار بعد تحديث القواعد",
-                disable: "معطل",
-                disableSite: "تبديل حالة التعطيل/التفعيل للموقع",
-                disableSiteTips: "معطل على هذا الموقع",
-                enableSiteTips: "مفعل على هذا الموقع",
-                enable: "مفعل",
-                toTop: "إلى الأعلى",
-                toBottom: "إلى الأسفل",
-                current: "الصفحة الحالية",
-                forceIframe: "إجبار على الانضمام للصفحة التالية",
-                cancelForceIframe: "إلغاء الانضمام القسري",
-                configure: "إعداد",
-                firstUpdate: "انقر هنا لتفعيل القواعد لأول مرة",
-                update: "تحديث القواعد عبر الإنترنت",
-                click2update: "انقر لتحديث القواعد من الرابط الآن",
-                loadNow: "تحميل التالي تلقائيًا",
-                loadConfirm: "كم عدد الصفحات التي ترغب تحميلها؟ (0 يعني لانهائي)",
-                noNext: "لم يتم العثور على رابط الصفحة التالية، يرجى إنشاء قاعدة جديدة",
-                passSec: "تم التحديث منذ #t# ثانية",
-                passMin: "تم التحديث منذ #t# دقيقة",
-                passHour: "تم التحديث منذ #t# ساعة",
-                passDay: "تم التحديث منذ #t# يوم",
-                cantDel: "لا يمكن حذف القواعد المدمجة",
-                confirmDel: "هل أنت متأكد من حذف هذه القاعدة؟",
-                updateSucc: "تم التحديث بنجاح",
-                beginUpdate: "بدأ التحديث، يرجى الانتظار لحظة",
-                customUrls: "استيراد رابط قاعدة Pagetual أو AutoPagerize، رابط واحد لكل سطر",
-                customRules: "إدخال القواعد المخصصة. <a href='#t#'>✍️ساهم بالقواعد</a>",
-                save: "حفظ",
-                /* From the creator hoothin :
-                "Shojo Now Loading..." is a meme that refers to the game loading text in the Japanese Touhou (東方) game series. */
-                loadingText: "جارٍ التحميل...",
-                opacity: "الشفافية",
-                opacityPlaceholder: "0: إخفاء الفاصل",
-                hideBar: "إخفاء الفاصل التصفحي",
-                hideBarButNoStop: "إخفاء، لكن لا تتوقف",
-                dbClick2Stop: "انقر مزدوج على المساحة الفارغة للإيقاف",
-                sortTitle: "يتم تفعيل الفرز بعد التحديث التالي للقواعد",
-                autoRun: "تمكين تلقائي (وضع القائمة السوداء)",
-                autoLoadNum: "عدد صفحات التحميل المسبق",
-                turnRate: "الانتقال للصفحة التالية عندما تكون المسافة أقل من 【X】 مرات ارتفاع الصفحة من التذييل",
-                inputPageNum: "أدخل رقم الصفحة للانتقال",
-                enableHistory: "كتابة سجل التصفح بعد تحويل الصفحة",
-                enableHistoryAfterInsert: "كتابة سجل التصفح فورًا بعد الدمج، أو بعد التصفح",
-                contentVisibility: "التنقل التلقائي لرؤية المحتوى, لتحسين أداء العرض",
-                initRun: "الانتقال بين الصفحات فور الفتح",
-                preload: "تحميل الصفحة التالية مسبقًا لتسريع الأداء",
-                click2ImportRule: "انقر لاستيراد رابط القواعد الأساسية، ثم انتظر حتى يكتمل التحديث",
-                forceAllBody: "دمج كامل الصفحة كإطار؟",
-                openInNewTab: "فتح الروابط الإضافية في علامة تبويب جديدة",
-                importSucc: "تم الاستيراد بنجاح",
-                import: "استيراد",
-                editCurrent: "تحرير القاعدة للحالية",
-                editBlacklist: "تحرير عناوين القائمة السوداء، سطر بسطر، دعم؟ * للرموز المتحركة",
-                upBtnImg: "أيقونة العودة إلى الأعلى",
-                downBtnImg: "أيقونة الانتقال إلى الأسفل",
-                sideControllerIcon: "أيقونة الشريط الجانبي",
-                loadingTextTitle: "تحميل النص",
-                dbClick2StopCtrl: "مفتاح Ctrl",
-                dbClick2StopAlt: "مفتاح Alt",
-                dbClick2StopShift: "مفتاح Shift",
-                dbClick2StopMeta: "مفتاح Meta",
-                dbClick2StopKey: "مفاتيح الاختصار",
-                pageElementCss: "نمط مخصص لعناصر الصفحة الرئيسية",
-                customCss: "مخصص بالكامل CSS نمط",
-                firstAlert: "لم تستورد القاعدة الأساسية بعد، يرجى اختيار القاعدة المناسبة للاستيراد",
-                picker: "محدد عناصر الصفحة Pagetual",
-                closePicker: "إغلاق محدد Pagetual",
-                pickerPlaceholder: "محدد العناصر، اتركه فارغًا إذا كنت لا تعرف",
-                pickerCheck: "تحقق من المحدد ونسخ",
-                switchSelector: "انقر للتبديل بين العناصر",
-                gotoEdit: "اذهب لتحرير القاعدة بالمحدد الحالي",
-                manualMode: "تعطيل الدمج/الربط، واستخدام مفتاح الاتجاه الأيمن يدويًا للتمرير، واستخدام مفتاح السهم الأيسر للرجوع",
-                clickMode: "تعطيل الدمج/الربط، عند التمرير إلى نهاية الصفحة، سيتم النقر تلقائيًا على الصفحة التالية",
-                pageBarMenu: "انقر على مركز شريط الصفحة لفتح قائمة التحديد",
-                nextSwitch: "تبديل الرابط التالي",
-                arrowToScroll: "انقر على مفتاح السهم الأيمن للتمرير التالي ومفتاح السهم الأيسر للتمرير السابق",
-                sideController: "عرض شريط التحكم في التصفح الترقيم في الشريط الجانبي",
-                sideControllerScroll: "تبديل التمرير",
-                sideControllerAlways: "عرض دائمًا",
-                hideLoadingIcon: "إخفاء رمز التحميل",
-                hideBarArrow: "إخفاء سهم شريط الصفحة",
-                duplicate: "تم تثبيت Pagetual مكرر، تحقق من مدير النصوص البرمجية الخاص بك!",
-                forceStateIframe: "تضمين الصفحة بالكامل كإطار",
-                forceStateDynamic: "تحميل المحتوى الديناميكي عبر الإطار",
-                forceStateDisable: "تعطيل تحويل الصفحات على هذا الموقع",
-                autoScrollRate: "سرعة التمرير (1~1000)",
-                disableAutoScroll: "إيقاف التمرير التلقائي",
-                enableAutoScroll: "تمكين التمرير التلقائي",
-                toggleAutoScroll: "تبديل التمرير التلقائي",
-                ruleRequest: "طلب قاعدة",
-                page: "صفحة ",
-                prevPage: "الصفحة السابقة",
-                nextPage: "الصفحة التالية",
-                errorRulesMustBeArray: "يجب أن تكون القواعد مصفوفة!",
-                errorJson: "خطأ في JSON، تحقق مرة أخرى!",
-                editSuccess: "تم التحرير بنجاح",
-                errorWrongUrl: "عنوان URL خاطئ، تحقق مرة أخرى!",
-                errorAlreadyExists: "موجود بالفعل!",
-                settingsSaved: "تم حفظ الإعدادات، قم بالتحديث لعرض",
-                iframe: "إطار",
-                dynamic: "ديناميكي",
-                reloadPage: "اكتمل التحرير، إعادة تحميل الصفحة الآن؟",
-                copied: "تم النسخ",
-                noValidContent: "لم يتم الكشف عن محتوى صالح، قد يكون الإجراء Captcha مطلوبًا، انقر لعرض",
-                outOfDate: "النص البرمجي قديم، قم بالتحديث إلى الإصدار الأحدث في الوقت المناسب!",
-                hideBarTips: "إخفاء شريط التحكم في التصفح الترقيم ، والتبديل لوضع كامل الصفحة",
-                setConfigPage: "تعيين الصفحة الحالية كصفحة الإعداد الافتراضية",
-                wedata2github: "تغيير عنوان الويب داتا إلى العنوان البديل المرآة, في مستودع جيت هاب",
-                addOtherProp: "إضافة خاصية قاعدة",
-                addNextSelector: "إضافة محتوى المحدد كـ nextLink",
-                addPageSelector: "إضافة محتوى المحدد كـ pageElement",
-                propName: "أدخل اسم خاصية القاعدة",
-                propValue: "أدخل قيمة خاصية القاعدة",
-                customFirst: "تجاهل ذاكرة التخزين المؤقت للقواعد المخصصة المحلية",
-                rulesExample: "مثال على القواعد",
-                lastPage: "تم الوصول إلى الصفحة الأخيرة",
-                lastPageTips: "عرض تلميحات عند الوصول إلى الصفحة الأخيرة"
+                enableDebug: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%AA%D8%B5%D8%AD%D9%8A%D8%AD%20%D8%A7%D9%84%D8%A3%D8%AE%D8%B7%D8%A7%D8%A1",
+                updateNotification: "%D8%A5%D8%B4%D8%B9%D8%A7%D8%B1%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                disable: "%D9%85%D8%B9%D8%B7%D9%84",
+                disableSite: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%AD%D8%A7%D9%84%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B9%D8%B7%D9%8A%D9%84/%D8%A7%D9%84%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D9%84%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                disableSiteTips: "%D9%85%D8%B9%D8%B7%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                enableSiteTips: "%D9%85%D9%81%D8%B9%D9%84%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                enable: "%D9%85%D9%81%D8%B9%D9%84",
+                toTop: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89",
+                toBottom: "%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B3%D9%81%D9%84",
+                current: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9",
+                forceIframe: "%D8%A5%D8%AC%D8%A8%D8%A7%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%A7%D9%86%D8%B6%D9%85%D8%A7%D9%85%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                cancelForceIframe: "%D8%A5%D9%84%D8%BA%D8%A7%D8%A1%20%D8%A7%D9%84%D8%A7%D9%86%D8%B6%D9%85%D8%A7%D9%85%20%D8%A7%D9%84%D9%82%D8%B3%D8%B1%D9%8A",
+                configure: "%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF",
+                firstUpdate: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%87%D9%86%D8%A7%20%D9%84%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%84%D8%A3%D9%88%D9%84%20%D9%85%D8%B1%D8%A9",
+                update: "%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%B9%D8%A8%D8%B1%20%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA",
+                click2update: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%A2%D9%86",
+                loadNow: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%D9%8B%D8%A7",
+                loadConfirm: "%D9%83%D9%85%20%D8%B9%D8%AF%D8%AF%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D9%8A%20%D8%AA%D8%B1%D8%BA%D8%A8%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%D9%87%D8%A7%D8%9F%20(0%20%D9%8A%D8%B9%D9%86%D9%8A%20%D9%84%D8%A7%D9%86%D9%87%D8%A7%D8%A6%D9%8A)",
+                noNext: "%D9%84%D9%85%20%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D8%B9%D8%AB%D9%88%D8%B1%20%D8%B9%D9%84%D9%89%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A5%D9%86%D8%B4%D8%A7%D8%A1%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
+                passSec: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%AB%D8%A7%D9%86%D9%8A%D8%A9",
+                passMin: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%AF%D9%82%D9%8A%D9%82%D8%A9",
+                passHour: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D8%B3%D8%A7%D8%B9%D8%A9",
+                passDay: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%85%D9%86%D8%B0%20#t#%20%D9%8A%D9%88%D9%85",
+                cantDel: "%D9%84%D8%A7%20%D9%8A%D9%85%D9%83%D9%86%20%D8%AD%D8%B0%D9%81%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AF%D9%85%D8%AC%D8%A9",
+                confirmDel: "%D9%87%D9%84%20%D8%A3%D9%86%D8%AA%20%D9%85%D8%AA%D8%A3%D9%83%D8%AF%20%D9%85%D9%86%20%D8%AD%D8%B0%D9%81%20%D9%87%D8%B0%D9%87%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%D8%9F",
+                updateSucc: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                beginUpdate: "%D8%A8%D8%AF%D8%A3%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%B8%D8%A7%D8%B1%20%D9%84%D8%AD%D8%B8%D8%A9",
+                customUrls: "%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20Pagetual%20%D8%A3%D9%88%20AutoPagerize%D8%8C%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D9%88%D8%A7%D8%AD%D8%AF%20%D9%84%D9%83%D9%84%20%D8%B3%D8%B7%D8%B1",
+                customRules: "%D8%A5%D8%AF%D8%AE%D8%A7%D9%84%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AE%D8%B5%D8%B5%D8%A9.%20%3Ca%20href='#t#'%3E%E2%9C%8D%EF%B8%8F%D8%B3%D8%A7%D9%87%D9%85%20%D8%A8%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%3C/a%3E",
+                save: "%D8%AD%D9%81%D8%B8",
+                loadingText: "%D8%AC%D8%A7%D8%B1%D9%8D%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84...",
+                opacity: "%D8%A7%D9%84%D8%B4%D9%81%D8%A7%D9%81%D9%8A%D8%A9",
+                opacityPlaceholder: "0:%20%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%81%D8%A7%D8%B5%D9%84",
+                hideBar: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%A7%D9%84%D9%81%D8%A7%D8%B5%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%D9%8A",
+                hideBarButNoStop: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%D8%8C%20%D9%84%D9%83%D9%86%20%D9%84%D8%A7%20%D8%AA%D8%AA%D9%88%D9%82%D9%81",
+                dbClick2Stop: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%85%D8%B2%D8%AF%D9%88%D8%AC%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D8%AD%D8%A9%20%D8%A7%D9%84%D9%81%D8%A7%D8%B1%D8%BA%D8%A9%20%D9%84%D9%84%D8%A5%D9%8A%D9%82%D8%A7%D9%81",
+                sortTitle: "%D9%8A%D8%AA%D9%85%20%D8%AA%D9%81%D8%B9%D9%8A%D9%84%20%D8%A7%D9%84%D9%81%D8%B1%D8%B2%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D9%84%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                autoRun: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%20(%D9%88%D8%B6%D8%B9%20%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%B3%D9%88%D8%AF%D8%A7%D8%A1)",
+                autoLoadNum: "%D8%B9%D8%AF%D8%AF%20%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B3%D8%A8%D9%82",
+                turnRate: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D9%84%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D8%B9%D9%86%D8%AF%D9%85%D8%A7%20%D8%AA%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D9%85%D8%B3%D8%A7%D9%81%D8%A9%20%D8%A3%D9%82%D9%84%20%D9%85%D9%86%20%E3%80%90X%E3%80%91%20%D9%85%D8%B1%D8%A7%D8%AA%20%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%AA%D8%B0%D9%8A%D9%8A%D9%84",
+                inputPageNum: "%D8%A3%D8%AF%D8%AE%D9%84%20%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%84%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84",
+                enableHistory: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%AD%D9%88%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                enableHistoryAfterInsert: "%D9%83%D8%AA%D8%A7%D8%A8%D8%A9%20%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D9%81%D9%88%D8%B1%D9%8B%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC%D8%8C%20%D8%A3%D9%88%20%D8%A8%D8%B9%D8%AF%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD",
+                contentVisibility: "%D8%A7%D9%84%D8%AA%D9%86%D9%82%D9%84%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%20%D9%84%D8%B1%D8%A4%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89,%20%D9%84%D8%AA%D8%AD%D8%B3%D9%8A%D9%86%20%D8%A3%D8%AF%D8%A7%D8%A1%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6",
+                initRun: "%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D9%81%D9%88%D8%B1%20%D8%A7%D9%84%D9%81%D8%AA%D8%AD",
+                preload: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%20%D9%85%D8%B3%D8%A8%D9%82%D9%8B%D8%A7%20%D9%84%D8%AA%D8%B3%D8%B1%D9%8A%D8%B9%20%D8%A7%D9%84%D8%A3%D8%AF%D8%A7%D8%A1",
+                click2ImportRule: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9%D8%8C%20%D8%AB%D9%85%20%D8%A7%D9%86%D8%AA%D8%B8%D8%B1%20%D8%AD%D8%AA%D9%89%20%D9%8A%D9%83%D8%AA%D9%85%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB",
+                forceAllBody: "%D8%AF%D9%85%D8%AC%20%D9%83%D8%A7%D9%85%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%83%D8%A5%D8%B7%D8%A7%D8%B1%D8%9F",
+                openInNewTab: "%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9%20%D9%81%D9%8A%20%D8%B9%D9%84%D8%A7%D9%85%D8%A9%20%D8%AA%D8%A8%D9%88%D9%8A%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
+                importSucc: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                import: "%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF",
+                editCurrent: "%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%84%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9",
+                editBlacklist: "%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%B9%D9%86%D8%A7%D9%88%D9%8A%D9%86%20%D8%A7%D9%84%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%B3%D9%88%D8%AF%D8%A7%D8%A1%D8%8C%20%D8%B3%D8%B7%D8%B1%20%D8%A8%D8%B3%D8%B7%D8%B1%D8%8C%20%D8%AF%D8%B9%D9%85%D8%9F%20*%20%D9%84%D9%84%D8%B1%D9%85%D9%88%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%B1%D9%83%D8%A9",
+                upBtnImg: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D9%88%D8%AF%D8%A9%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89",
+                downBtnImg: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A3%D8%B3%D9%81%D9%84",
+                sideControllerIcon: "%D8%A3%D9%8A%D9%82%D9%88%D9%86%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AC%D8%A7%D9%86%D8%A8%D9%8A",
+                loadingTextTitle: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%86%D8%B5",
+                dbClick2StopCtrl: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Ctrl",
+                dbClick2StopAlt: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Alt",
+                dbClick2StopShift: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Shift",
+                dbClick2StopMeta: "%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20Meta",
+                dbClick2StopKey: "%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD%20%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D8%B5%D8%A7%D8%B1",
+                pageElementCss: "%D9%86%D9%85%D8%B7%20%D9%85%D8%AE%D8%B5%D8%B5%20%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9",
+                customCss: "%D9%85%D8%AE%D8%B5%D8%B5%20%D8%A8%D8%A7%D9%84%D9%83%D8%A7%D9%85%D9%84%20CSS%20%D9%86%D9%85%D8%B7",
+                firstAlert: "%D9%84%D9%85%20%D8%AA%D8%B3%D8%AA%D9%88%D8%B1%D8%AF%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9%20%D8%A8%D8%B9%D8%AF%D8%8C%20%D9%8A%D8%B1%D8%AC%D9%89%20%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A9%20%D9%84%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF",
+                picker: "%D9%85%D8%AD%D8%AF%D8%AF%20%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20Pagetual",
+                closePicker: "%D8%A5%D8%BA%D9%84%D8%A7%D9%82%20%D9%85%D8%AD%D8%AF%D8%AF%20Pagetual",
+                pickerPlaceholder: "%D9%85%D8%AD%D8%AF%D8%AF%20%D8%A7%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1%D8%8C%20%D8%A7%D8%AA%D8%B1%D9%83%D9%87%20%D9%81%D8%A7%D8%B1%D8%BA%D9%8B%D8%A7%20%D8%A5%D8%B0%D8%A7%20%D9%83%D9%86%D8%AA%20%D9%84%D8%A7%20%D8%AA%D8%B9%D8%B1%D9%81",
+                pickerCheck: "%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%88%D9%86%D8%B3%D8%AE",
+                switchSelector: "%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D9%84%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A8%D9%8A%D9%86%20%D8%A7%D9%84%D8%B9%D9%86%D8%A7%D8%B5%D8%B1",
+                gotoEdit: "%D8%A7%D8%B0%D9%87%D8%A8%20%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A8%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A",
+                manualMode: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC/%D8%A7%D9%84%D8%B1%D8%A8%D8%B7%D8%8C%20%D9%88%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%A7%D8%AA%D8%AC%D8%A7%D9%87%20%D8%A7%D9%84%D8%A3%D9%8A%D9%85%D9%86%20%D9%8A%D8%AF%D9%88%D9%8A%D9%8B%D8%A7%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%D8%8C%20%D9%88%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D8%B3%D8%B1%20%D9%84%D9%84%D8%B1%D8%AC%D9%88%D8%B9",
+                clickMode: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%A7%D9%84%D8%AF%D9%85%D8%AC/%D8%A7%D9%84%D8%B1%D8%A8%D8%B7%D8%8C%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A5%D9%84%D9%89%20%D9%86%D9%87%D8%A7%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%D8%8C%20%D8%B3%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D9%86%D9%82%D8%B1%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%D9%8B%D8%A7%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                pageBarMenu: "%D8%A7%D9%86%D9%82%D8%B1%20%D8%B9%D9%84%D9%89%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D9%84%D9%81%D8%AA%D8%AD%20%D9%82%D8%A7%D8%A6%D9%85%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AF",
+                nextSwitch: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A",
+                arrowToScroll: "%D8%A7%D9%86%D9%82%D8%B1%20%D8%B9%D9%84%D9%89%20%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D9%85%D9%86%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%20%D9%88%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%D8%A7%D9%84%D8%A3%D9%8A%D8%B3%D8%B1%20%D9%84%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D9%82",
+                sideController: "%D8%B9%D8%B1%D8%B6%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A7%D9%84%D8%AA%D8%B1%D9%82%D9%8A%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AC%D8%A7%D9%86%D8%A8%D9%8A",
+                sideControllerScroll: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1",
+                sideControllerAlways: "%D8%B9%D8%B1%D8%B6%20%D8%AF%D8%A7%D8%A6%D9%85%D9%8B%D8%A7",
+                hideLoadingIcon: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B1%D9%85%D8%B2%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84",
+                hideBarArrow: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B3%D9%87%D9%85%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                duplicate: "%D8%AA%D9%85%20%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA%20Pagetual%20%D9%85%D9%83%D8%B1%D8%B1%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D9%86%20%D9%85%D8%AF%D9%8A%D8%B1%20%D8%A7%D9%84%D9%86%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%20%D8%A8%D9%83!",
+                forceStateIframe: "%D8%AA%D8%B6%D9%85%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A8%D8%A7%D9%84%D9%83%D8%A7%D9%85%D9%84%20%D9%83%D8%A5%D8%B7%D8%A7%D8%B1",
+                forceStateDynamic: "%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D9%83%D9%8A%20%D8%B9%D8%A8%D8%B1%20%D8%A7%D9%84%D8%A5%D8%B7%D8%A7%D8%B1",
+                forceStateDisable: "%D8%AA%D8%B9%D8%B7%D9%8A%D9%84%20%D8%AA%D8%AD%D9%88%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A7%D8%AA%20%D8%B9%D9%84%D9%89%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9",
+                autoScrollRate: "%D8%B3%D8%B1%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20(1~1000)",
+                disableAutoScroll: "%D8%A5%D9%8A%D9%82%D8%A7%D9%81%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                enableAutoScroll: "%D8%AA%D9%85%D9%83%D9%8A%D9%86%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                toggleAutoScroll: "%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D9%85%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A",
+                ruleRequest: "%D8%B7%D9%84%D8%A8%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                page: "%D8%B5%D9%81%D8%AD%D8%A9%20",
+                prevPage: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D9%82%D8%A9",
+                nextPage: "%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9",
+                errorRulesMustBeArray: "%D9%8A%D8%AC%D8%A8%20%D8%A3%D9%86%20%D8%AA%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D9%85%D8%B5%D9%81%D9%88%D9%81%D8%A9!",
+                errorJson: "%D8%AE%D8%B7%D8%A3%20%D9%81%D9%8A%20JSON%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89!",
+                editSuccess: "%D8%AA%D9%85%20%D8%A7%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%20%D8%A8%D9%86%D8%AC%D8%A7%D8%AD",
+                errorWrongUrl: "%D8%B9%D9%86%D9%88%D8%A7%D9%86%20URL%20%D8%AE%D8%A7%D8%B7%D8%A6%D8%8C%20%D8%AA%D8%AD%D9%82%D9%82%20%D9%85%D8%B1%D8%A9%20%D8%A3%D8%AE%D8%B1%D9%89!",
+                errorAlreadyExists: "%D9%85%D9%88%D8%AC%D9%88%D8%AF%20%D8%A8%D8%A7%D9%84%D9%81%D8%B9%D9%84!",
+                settingsSaved: "%D8%AA%D9%85%20%D8%AD%D9%81%D8%B8%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%D8%A7%D8%AA%D8%8C%20%D9%82%D9%85%20%D8%A8%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D9%84%D8%B9%D8%B1%D8%B6",
+                iframe: "%D8%A5%D8%B7%D8%A7%D8%B1",
+                dynamic: "%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D9%83%D9%8A",
+                reloadPage: "%D8%A7%D9%83%D8%AA%D9%85%D9%84%20%D8%A7%D9%84%D8%AA%D8%AD%D8%B1%D9%8A%D8%B1%D8%8C%20%D8%A5%D8%B9%D8%A7%D8%AF%D8%A9%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A2%D9%86%D8%9F",
+                copied: "%D8%AA%D9%85%20%D8%A7%D9%84%D9%86%D8%B3%D8%AE",
+                noValidContent: "%D9%84%D9%85%20%D9%8A%D8%AA%D9%85%20%D8%A7%D9%84%D9%83%D8%B4%D9%81%20%D8%B9%D9%86%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%B5%D8%A7%D9%84%D8%AD%D8%8C%20%D9%82%D8%AF%20%D9%8A%D9%83%D9%88%D9%86%20%D8%A7%D9%84%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%20Captcha%20%D9%85%D8%B7%D9%84%D9%88%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A7%D9%86%D9%82%D8%B1%20%D9%84%D8%B9%D8%B1%D8%B6",
+                outOfDate: "%D8%A7%D9%84%D9%86%D8%B5%20%D8%A7%D9%84%D8%A8%D8%B1%D9%85%D8%AC%D9%8A%20%D9%82%D8%AF%D9%8A%D9%85%D8%8C%20%D9%82%D9%85%20%D8%A8%D8%A7%D9%84%D8%AA%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D8%AF%D8%AB%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%88%D9%82%D8%AA%20%D8%A7%D9%84%D9%85%D9%86%D8%A7%D8%B3%D8%A8!",
+                hideBarTips: "%D8%A5%D8%AE%D9%81%D8%A7%D8%A1%20%D8%B4%D8%B1%D9%8A%D8%B7%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B5%D9%81%D8%AD%20%D8%A7%D9%84%D8%AA%D8%B1%D9%82%D9%8A%D9%85%20%D8%8C%20%D9%88%D8%A7%D9%84%D8%AA%D8%A8%D8%AF%D9%8A%D9%84%20%D9%84%D9%88%D8%B6%D8%B9%20%D9%83%D8%A7%D9%85%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9",
+                setConfigPage: "%D8%AA%D8%B9%D9%8A%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9%20%D9%83%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF%20%D8%A7%D9%84%D8%A7%D9%81%D8%AA%D8%B1%D8%A7%D8%B6%D9%8A%D8%A9",
+                wedata2github: "%D8%AA%D8%BA%D9%8A%D9%8A%D8%B1%20%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D9%88%D9%8A%D8%A8%20%D8%AF%D8%A7%D8%AA%D8%A7%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D8%A8%D8%AF%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%B1%D8%A2%D8%A9,%20%D9%81%D9%8A%20%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%20%D8%AC%D9%8A%D8%AA%20%D9%87%D8%A7%D8%A8",
+                addOtherProp: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                addNextSelector: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%83%D9%80%20nextLink",
+                addPageSelector: "%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D8%AD%D8%AA%D9%88%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%20%D9%83%D9%80%20pageElement",
+                propName: "%D8%A3%D8%AF%D8%AE%D9%84%20%D8%A7%D8%B3%D9%85%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                propValue: "%D8%A3%D8%AF%D8%AE%D9%84%20%D9%82%D9%8A%D9%85%D8%A9%20%D8%AE%D8%A7%D8%B5%D9%8A%D8%A9%20%D8%A7%D9%84%D9%82%D8%A7%D8%B9%D8%AF%D8%A9",
+                customFirst: "%D8%AA%D8%AC%D8%A7%D9%87%D9%84%20%D8%B0%D8%A7%D9%83%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AE%D8%B2%D9%8A%D9%86%20%D8%A7%D9%84%D9%85%D8%A4%D9%82%D8%AA%20%D9%84%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF%20%D8%A7%D9%84%D9%85%D8%AE%D8%B5%D8%B5%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D9%84%D9%8A%D8%A9",
+                rulesExample: "%D9%85%D8%AB%D8%A7%D9%84%20%D8%B9%D9%84%D9%89%20%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%B9%D8%AF",
+                lastPage: "%D8%AA%D9%85%20%D8%A7%D9%84%D9%88%D8%B5%D9%88%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9",
+                lastPageTips: "%D8%B9%D8%B1%D8%B6%20%D8%AA%D9%84%D9%85%D9%8A%D8%AD%D8%A7%D8%AA%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D9%88%D8%B5%D9%88%D9%84%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%20%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D8%A9"
             }
         },
         {
@@ -749,7 +877,7 @@
                 configure: "設定ページを開く",
                 firstUpdate: "ここをクリックしてルールを初期化します",
                 update: "更新ルール",
-                click2update: "今すぐルールを更新してください",
+                click2update: "今すぐルールを更新",
                 loadNow: "今すぐページをめくる",
                 loadConfirm: "数ページめくりたいですか？（0は途切れない）",
                 noNext: "次のページが見つかりません、新しいルールを作成してください",
@@ -762,7 +890,7 @@
                 updateSucc: "更新に成功しました",
                 beginUpdate: "更新中、お待ちください",
                 customUrls: "インポートルールのURL、1行に1つ",
-                customRules: "【東方永頁機】の形式でカスタムルールを入力してください <a href='#t#'>✍️寄稿ルール</a>",
+                customRules: "【東方永頁機】の形式でルールを入力してください <a href='#t#'>✍️寄稿</a>",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity: "不透明値",
@@ -771,7 +899,7 @@
                 hideBarButNoStop: "非表示にするが停止しない",
                 dbClick2Stop: "空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle: "並べ替えは、次のルールの更新後に有効になります",
-                autoRun: "自動的に有効",
+                autoRun: "自動的に有効 (blacklist mode)",
                 autoLoadNum: "指定したページ数を自動的に読み込みます",
                 turnRate: "ページの端からページの高さの【X】倍になったらページをめくる",
                 inputPageNum: "ジャンプするページ番号を入力",
@@ -787,9 +915,9 @@
                 import: "インポート",
                 editCurrent: "現在のルールの編集",
                 editBlacklist: "ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
-                upBtnImg: "トップアイコンに戻る",
-                downBtnImg: "フッターアイコンに移動",
-                sideControllerIcon: "サイドバー アイコン",
+                upBtnImg: "Icon of back to top",
+                downBtnImg: "Icon of go to footer",
+                sideControllerIcon: "Icon of sidebar",
                 loadingTextTitle: "テキストをロード",
                 dbClick2StopCtrl: "Ctrlキー",
                 dbClick2StopAlt: "Altキー",
@@ -821,7 +949,7 @@
                 forceStateDisable: "このステーションでのページめくりを無効にする",
                 autoScrollRate: "スクロール速度 (1~1000)",
                 disableAutoScroll: "自動スクロールを停止します",
-                EnableAutoScroll: "自動スクロールを有効にする",
+                enableAutoScroll: "自動スクロールを有効にする",
                 toggleAutoScroll: "自動スクロールの切り替え",
                 ruleRequest: "ルール要求",
                 page: "Page ",
@@ -987,6 +1115,11 @@
             let lang = langData[i];
             if (lang && lang.match.indexOf(la) !== -1) {
                 i18nData = lang.lang;
+                if (lang.encode) {
+                    for (let k in i18nData) {
+                        i18nData[k] = decodeURI(i18nData[k]);
+                    }
+                }
                 break;
             }
         }
@@ -1156,20 +1289,21 @@
             storage.setItem(list, listData);
         });
     }
-    const isMobile = ('ontouchstart' in document.documentElement);
+    const isMobile = ('ontouchstart' in document.documentElement && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     const configPage = [`https://pagetual.hoothin.com/${lang === 'zh-CN' ? 'cn/' : ''}rule.html`,
                         "https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                         "https://hoothin.github.io/UserScripts/Pagetual/"];
     const firstRunPage = "https://pagetual.hoothin.com/firstRun";
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684(\-[^\/]*)?(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)|^https:\/\/pagetual\.hoothin\.com\/.*firstRun\.html/i;
     const allOfBody = "body>*";
     const mainSel = ["article,.article","[role=main],main,.main,#main","#results"];
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u005c\u0073\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007c\u0412\u043f\u0435\u0440\u0435\u0434", "i");
-    const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u007c\u00bb\u007c\u003e\u003e\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
-    const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
-    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, clickedSth = false, loadNowNum = 5, autoScrollRate = 50;
-    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false;
+    const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u005c\u0073\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u2192\u005d\u007c\u0024\u0029", "i");
+    const prevReg = new RegExp("\u005e\u005c\u0073\u002a\u0028\u005b\u4e0a\u524d\u9996\u5c3e\u005d\u007c\u0070\u0072\u0065\u0076\u0069\u006f\u0075\u0073\u007c\u0065\u006e\u0064\u0029", "i");
+    const lazyImgAttr = ["data-lazy-src", "data-s", "data-lazy", "data-isrc", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
+    var rulesData = {uninited: true, firstRun: true, sideController: !isMobile}, ruleUrls, updateDate, loadNowNum = 5, autoScrollRate = 50;
+    var isPause = false, manualPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, autoScroll = 0, autoScrollInterval, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false, openInNewTab = 0, charset = "UTF-8", charsetValid = true, urlWillChange = false, hidePageBar = false;
     var tryTimes = 0, showedLastPageTips = false, rate = 1, author = '';
 
     function getBody(doc) {
@@ -1181,8 +1315,19 @@
         doc = (doc && doc.evaluate) ? doc : document;
         contextNode = contextNode || doc;
         try {
-            let result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-            return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            let xpathNode = (s, d, n) => {
+                let result = d.evaluate(s, n, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
+                return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            };
+            let selSplit = xpath.split(" =>> ");
+            if (selSplit.length === 2) {
+                let ele = xpathNode(selSplit[0], doc, contextNode);
+                if (ele && ele.shadowRoot) {
+                    return xpathNode(selSplit[1], ele.shadowRoot, ele.shadowRoot);
+                }
+            } else {
+                return xpathNode(xpath, doc, contextNode);
+            }
         } catch (err) {
             debug(`Invalid xpath: ${xpath}`);
         }
@@ -1217,6 +1362,10 @@
 
     function getAllElements(sel, doc, contextNode) {
         try {
+            if (sel.indexOf(" =>> ") !== -1) {
+                let result = getElement(sel, doc, contextNode);
+                return result && [result];
+            }
             if (!isXPath(sel)) {
                 return doc.querySelectorAll(sel);
             }
@@ -1229,19 +1378,26 @@
     function getElement(sel, doc, contextNode, bySort) {
         try {
             if (!isXPath(sel)) {
+                let checkShadow = s => {
+                    let selSplit = s.split(" =>> ");
+                    if (selSplit.length === 2) {
+                        let ele = doc.querySelector(selSplit[0]);
+                        return ele && ele.shadowRoot && ele.shadowRoot.querySelector(selSplit[1]);
+                    } else return doc.querySelector(s);
+                };
                 if (!bySort) {
-                    return doc.querySelector(sel);
+                    return checkShadow(sel);
                 } else {
                     let selArr = sel.split(",");
                     try {
                         for (let i = 0; i < selArr.length; i++) {
-                            let ele = doc.querySelector(selArr[i].trim());
+                            let ele = checkShadow(selArr[i].trim());
                             if (ele) {
                               return ele;
                             }
                         }
                     } catch(e) {
-                        return doc.querySelector(sel);
+                        return checkShadow(sel);
                     }
                     return null;
                 }
@@ -1628,7 +1784,9 @@
                 if (!include) {
                     if (doc !== document) {
                         getBody(doc).scrollTop = 9999999;
-                        doc.documentElement.scrollTop = 9999999;
+                        if (doc.documentElement) {
+                            doc.documentElement.scrollTop = 9999999;
+                        }
                     }
                     return false;
                 }
@@ -1686,7 +1844,7 @@
 
         async getRule(callback) {
             var href = location.href.slice(0, 500);
-            if(noRuleTest) {
+            if (noRuleTest) {
                 this.curSiteRule = {};
                 this.curSiteRule.url = href;
                 this.curSiteRule.smart = true;
@@ -1835,7 +1993,10 @@
             for (let i in this.smartRules) {
                 let rule = this.smartRules[i];
                 if (!rule || !rule.url || !rule.smart) continue;
-                if (href == rule.url) {
+                if (href === rule.url) {
+                    setRule(rule);
+                    return;
+                } else if (rule.listenUrlChange === false && href.replace(/[^\/]+$/, "") === rule.url) {
                     setRule(rule);
                     return;
                 }
@@ -1853,7 +2014,11 @@
                         if (checkRule(rule)) return;
                     }
                     if (end >= self.rules.length) {
-                        setRule({url: href, smart: true});
+                        if (document.documentElement && document.documentElement.className && document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) {
+                            setRule({url: href.replace(/[^\/]+$/, ""), smart: true, nextLink: 0, listenUrlChange: false});
+                        } else {
+                            setRule({url: href, smart: true});
+                        }
                         return;
                     } else {
                         searchByTime();
@@ -1976,7 +2141,7 @@
         getValidSize(ele, win) {
             if (!win) return {h: 0, w: 0};
             let eleStyle = win.getComputedStyle(ele);
-            if (!ele.offsetParent && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
+            if (!ele.offsetParent && eleStyle.display !== "contents" && (eleStyle.position !== "fixed" || eleStyle.opacity === 0)) {
                 return {h: 0, w: 0};
             }
             if (ele.children && ele.children.length === 1 && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
@@ -2101,14 +2266,30 @@
                         }
                     }
                 }
-                if (this.curSiteRule.smart && pageElement && pageElement.length && curWin && curWin !== _unsafeWindow) {
+                if (this.curSiteRule.smart && pageElement && pageElement.length) {
                     if (pageElement.length === 1 && !pageElement[0].src && pageElement[0].innerHTML.trim() === "") {
                         pageElement = null;
-                    } else {
+                    } else if (curWin && curWin !== _unsafeWindow) {
                         let parent = pageElement[0].parentNode;
                         let loading = parent.querySelector('[class*=loading]');
                         if (loading && loading.offsetParent && loading.offsetHeight > parent.offsetHeight>>2) {
                             pageElement = null;
+                        } else {
+                            loading = parent.querySelector('[class*=skeleton-item]');
+                            if (loading && loading.offsetParent && loading.offsetHeight) {
+                                var actualTop = loading.offsetTop;
+                                var current = loading.offsetParent;
+                                while (current !== null) {
+                                    actualTop += current.offsetTop;
+                                    current = current.offsetParent;
+                                }
+                                getBody(doc).scrollTop = 0;
+                                doc.documentElement.scrollTop = 0;
+                                let maxHeight = Math.max(getBody(doc).scrollHeight, doc.documentElement.scrollHeight);
+                                getBody(doc).scrollTop = actualTop - 10;
+                                doc.documentElement.scrollTop = actualTop - 10;
+                                pageElement = null;
+                            }
                         }
                     }
                 }
@@ -2201,7 +2382,7 @@
                         }
                         if (compareNodeName(curNode, ["canvas", "nav"])) continue;
                         let curStyle = curWin.getComputedStyle(curNode);
-                        if (!curNode.offsetParent && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
+                        if (!curNode.offsetParent && curStyle.display !== "contents" && (curStyle.position !== "fixed" || curStyle.opacity === 0)) {
                             continue;
                         }
                         if (!compareNodeName(curNode, ["img"]) && curNode.querySelector('img') === null && /^\s*$/.test(curNode.innerText)) continue;
@@ -2256,7 +2437,7 @@
                                 }
                             }
                             if (h < minHeight) {
-                                if (!needCheckNext || h < (windowHeight>>1)) {
+                                if (!needCheckNext || h < (minHeight>>1)) {
                                     continue;
                                 }
                                 if (!ele.contains(self.initNext)) {
@@ -2347,7 +2528,12 @@
                     while (posEle && !posEle.offsetParent) {
                         posEle = posEle.previousElementSibling || posEle.parentNode;
                     }
-                    if (posEle && posEle.scrollHeight === 0 && posEle.lastElementChild) posEle = posEle.lastElementChild;
+                    if (posEle && posEle.lastElementChild) {
+                        if (posEle.scrollHeight === 0) posEle = posEle.lastElementChild;
+                        else if (posEle.lastElementChild.offsetTop > 500) {
+                            posEle = posEle.lastElementChild;
+                        }
+                    }
                     let lastBottom = forceState !== 2 && forceState !== 3 && posEle && getElementBottom(posEle);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
                         debug("Stop as too long between next & page element, try to enable Force-Join mode.");
@@ -2481,7 +2667,7 @@
                 let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
                 if (!contentVisibility && !pageElementCss) return;
                 [].forEach.call(pageElement, (ele, i) => {
-                    if (!compareNodeName(ele, ["link", "meta", "style", "script"])) {
+                    if (!compareNodeName(ele, ["link", "meta", "style", "script", "title"])) {
                         if (pageElementCss) {
                             if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
@@ -2517,7 +2703,7 @@
         }
 
         linkHasHref(link) {
-            return link.href && link.href.replace && !this.hrefIsJs(link.href);
+            return link && link.href && link.href.replace && !this.hrefIsJs(link.href);
         }
 
         hrefIsJs(href) {
@@ -2530,11 +2716,10 @@
                 let sel = list[i];
                 let result = getAllElements(sel, source);
                 if (result.length > 0) {
-                    if (defaultView) {
-                        for (let i = result.length - 1; i >= 0; i--) {
-                            let ele = result[i];
-                            if (isVisible(ele, defaultView)) return ele;
-                        }
+                    for (let i = result.length - 1; i >= 0; i--) {
+                        let ele = result[i];
+                        if (prevReg.test(ele.innerText)) continue;
+                        if (!defaultView || isVisible(ele, defaultView)) return ele;
                     }
                     return result[result.length - 1];
                 }
@@ -2549,7 +2734,7 @@
                     return false;
                 }
                 if (e.className) {
-                    if (/slick|slide|gallery|disabled\s*$/i.test(e.className)) {
+                    if (/slick|slide|carousel|gallery|disabled\s*$/i.test(e.className)) {
                         return false;
                     } else if (e.classList) {
                         if (e.classList.contains('disabled') || e.classList.contains('active')) {
@@ -2558,7 +2743,7 @@
                     }
                 }
                 let ariaLabel = e.getAttribute("aria-label");
-                if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) return false;
+                if (ariaLabel && /slick|slide|carousel|gallery/i.test(ariaLabel)) return false;
                 return true;
             };
             if (!ele) return false;
@@ -2571,7 +2756,6 @@
         }
 
         async getPage(doc, exist) {
-            if (document.documentElement.className.indexOf && document.documentElement.className.indexOf('discourse') !== -1) return {};
             let body = getBody(doc);
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
@@ -2610,15 +2794,17 @@
                 ".curPage+a",
                 ".nextPage",
                 ".pagination-next>a",
+                ".pagination>.active+a",
                 "a[data-pagination=next]",
                 ".pageButtonsCurrent+a",
                 "a[class*=nextpage]",
                 "li.page-current+li>a",
                 "[class^=pag] a[rel=next]",
                 "[class^=Pag] [aria-label=next]",
+                "[class^=Pag] [aria-label=Next]",
                 "[aria-label='Next Page']",
                 "[aria-label='Next page']",
-                "[aria-label='next page']",
+                "[aria-label$='next page']",
                 ".pagination-nav__item--next>a",
                 "a.pageright",
                 ".page-numbers.current+a",
@@ -2653,7 +2839,8 @@
                 "body [class*=pagination-next]>button",
                 "body [class*=page--current]+li>a",
                 "body [class*=Pages]>.curr+a",
-                "body [class*=pagination] .next-btn",
+                "body [class*=page]>.cur+a",
+                "body [class*=pagination] [class*=next]",
                 ".page>em+a",
                 "[name*=nextPage]",
                 '//button[contains(@class, "Page")][text()="Next"]',
@@ -2663,7 +2850,6 @@
             if (!next) {
                 await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
-                const prevReg = /^\s*([上前首尾]|previous)/i;
                 for (i = 0; i < nexts.length; i++) {
                     let n = nexts[i];
                     if (this.verifyElement(n) && this.linkHasHref(n) && !prevReg.test(n.innerText.trim())) {
@@ -2697,7 +2883,7 @@
                 await sleep(1);
                 next = body.querySelector("a.curr+a") ||
                     body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a") ||
-                    body.querySelector(".number>ul>li.active+li>a");
+                    body.querySelector(".number>ul>li.active+li>a,.pager a.next");
             }
             if (!next) {
                 await sleep(1);
@@ -2705,7 +2891,8 @@
                 if (pageDiv) {
                     cur = pageDiv.querySelector("li>b,li>strong");
                     if (cur) next = cur.parentNode.nextElementSibling;
-                    if (next) next = next.querySelector("a");
+                    if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
+                    else next = null;
                 }
             }
             if (!next) {
@@ -2715,10 +2902,22 @@
             }
             if (!next) {
                 await sleep(1);
-                let pageDiv = body.querySelector(".pagination");
+                let pageDiv = body.querySelector(".pagination,.pagination-list");
                 if (pageDiv) {
                     cur = pageDiv.querySelector("[class*=current],.page-selected");
                     if (cur) next = cur.parentNode.nextElementSibling;
+                    if (next && next.nodeName === cur.parentNode.nodeName) next = next.querySelector("a");
+                    else next = null;
+                }
+            }
+            if (!next) {
+                await sleep(1);
+                cur = body.querySelector(".paginator td strong");
+                if (cur) {
+                    while (cur && !compareNodeName(cur, ["td"])) {
+                        cur = cur.parentNode;
+                    }
+                    next = cur && cur.nextElementSibling;
                     if (next) next = next.querySelector("a");
                 }
             }
@@ -2789,7 +2988,7 @@
                             }
                             if (!next4) {
                                 if (!next2) {
-                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^(»|>>)$/.test(innerText)) {
+                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older|next.chap/i.test(aTag.className) || /^(»|>>)$/.test(innerText)) {
                                         if (isJs) {
                                             if (!nextJs2) nextJs2 = aTag;
                                         } else {
@@ -3003,6 +3202,19 @@
             return pageNum === url ? defaultPage : (pageNum.length > 4 ? defaultPage : pageNum);
         }
 
+        reachedLastPage() {
+            if (rulesData.lastPageTips) {
+                showTips(i18n("lastPage"), "", 800);
+            }
+            _unsafeWindow.postMessage({
+                action: "lastPage",
+                command: 'pagetual'
+            }, '*');
+            if (sideController.inited) {
+                sideController.frame.classList.add("end");
+            }
+        }
+
         async getNextLink(doc, exist) {
             let nextLink = null, page, href;
             let getNextLinkByForm = (form, submitBtn, n) => {
@@ -3140,7 +3352,7 @@
                     }
                     if (doc === document) {
                         if (!this.linkHasHref(nextLink)) {
-                            if ((clickedSth && this.curSiteRule.smart) || !isVisible(nextLink, _unsafeWindow)) {
+                            if (!isVisible(nextLink, _unsafeWindow)) {
                                 this.nextLinkHref = false;
                                 return null;
                             }
@@ -3189,15 +3401,15 @@
                 }
             }
             if (nextLink) {
+                if (doc === document && nextLink.offsetParent) {
+                    let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+                    let actualBottom = getElementBottom(nextLink);
+                    bottomGap = scrollH - actualBottom + (window.innerHeight || document.documentElement.clientHeight) * rate;
+                    if (bottomGap < 100) bottomGap = 100;
+                }
                 if (!this.checkStopSign(nextLink, doc)) {
                     if (curPage > 1) {
-                        if (rulesData.lastPageTips) {
-                            showTips(i18n("lastPage"), "", 800);
-                        }
-                        _unsafeWindow.postMessage({
-                            action: "lastPage",
-                            command: 'pagetual'
-                        }, '*');
+                        this.reachedLastPage();
                     }
                     return null;
                 }
@@ -3210,7 +3422,8 @@
                     if (href && nextLink.getAttribute) {
                         let _href = nextLink.getAttribute("href");
                         if (_href) {
-                            if (_href.charAt(0) === "#" || _href === "?"){
+                            let realHref = _href.replace(location.href, "");
+                            if (realHref.charAt(0) === "#" || realHref === "?"){
                                 href = "#";
                             } else {
                                 href = _href;
@@ -3380,17 +3593,45 @@
             return true;
         }
 
+        preloadOneImg(src) {
+            return new Promise(resolve => {
+                let img = document.createElement('img');
+                img.src = src;
+                this.preloadDiv.appendChild(img);
+                if (img.complete) resolve('complete');
+                else {
+                    img.onload = e => {
+                        resolve('load');
+                    };
+                    img.onerror = e => {
+                        resolve('error');
+                    };
+                }
+            }).then(e => {
+                let src = this.unCheckedImgs.shift();
+                if (src) {
+                    this.preloadOneImg(src);
+                }
+                return e;
+            });
+        }
+
         preloadImageHandler() {
             if (this.preloadingImage || !this.unCheckedImgs.length) return;
             this.preloadingImage = true;
-            setTimeout(() => {
+            let src = this.unCheckedImgs.shift(), i = 0, promiseList = [];
+
+            while(src) {
+                promiseList.push(this.preloadOneImg(src));
+                if (++i > 5) {
+                    break;
+                } else {
+                    src = this.unCheckedImgs.shift();
+                }
+            }
+            Promise.all(promiseList).then(e => {
                 this.preloadingImage = false;
-                this.preloadImageHandler();
-            }, 10);
-            let iSrc = this.unCheckedImgs.shift();
-            let img = document.createElement('img');
-            img.src = iSrc;
-            this.preloadDiv.appendChild(img);
+            });
         }
 
         preload() {
@@ -3496,7 +3737,7 @@
                 if (pageElement && pageElement.length > 0) {
                     let pEIndex = pageElement.length - 1;
                     let pELast = pageElement[pEIndex];
-                    while(pELast && compareNodeName(pELast, ["link", "meta", "style", "script"])) {
+                    while(pELast && compareNodeName(pELast, ["link", "meta", "style", "script", "title"])) {
                         pEIndex--;
                         pELast = pageElement[pEIndex];
                     }
@@ -3666,14 +3907,39 @@
         }
 
         canListenUrlChange() {
-            if (this.curSiteRule && typeof this.curSiteRule.listenUrlChange === 'undefined' && this.docElementValid()) {
-                return false;
+            if (this.curSiteRule) {
+                if (this.curSiteRule.listenUrlChange === true) return true;
+                if (this.curSiteRule.listenUrlChange === false) return false;
+                if (this.docElementValid()) {
+                    return false;
+                }
             }
             return true;
         }
 
+        checkClickHref() {
+            if (this.curSiteRule.smart && this.nextLinkEle && !this.linkHasHref(this.nextLinkEle)) {
+                this.urlChanged();
+                isPause = true;
+                if (!this.nextLinkHref) isLoading = false;
+            }
+        }
+
         docElementValid() {
-            return (this.docPageElement && document.documentElement.contains(this.docPageElement[0]));
+            if (!this.docPageElement || this.docPageElement.length == 0) return false;
+            if (!this.checkPageEle) {
+                let ele;
+                if (this.docPageElement.length == 1) {
+                    ele = this.docPageElement[0];
+                } else {
+                    ele = this.docPageElement[Math.floor(this.docPageElement.length / 2)];
+                }
+                if (ele.children.length) {
+                    ele = ele.children[Math.floor(ele.children.length / 2)];
+                }
+                this.checkPageEle = ele;
+            }
+            return document.documentElement.contains(this.checkPageEle);
         }
 
         urlChanged() {
@@ -3703,11 +3969,12 @@
             this.historyUrl = "";
             this.possibleCheck = 0;
             let base = document.querySelector("base");
-            this.basePath = base ? base.href : location.href;
+            this.basePath = (base && base.href) || location.href;
             this.getRule(async () => {
                 if (self.curSiteRule.sideController === true || (self.curSiteRule.sideController !== false && rulesData.sideController)) {
                     isPause = manualPause;
                 }
+                hidePageBar = rulesData.opacity == 0 || self.curSiteRule.pageBar === 0;
                 if (typeof(self.curSiteRule.rate) !== "undefined") {
                     rate = self.curSiteRule.rate;
                 }
@@ -3749,7 +4016,15 @@
                 } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
                     self.addToHpRules();
                 }
-                let css = self.curSiteRule.css || rulesData.customCss;
+                let css;
+                if (rulesData.customCss && self.curSiteRule.css) {
+                    let globalCssArr = rulesData.customCss.split("inIframe:");
+                    let ruleCssArr = self.curSiteRule.css.split("inIframe:");
+                    let mainCss = globalCssArr[0] + ruleCssArr[0], inCss = (globalCssArr[1] || "") + (ruleCssArr[1] || "");
+                    css = mainCss + (inCss ? ("inIframe:" + inCss) : "");
+                } else {
+                    css = self.curSiteRule.css || rulesData.customCss;
+                }
                 if (css) {
                     let cssArr = css.split("inIframe:");
                     if (cssArr && cssArr.length) {
@@ -3781,7 +4056,7 @@
                 if (self.curSiteRule.pageNum && self.nextLinkHref && self.nextLinkHref != "#") {
                     let num1st = self.getPageNumFromUrl(location.href, 1);
                     let num2nd = self.getPageNumFromUrl(self.nextLinkHref, 1);
-                    if (num2nd != num1st + 1) {
+                    if (parseInt(num2nd) != parseInt(num1st) + 1) {
                         self.curSiteRule.pageNum = null;
                     }
                 }
@@ -3820,7 +4095,7 @@
                             nextPage();
                         }, 300);
                     }
-                }
+                } else isPause = false;
             });
         }
 
@@ -3885,6 +4160,9 @@
             }
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
+            if (sideController.inited) {
+                sideController.frame.classList.add("pagetual-sideController-loading");
+            }
         }
 
         insertElement(ele) {
@@ -3974,10 +4252,46 @@
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
                     if (!compareNodeName(newEle, ["style", "script"])) self.visibilityItems.push(newEle);
-                    collection.appendChild(newEle)
+                    collection.appendChild(newEle);
                     newEles.push(newEle);
                 });
-                self.insertElement(collection);
+                let css = this.curSiteRule.css;
+                let addCss = (parent) => {
+                    if (css) {
+                        let cssArr = css.split("inIframe:");
+                        if (cssArr && cssArr.length == 2) {
+                            let styleEle = document.createElement("style");
+                            styleEle.innerHTML = cssArr[1];
+                            parent.appendChild(styleEle);
+                        }
+                    }
+                };
+                if (this.curSiteRule.surround === "iframe") {
+                    let ele = document.createElement("iframe");
+                    ele.style.border = "unset";
+                    ele.style.maxWidth = "100%";
+                    ele.style.width = "100vw";
+                    self.insertElement(ele);
+                    try {
+                        let doc = ele.contentDocument || ele.contentWindow.document;
+                        doc.body.appendChild(collection);
+                        ele.style.width = doc.body.scrollWidth + "px";
+                        ele.style.height = doc.body.scrollHeight + "px";
+                        doc.documentElement.style.overflow = "hidden";
+                        doc.body.style.overflow = "hidden";
+                        addCss(doc.body);
+                    } catch(e) {
+                        console.log(e);
+                    }
+                } else if (this.curSiteRule.surround === "shadowDom") {
+                    let ele = document.createElement("div");
+                    self.insertElement(ele);
+                    let shadowRoot = ele.attachShadow({ mode: "open" });
+                    shadowRoot.appendChild(collection);
+                    addCss(shadowRoot);
+                } else {
+                    self.insertElement(collection);
+                }
             }
             getBody(document).scrollTop = lastScrollTop;
             document.documentElement.scrollTop = lastScrollTop;
@@ -4052,8 +4366,11 @@
                  user-select: none;
                  z-index: 2147483646!important;
                  padding: 0!important;
-                 opacity: 0.35;
+                 opacity: 0.5;
                  transition: opacity .5s ease, background .5s, box-shadow .5s;
+             }
+             #pagetual-sideController.end {
+                 opacity: 0.3;
              }
              #pagetual-sideController * {
                  font-weight: bold;
@@ -4084,6 +4401,29 @@
              #pagetual-sideController #pagetual-sideController-move > svg:hover {
                  transform: scale(1.2);
              }
+             ${rulesData.hideLoadingIcon ? '' : `
+             #pagetual-sideController.minSize #pagetual-sideController-move::before {
+                 content: '';
+                 position: absolute;
+                 width: 34px;
+                 height: 34px;
+                 background-color: #1a232a;
+                 background-repeat: no-repeat;
+                 background-position: 0 0;
+                 z-index: -1;
+                 margin: -2px;
+                 border-radius: 50%;
+             }
+             #pagetual-sideController.minSize.pagetual-sideController-loading #pagetual-sideController-move::before {
+                 background-image: conic-gradient(transparent, #a8efff, transparent 50%);
+                 -webkit-animation: siderotate 1s linear infinite;
+                 animation: siderotate 1s linear infinite;
+             }
+             @keyframes siderotate {
+                 100% {
+                     transform: rotate(1turn);
+                 }
+             }`}
              #pagetual-sideController.minSize #pagetual-sideController-move > svg {
                  background: white;
                  opacity: 0;
@@ -4118,7 +4458,7 @@
                  pointer-events: none;
              }
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
-                 opacity: 0.8;
+                 opacity: 1;
              }
              #pagetual-sideController:hover {
                  opacity: 1;
@@ -4150,6 +4490,7 @@
              }
              #pagetual-sideController.minSize #pagetual-sideController-move {
                  pointer-events: all;
+                 height: 30px;
              }
              #pagetual-sideController.minSize .pagetual-sideController-btn {
                  opacity: 0;
@@ -4240,7 +4581,12 @@
                 nextPage();
             }, true);
 
+            let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
             pre.addEventListener("click", e => {
+                if (manualMode) {
+                    history.back();
+                    return;
+                }
                 let prePageBar = getPageBar().preBar;
                 if (prePageBar) {
                     scrollToPageBar(prePageBar);
@@ -4251,7 +4597,20 @@
                 }
             }, true);
 
-            next.addEventListener("click", e => {
+            next.addEventListener("click", async e => {
+                if (manualMode) {
+                    let nextLink = ruleParser.nextLinkHref;
+                    if (!nextLink) return;
+                    let isJs = ruleParser.hrefIsJs(nextLink);
+                    if (isJs) {
+                        let nextBtn = ruleParser.nextLinkEle;
+                        if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document, true);
+                        if (nextBtn) emuClick(nextBtn);
+                    } else {
+                        window.location.href = nextLink;
+                    }
+                    return;
+                }
                 let pageBarObj = getPageBar();
                 let nextPageBar = pageBarObj.nextBar;
                 if (nextPageBar) {
@@ -4270,15 +4629,15 @@
             }, true);
 
             top.addEventListener("click", e => {
-                getBody(document).scrollTop=0;
-                document.documentElement.scrollTop=0;
+                getBody(document).scrollTop = 0;
+                document.documentElement.scrollTop = 0;
                 e.preventDefault();
                 e.stopPropagation();
             }, true);
 
             bottom.addEventListener("click", e => {
                 if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                    changeStop(true, true);
+                    changeStop(true);
                 }
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 getBody(document).scrollTop = scrollH || 9999999;
@@ -4335,7 +4694,7 @@
                     initY = (clientY(e) - 83 + 83) / windowHeight * 100;
                     this.frame.style.top = `calc(${initY}% - 83px)`;
                     this.frame.style.left = `calc(${initX}% - 40px)`;
-                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 20) {
+                } else if (Math.abs(clientX(e) - initX) + Math.abs(clientY(e) - initY) > 5) {
                     moving = true;
                     clearTimeout(removeTimer);
                 }
@@ -4367,8 +4726,6 @@
                 document.addEventListener("mouseup", mouseUpHandler, true);
                 document.addEventListener("touchmove", mouseMoveHandler, true);
                 document.addEventListener("touchend", mouseUpHandler, true);
-                e.stopPropagation();
-                e.preventDefault();
             };
 
             move.addEventListener("mousedown", mouseDownHandler, true);
@@ -4395,7 +4752,9 @@
             if (this.frame.parentNode) return;
             getBody(document).appendChild(this.frame);
             clearTimeout(this.hideTimer);
-            this.frame.classList.add("minSize");
+            if (!isMobile) {
+                this.frame.classList.add("minSize");
+            }
         }
 
         remove() {
@@ -4453,6 +4812,10 @@
               cursor: pointer;
               margin: 3px;
               font-size: larger;
+              max-width: 200px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
              }
              #pagetual-nextSwitch>.group>span:hover {
               color: red;
@@ -4996,6 +5359,10 @@
                 editTemp[propName] = propValue;
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
             }, true);
+            addOtherProp.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0], {active: true});
+            }, true);
             addNextSelector.addEventListener("click", e => {
                 let editTemp = self.getTempRule();
                 if (!editTemp) return;
@@ -5005,6 +5372,10 @@
                 }
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
             }, true);
+            addNextSelector.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0].replace("rule.html", "rules/nextLink.html"), {active: true});
+            }, true);
             addPageSelector.addEventListener("click", e => {
                 let editTemp = self.getTempRule();
                 if (!editTemp) return;
@@ -5013,6 +5384,10 @@
                     editTemp.pageElement = selector;
                 }
                 self.tempRule.value = JSON.stringify(editTemp, null, 4);
+            }, true);
+            addPageSelector.addEventListener("contextmenu", e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0].replace("rule.html", "rules/pageElement.html"), {active: true});
             }, true);
             showDetailBtn.addEventListener("click", e => {
                 frame.classList.toggle("showDetail");
@@ -5077,7 +5452,7 @@
                 if (moving) {
                     moving = false;
                 } else {
-                    _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                    _GM_openInTab(configPage[0], {active: true});
                 }
                 document.removeEventListener("mousemove", moveHanlder, true);
                 title.removeEventListener("mouseup", upHanlder, true);
@@ -5160,7 +5535,7 @@
                 }, 100);
             };
             this.clickHandler = e => {
-                if (!self.showSign) return;
+                if (!self.showSign || !e.isTrusted) return;
                 if (self.inPicker) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -5431,6 +5806,10 @@
         };
         setTimeout(() => {
             var container = document.getElementById("jsoneditor");
+            if (!container) {
+                container = document.createElement("div");
+                configCon.appendChild(container);
+            }
             container.style.height = '800px';
             container.innerHTML = "";
             try {
@@ -5504,7 +5883,7 @@
         scrollTarget = scrollTarget || document.documentElement;
 
         autoScrollInterval = setInterval(() => {
-            if (isPause) return;
+            if (isPause && !urlChanging) return;
             if (devicePixelRatio !== window.devicePixelRatio) {
                 devicePixelRatio = window.devicePixelRatio;
                 scrollRange = Math.ceil(scrollRange_o / devicePixelRatio);
@@ -5535,10 +5914,6 @@
             }
         }
         let isGuidePage = checkGuidePage(href);
-        if (!isGuidePage) {
-            if (href.indexOf("PagetualGuide") != -1) return true;
-            if (location.hostname === "pagetual.hoothin.com") return true;
-        }
 
         var click2import, importUrlPres;
 
@@ -5550,6 +5925,9 @@
                     break;
                 }
             }
+        }
+        if (!isGuidePage) {
+            if (location.hostname === "hoothin.github.io" || location.hostname === "pagetual.hoothin.com") isGuidePage = true;
         }
         configCon = document.getElementById("configCon");
         if (configCon) {
@@ -5694,7 +6072,15 @@
             };
             [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
                 let importBtn = createImportBtn(pre);
+                if (rulesData.uninited) {
+                    pre.style.display = "";
+                }
             });
+            click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
+            if (click2import) {
+                click2import.innerText = i18n("click2ImportRule");
+                click2import.style.display = rulesData.uninited ? "block" : "none";
+            }
             if (!importHandler) {
                 importHandler = e => {
                     if (compareNodeName(e.target, ["pre"])) {
@@ -5785,8 +6171,6 @@
                   margin-bottom: 0px;
                  }
                 `);
-                click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
-                if (click2import) click2import.innerText = i18n("click2ImportRule")
                 configCon = document.querySelector(".markdown-body,.theme-default-content");
                 if (!configCon) {
                     setTimeout(() => {
@@ -5797,6 +6181,7 @@
                 let insertPos = configCon.querySelector("hr,#jsoneditor");
                 configCon = document.createElement("div");
                 configCon.id = "configCon";
+                configCon.classList.add("showSave");
                 insertPos.parentNode.insertBefore(configCon, insertPos);
 
                 importUrlPres = document.querySelectorAll("pre[name='user-content-pagetual'],pre[name='pagetual']");
@@ -5806,7 +6191,6 @@
                         importUrlPre.style.display = rulesData.uninited ? "block" : "none";
                     });
                 }
-                if (click2import) click2import.style.display = rulesData.uninited ? "block" : "none";
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
                 let rulesExample = document.querySelector("#user-content-rules-example+a,#rules-example>a");
@@ -5818,6 +6202,7 @@
                         rulesExample.href = rulesExample.href.replace("/en", "");
                     }
                 }
+                document.documentElement.scrollTop = 0;
 
                 let newPos, lastPos = 0;
                 window.addEventListener('scroll', function(e) {
@@ -5829,8 +6214,8 @@
                     }
                     lastPos = newPos;
                 });
-            } else return false;
-        } else return false;
+            } else return isGuidePage;
+        } else return isGuidePage;
         let ruleBarInsertPos = document.createTextNode(' ');
         configCon.appendChild(ruleBarInsertPos);
         class Rulebar {
@@ -6219,7 +6604,7 @@
         let hideLoadingIconInput = createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon != false);
         let initRunInput = createCheckbox(i18n("initRun"), rulesData.initRun != false);
         let autoLoadNumInput = createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
-        let preloadInput = createCheckbox(i18n("preload"), rulesData.preload != false);
+        let preloadInput = createCheckbox(i18n("preload"), rulesData.preload);
         let rateInput = createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number", true);
         let dbClick2StopInput = createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput = createCheckbox(i18n("manualMode"), rulesData.manualMode);
@@ -6538,7 +6923,7 @@
                         title: "Pagetual rules updated",
                         onclick: (event) => {
                             event.preventDefault();
-                            _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
+                            _GM_openInTab(configPage[0], {active: true});
                         }
                     });
                 }
@@ -6588,7 +6973,7 @@
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && !compareNodeName(el, ["body"])) {
+            if(el && el.nodeType === 1 && !compareNodeName(el, ["body"])) {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -6793,7 +7178,7 @@
                     rulesData.initRun = true;
                 }
                 if (typeof(rulesData.preload) == "undefined") {
-                    rulesData.preload = true;
+                    rulesData.preload = false;
                 }
                 if (typeof(rulesData.customFirst) == "undefined") {
                     rulesData.customFirst = false;
@@ -6889,7 +7274,7 @@
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true, true);
+                        changeStop(true);
                         sideController.remove();
                     }
                     setListData("forceState", location.host, forceState);
@@ -6913,7 +7298,16 @@
                 startAutoScroll();
 
 
-                if (initConfig(href)) return;
+                if (initConfig(href)) {
+                    document.addEventListener("click", e => {
+                        if (e.target && typeof e.target.dataset.pagetualPicker !== 'undefined') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            picker.start();
+                        }
+                    });
+                    return;
+                }
                 pageReady = true;
                 if (forceState == 1) return;
                 let now = new Date().getTime();
@@ -6927,6 +7321,7 @@
         });
     }
 
+    let xhrFailed = false;
     function requestDoc(url, callback) {
         let postParams = url.match(/#p{(.*)}$/);
         if (postParams) {
@@ -6997,7 +7392,7 @@
                     }
                 }
                 let base = doc.querySelector("base");
-                ruleParser.basePath = base ? base.href : url;
+                ruleParser.basePath = (base && base.href) || url;
                 if (charsetValid && !ruleHeaders) {
                     let equiv = doc.querySelector('[http-equiv="Content-Type"]');
                     if (equiv && equiv.content) {
@@ -7012,8 +7407,11 @@
                     pageElement = ruleParser.getPageElement(doc);
                 }
                 if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
-                    debug(res.status + " " + url, "Error status");
-                    return callback(false);
+                    debug(res.status + " " + url + " " + response, "Error status");
+                    if (!ruleParser.curSiteRule.smart || !xhrFailed) {
+                        xhrFailed = true;
+                        return callback(false);
+                    }
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.smart) {
                     let article;
@@ -7082,6 +7480,7 @@
                 if (!isJs) {
                     let inForce = (forceState == 2 || forceState == 3);
                     _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
+                        changeStop(false, true);
                         if (inForce) {
                             setListData("forceState", location.host, "");
                         } else {
@@ -7274,7 +7673,8 @@
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
            pointer-events: none;
-           word-break: break-all;
+           word-break: break-word;
+           text-align: center;
          }
          .pagetual_tipsWords>a {
            color: #ffffff;
@@ -7373,7 +7773,6 @@
     }
 
     function isInViewPort(element) {
-        if (!getBody(document).contains(element)) return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
         const {
@@ -7478,10 +7877,12 @@
         var checkUrlTime = 100;
         var checkUrlTimer;
         var checkClickedEle = null;
+        var clickedSth = false;
         var checkFunc = () => {
             if (forceState == 1) return;
             if (checkClickedEle) {
-                if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
+                if (typeof ruleParser.curSiteRule.refreshByClick !== "undefined") {
+                } else if (!clickedSth && checkClickedEle && checkClickedEle.nodeName) {
                     if (compareNodeName(checkClickedEle, ["a", "button"])) {
                         clickedSth = true;
                     } else {
@@ -7497,7 +7898,10 @@
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
             if (document.hidden) return;
-            if (!ruleParser.canListenUrlChange()) {
+            if (clickedSth) {
+                ruleParser.checkClickHref();
+                clickedSth = false;
+            } else if (!ruleParser.canListenUrlChange()) {
                 return;
             }
             if ((prevPathname !== window.location.pathname || prevSearch !== window.location.search) && window.location.href != ruleParser.historyUrl) {
@@ -7636,6 +8040,7 @@
             return true;
         }
         _unsafeWindow.addEventListener('message', messageHandler, true);
+        let foundLoadMore = false, scrolling = false;
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {});
@@ -7647,18 +8052,29 @@
             if (!loadingMore) {
                 loadmoreBtn = getLoadMore(document, loadmoreBtn);
                 if (loadmoreBtn) {
+                    foundLoadMore = true;
+                    checkLoadMoreTimes = 0;
                     if (isInViewPort(loadmoreBtn)) {
                         emuClick(loadmoreBtn);
                         loadingMore = true;
-                        setTimeout(() => {loadingMore = false}, 200);
+                        setTimeout(() => {loadingMore = false}, 300);
                     }
                 } else {
                     loadingMore = true;
-                    if (!ruleParser.curSiteRule.smart || checkLoadMoreTimes++ < 3) {
-                        setTimeout(() => {loadingMore = false}, 200);
+                    if (!ruleParser.curSiteRule.smart) {
+                        setTimeout(() => {loadingMore = false}, 300);
+                    } else if (checkLoadMoreTimes++ < 10) {
+                        setTimeout(() => {loadingMore = false}, 500);
+                    } else if (foundLoadMore) {
+                        setTimeout(() => {loadingMore = false}, 1000);
                     }
                 }
             }
+            if (scrolling) return;
+            scrolling = true;
+            setTimeout(() => {
+                scrolling = false;
+            }, 100);
             if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
@@ -7677,6 +8093,11 @@
                     targetY = -1;
                 }
             }
+            if (curScroll <= 20 && curScroll > 0) {
+                if (sideController.inited) {
+                    sideController.pagenum.innerHTML = createHTML("1");
+                }
+            }
         };
         dblclickHandler = e => {
             if (forceState == 1 || compareNodeName(e.target, ["input", "textarea", "select", "a", "button", "svg", "use", "img", "path"])) return;
@@ -7688,16 +8109,16 @@
                     return;
                 }
             }
-            if (!compareNodeName(e.target, ["body"]) && !e.target.classList.contains('pagetual_pageBar')) {
+            if (!e.target.classList.contains('pagetual_pageBar')) {
                 try {
                     let selection = window.getSelection();
-                    let selStr = selection.toString().trim();
-                    if (!selStr) {
+                    let selObj = selection.toString();
+                    if (!selObj) {
                         selection = selection.getRangeAt(0);
-                        selStr = selection && selection.cloneContents().children[0];
-                        if (selStr && !compareNodeName(selStr, ["img"])) selStr = false;
+                        selObj = selection && selection.cloneContents().children[0];
+                        if (selObj && !compareNodeName(selObj, ["img"])) selObj = false;
                     }
-                    if (selStr) {
+                    if (selObj) {
                         return;
                     }
                 } catch (e) {}
@@ -7708,7 +8129,7 @@
                         changeHideBar(!isHideBar);
                     }
                     if (!rulesData.hideBarButNoStop) {
-                        changeStop(!isPause, true);
+                        changeStop(!isPause);
                         showTips(i18n(isPause ? "disable" : "enable"));
                     }
                     if (!isPause) {
@@ -7744,7 +8165,7 @@
                     } else {
                         forceState = 1;
                         showTips(i18n("disableSiteTips"));
-                        changeStop(true, true);
+                        changeStop(true);
                         sideController.remove();
                     }
                     if (!ruleParser.curSiteRule.url) {
@@ -7770,7 +8191,8 @@
             manualModeKeyHandler = e => {
                 if (document.activeElement &&
                     (compareNodeName(document.activeElement, ["input", "textarea"]) ||
-                     document.activeElement.contentEditable == 'true')) {
+                     document.activeElement.contentEditable == 'true' ||
+                     window.getSelection().toString())) {
                     return;
                 }
                 if (e.keyCode == 39) {
@@ -7790,7 +8212,8 @@
             keyupHandler = e => {
                 if (document.activeElement &&
                     (compareNodeName(document.activeElement, ["input", "textarea"]) ||
-                     document.activeElement.contentEditable == 'true')) {
+                     document.activeElement.contentEditable == 'true' ||
+                     window.getSelection().toString())) {
                     return;
                 }
                 if (e.keyCode == 39) {
@@ -7847,7 +8270,7 @@
         }, 1);
     }
 
-    const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|(load|view)\s*more|もっと読み込む)[.…▼\s]*$/i;
+    const loadmoreReg = /^\s*((点击)?(加载更多|继续加载)|(點擊)?(加載更多|繼續加載)|load\s*more|もっと読み込む)[\.…▼\s]*$/i;
     const defaultLoadmoreSel = ".loadMore,.LoadMore,[class*='load-more'],button.show_more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain,.view-more-btn";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
@@ -7858,7 +8281,7 @@
             loadmoreBtn = getElement(btnSel, doc, null, true);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]");
+            let buttons = getBody(doc).querySelectorAll("input,button,a,div[onclick]");
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (!button.innerText || button.innerText.length > 20) continue;
@@ -7917,7 +8340,7 @@
         } else {
             bottomGap = 1000;
         }
-        if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
+        if (hidePageBar) return null;
         url = url.replace(/#p{.*/, "");
         let example = (ruleParser.curSiteRule.insertPos == 2 || ruleParser.curSiteRule.insertPos == "in") ? insert.children[0] : (insert.parentNode.children[0] || insert);
         while (example && (compareNodeName(example, ["script", "style"]) || example.className == "pagetual_pageBar")) {
@@ -8174,7 +8597,7 @@
         });
         downSpan.addEventListener("click", e => {
             if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-                changeStop(true, true);
+                changeStop(true);
             }
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
@@ -8184,23 +8607,40 @@
             e.stopPropagation();
         });
         pageBar.addEventListener("click", e => {
-            changeStop(!isPause, true);
+            changeStop(!isPause);
             pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
         ruleParser.runPageBar(pageBar);
 
+        if (sideController.inited) {
+            try {
+                let observer = new IntersectionObserver(entries => {
+                    if (entries[0].intersectionRatio > 0) {
+                        sideController.pagenum.innerHTML = createHTML(localPage);
+                    }
+                });
+                observer.observe(pageBar);
+            } catch(e) {}
+        }
         return pageBar;
     }
 
-    async function waitForElement(sel, doc) {
+    async function waitForElement(sel, doc, maxTime) {
         if (!sel) return null;
         return new Promise((resolve) => {
+            let passedTime = 0;
             let checkInv = setInterval(() => {
                 let result = getElement(sel, doc, null, true);
                 if (result) {
                     clearInterval(checkInv);
                     resolve(result);
+                } else if (maxTime) {
+                    passedTime += 100;
+                    if (passedTime >= maxTime) {
+                        clearInterval(checkInv);
+                        resolve(result);
+                    }
                 }
             }, 100);
         });
@@ -8453,14 +8893,16 @@
                             }
                         }
                         let base = doc.querySelector("base");
-                        ruleParser.basePath = base ? base.href : url;
+                        ruleParser.basePath = (base && base.href) || url;
                         if (eles === null) eles = ruleParser.getPageElement(doc, iframe.contentWindow, pageEleTryTimes < 25);
                         if (eles && eles.length > 0) {
                             await ruleParser.hookUrl(doc);
                             await callback(doc, eles);
                         } else if (pageEleTryTimes++ < 100) {
                             getBody(doc).scrollTop = 9999999;
-                            doc.documentElement.scrollTop = 9999999;
+                            if (doc.documentElement) {
+                                doc.documentElement.scrollTop = 9999999;
+                            }
                             setTimeout(() => {
                                 checkIframe();
                             }, waitTime);
@@ -8530,14 +8972,14 @@
 
     var emuIframe, lastActiveUrl, orgContent, meetCors = false;
     function emuPage(callback) {
-        let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
+        let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false, checkNext = 0;
+        let activeClass = "active";
+        if (typeof ruleParser.curSiteRule.activeClass !== 'undefined') {
+            activeClass = ruleParser.curSiteRule.activeClass;
+        }
         function returnFalse(log) {
             if (curPage > 1) {
-                if (rulesData.lastPageTips) showTips(i18n("lastPage"), "", 800);
-                _unsafeWindow.postMessage({
-                    action: "lastPage",
-                    command: 'pagetual'
-                }, '*');
+                ruleParser.reachedLastPage();
             } else {
                 sideController.remove();
             }
@@ -8549,15 +8991,19 @@
                 emuIframe = null;
             }
         }
-        function cloneStatus() {
-            if (!iframeDoc) return;
+        async function cloneStatus() {
+            if (!iframeDoc || ruleParser.curSiteRule.cloneStatus === false) return;
             let inputs = document.querySelectorAll("input:not([type=button],[type=image],[type=reset],[type=submit])");
             let selectOptions = document.querySelectorAll("select>option");
             [...inputs].forEach(input => {
                 let sel = geneSelector(input, true, true);
                 let mirrorEle = iframeDoc.querySelector(sel);
                 if (!mirrorEle) return;
-                emuInput(mirrorEle, input.value);
+                if (mirrorEle.type === "checkbox" || mirrorEle.type === "radio") {
+                    mirrorEle.checked = !!input.checked;
+                } else {
+                    emuInput(mirrorEle, input.value);
+                }
             });
             [...selectOptions].forEach(option => {
                 let sel = geneSelector(option, true, true);
@@ -8565,8 +9011,22 @@
                 if (!mirrorEle) return;
                 let selected = option.selected;
                 mirrorEle.selected = !!selected;
-                mirrorEle.parentNode.dispatchEvent(new Event('change'));
+                if (selected) {
+                    mirrorEle.parentNode.dispatchEvent(new Event('change'));
+                }
             });
+            if (activeClass) {
+                let actives = document.querySelectorAll("." + activeClass);
+                for (let active of actives) {
+                    let sel = geneSelector(active, true, true).replace("." + activeClass, "");
+                    let mirrorEle = await waitForElement(sel, iframeDoc, 5000);
+                    if (!mirrorEle || mirrorEle.classList.contains(activeClass)) {
+                        continue;
+                    }
+                    emuClick(mirrorEle);
+                    await sleep(300);
+                }
+            }
         }
         async function checkPage() {
             if (isPause) return loadPageOver();
@@ -8575,6 +9035,10 @@
             } catch(e) {
                 returnFalse("Stop as cors");
                 return;
+            }
+            getBody(iframeDoc).scrollTop = 9999999;
+            if (iframeDoc.documentElement) {
+                iframeDoc.documentElement.scrollTop = 9999999;
             }
 
             let waitTime = 200, checkEval;
@@ -8620,7 +9084,9 @@
                     if (nextLink) pageEle = ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow, true);
                     if (!pageEle || pageEle.length == 0 || !nextLink) {
                         getBody(iframeDoc).scrollTop = 9999999;
-                        iframeDoc.documentElement.scrollTop = 9999999;
+                        if (iframeDoc.documentElement) {
+                            iframeDoc.documentElement.scrollTop = 9999999;
+                        }
                         if (waitTimes-- > 0) {
                             setTimeout(() => {
                                 checkPage();
@@ -8720,8 +9186,9 @@
                 } else {
                     checkInner = checkItem.innerHTML;
                 }
-                if (orgPage != checkItem || checkInner != preContent) {
+                if (checkInner != preContent) {
                     changed = true;
+                    checkNext = 0;
                     orgPage = checkItem;
                     preContent = checkInner;
                     setTimeout(() => {
@@ -8734,6 +9201,14 @@
                     } else {
                         orgContent = preContent;
                         await ruleParser.hookUrl(iframeDoc);
+                        if (!nextLink || !nextLink.offsetParent) {
+                            nextLink = await ruleParser.getNextLink(iframeDoc, true);
+                        }
+                        if (!nextLink && ++checkNext < 5) {
+                            setTimeout(() => {
+                                checkPage();
+                            }, waitTime);
+                        }
                         callback(iframeDoc, eles);
                     }
                 } else {
@@ -8799,8 +9274,11 @@
                         if (iframeDoc && refreshByClickSel) {
                             let clickBtn = await waitForElement(refreshByClickSel, iframeDoc);
                             await sleep(500);
-                            cloneStatus();
+                            await cloneStatus();
                             emuClick(clickBtn, iframeDoc);
+                            await sleep(500);
+                        } else {
+                            await cloneStatus();
                             await sleep(500);
                         }
                     }
@@ -9055,7 +9533,15 @@
                 callback(false);
                 return;
             }
-            let css = ruleParser.curSiteRule.css || rulesData.customCss;
+            let css;
+            if (rulesData.customCss && ruleParser.curSiteRule.css) {
+                let globalCssArr = rulesData.customCss.split("inIframe:");
+                let ruleCssArr = ruleParser.curSiteRule.css.split("inIframe:");
+                let mainCss = globalCssArr[0] + ruleCssArr[0], inCss = (globalCssArr[1] || "") + (ruleCssArr[1] || "");
+                css = mainCss + (inCss ? ("inIframe:" + inCss) : "");
+            } else {
+                css = ruleParser.curSiteRule.css || rulesData.customCss;
+            }
             if (css) {
                 let cssArr = css.split("inIframe:");
                 if (cssArr && cssArr.length > 1) {
@@ -9064,6 +9550,7 @@
                     iframeDoc.head.appendChild(styleEle);
                 }
             }
+            curIframe.style.height = "";
             checkIframe();
             iframeDoc.addEventListener('wheel', e => {
                 document.dispatchEvent(new Event('wheel'));
@@ -9140,6 +9627,9 @@
                 }
             }, 1);
         }
+        if (sideController.inited) {
+            sideController.frame.classList.remove("pagetual-sideController-loading");
+        }
     }
 
     function checkAutoLoadNum() {
@@ -9179,14 +9669,8 @@
                         ruleParser.findNoNext();
                     }
                 } else if (!showedLastPageTips) {
-                    if (rulesData.lastPageTips) {
-                        showTips(i18n("lastPage"), "", 800);
-                    }
+                    ruleParser.reachedLastPage();
                     showedLastPageTips = true;
-                    _unsafeWindow.postMessage({
-                        action: "lastPage",
-                        command: 'pagetual'
-                    }, '*');
                 }
                 return;
             }
@@ -9197,7 +9681,9 @@
         if (pvGallery && pvGallery.style.display !== "none") return;
         let insert = ruleParser.getInsert();
         if (insert) {
-            if (curPage === 1) initView();
+            if (curPage === 1) {
+                initView();
+            }
             /*if (curPage == 1) {
                 window.postMessage({
                     command: 'pagetual.insert'
@@ -9214,6 +9700,10 @@
             isLoading = true;
             if (curPage !== 1 || !isJs || !ruleParser.curSiteRule.smart) {
                 ruleParser.beginLoading(loadingDiv);
+            } else {
+                if (sideController.inited) {
+                    sideController.frame.classList.add("pagetual-sideController-loading");
+                }
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
@@ -9263,7 +9753,12 @@
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
                             }, true);
-                        } else loadPageOver();
+                        } else {
+                            loadPageOver();
+                            if (autoLoadNum >= 0) {
+                                setTimeout(() => nextPage(), 2000);
+                            }
+                        }
                     });
                 } else {
                     if (!isJs) {
@@ -9275,7 +9770,12 @@
                             if (eles) {
                                 createPageBar(nextLink);
                                 checkAutoLoadNum();
-                            } else loadPageOver();
+                            } else {
+                                loadPageOver();
+                                if (autoLoadNum >= 0) {
+                                    setTimeout(() => nextPage(), 2000);
+                                }
+                            }
                         });
                     } else {
                         emuPage((doc, eles) => {
@@ -9288,7 +9788,12 @@
                                     createPageBar(nextLink);
                                     checkAutoLoadNum();
                                 }, true);
-                            } else loadPageOver();
+                            } else {
+                                loadPageOver();
+                                if (autoLoadNum >= 0) {
+                                    setTimeout(() => nextPage(), 2000);
+                                }
+                            }
                         });
                     }
                 }

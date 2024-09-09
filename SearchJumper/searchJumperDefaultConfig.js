@@ -52,7 +52,7 @@ switch (lang) {
                 "sites": [
                     {
                         "name": "关注我的公众号",
-                        "url": "https://mp.weixin.qq.com/s?__biz=MzkxMjY1NjkzNQ==&mid=2247483662&idx=1&sn=faf637ec27d15fe02522ff0c6cd4957e",
+                        "url": "https://mp.weixin.qq.com/s/ldpYIQGfveILJK_VabIBQA",
                         "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico",
                         "description": "打开配置页删除此项"
                     },
@@ -104,11 +104,6 @@ switch (lang) {
                         "url": "[\"Poe - Sage AI Chat\"]"
                     },
                     {
-                        "name": "豆瓣评分",
-                        "url": "showTips:https://www.douban.com/search?cat=1002&q=%s \n{name} \n<br/>\n<p style=\"margin: 5px;\">\n{h3>a}\n<span style=\"position: absolute; right: 10px; color: orange;\">{.rating_nums}</span>\n</p>\n<div style=\"display: flex; font-size: 20px; width: 500px;\">\n<img src=\"https://images.weserv.nl/?url={.pic>a>img|src}\"/>\n<div>\n<div>{.subject-cast}</div>\n<div style=\"font-size: 16px; margin-top: 10px; border-top: 1px solid;\">{.content>p}</div>\n</div>\n</div>",
-                        "icon": "https://www.douban.com/favicon.ico"
-                    },
-                    {
                         "name": "维基百科预览",
                         "url": "showTips:https://zh.wikipedia.org/wiki/%s\n<div style=\"max-height: 500px; margin: 5px; overflow: hidden; font-size: large; text-align: left; font-weight: initial; line-height: initial;\">\n<img style=\"max-width: 250px; margin: 0 10px;\" align=\"left\" src=\"{.infobox img,figure>a>img|src}\"/>\n{.mw-parser-output>p}\n</div>"
                     },
@@ -126,7 +121,7 @@ switch (lang) {
                     },
                     {
                         "name": "💲美元转人民币",
-                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\\D/g,'')} RMB</i>",
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/g,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d",
                         "nobatch": true
                     },
@@ -143,11 +138,6 @@ switch (lang) {
                         "nobatch": true
                     },
                     {
-                        "name": "汉语读音",
-                        "url": "showTips:https://dict.baidu.com/s?wd=%s&ptype=zici\n<p style=\"margin: 3px\">{.means>div>dl>dt}</p>\n<span style=\"font-size: 18px; line-height: 25px; font-weight: normal; display: block; text-align: left;\">{.means>div>dl>dd}</span>",
-                        "icon": "https://m.baidu.com/static/index/icon/w_icon2.png"
-                    },
-                    {
                         "name": "有道词典英译中",
                         "url": "showTips:https://dict.youdao.com/result?word=%s&lang=en\n{.phone_con}\n{.word-exp|<div style=\"font-size: 20px; line-height: initial; font-weight: normal;\">()</div>}",
                         "kwFilter": "^[a-zA-Z]+$"
@@ -156,6 +146,15 @@ switch (lang) {
                         "name": "↩️ 短链接还原",
                         "url": "showTips:%s\n{url}",
                         "kwFilter": "^https?://."
+                    },
+                    {
+                        "name": "🔓 解码 base64",
+                        "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>",
+                        "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
+                    },
+                    {
+                        "name": "🔒 base64加密",
+                        "url": "paste:%be"
                     },
                     {
                         "name": "📺 预览视频",
@@ -199,7 +198,7 @@ switch (lang) {
                     },
                     {
                         "name": "一键抠图",
-                        "url": "https://www.remove.bg/zh/upload#p{sleep(1000)&body=%i}"
+                        "url": "https://www.remove.bg/zh/upload#p{wait()&body=%i}"
                     },
                     {
                         "name": "WhatAnime",
@@ -290,11 +289,6 @@ switch (lang) {
                         "name": "自动下载到百度网盘",
                         "url": "https://pan.baidu.com/disk/main#p{click([data-id\\=downloadLink])&div.nd-download-link div[role\\=dialog] input=%t&click(.nd-download-link button.u-button--primary)}",
                         "icon": "https://nd-static.bdstatic.com/m-static/v20-main/favicon-main.ico"
-                    },
-                    {
-                        "name": "短网址生成",
-                        "url": "https://cui.la#p{#url=%u}",
-                        "icon": "https://cui.la/content/151952ahk56ovvoqhnv557.png.icon.png"
                     },
                     {
                         "name": "分享到微博",
@@ -550,7 +544,7 @@ switch (lang) {
                     },
                     {
                         "name": "💲USD to RMB",
-                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%s USD = {json.result|*%s.replace(/\\D/,'')} RMB</i>",
+                        "url": "showTips:http://apilayer.net/api/convert?from=USD&to=CNY&amount=1&access_key=%template{apilayer key} \n{name}<br/><i>%sr USD = {json.result|*%sr.replace(/\\D/,'')} RMB</i>",
                         "kwFilter": "\\d\\$|\\$\\d"
                     },
                     {
@@ -593,6 +587,15 @@ switch (lang) {
                         "name": "↩️ Short link restore",
                         "url": "showTips:%s\n{url}",
                         "kwFilter": "^https?://."
+                    },
+                    {
+                        "name": "🔓 Decode base64",
+                        "url": "showTips:\n📋 <span data-copy style=\"user-select: all;\">%bd</span>",
+                        "kwFilter": "^\\s*[0-9a-zA-z\\+\\/\\=]{4,}\\s*$"
+                    },
+                    {
+                        "name": "🔒 Encode base64",
+                        "url": "paste:%be"
                     },
                     {
                         "name": "📺 Preview video",
@@ -694,7 +697,7 @@ switch (lang) {
                     },
                     {
                         "name": "Remove bg",
-                        "url": "https://www.remove.bg/upload#p{sleep(1000)&body=%i}"
+                        "url": "https://www.remove.bg/upload#p{wait()&body=%i}"
                     },
                     {
                         "name": "Google lens",

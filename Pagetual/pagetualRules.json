@@ -3450,7 +3450,7 @@
     "pageElement": ".itg>div,.itg>tbody>tr:not(:first-of-type),.gl1t, #gdt>div:not(.c), #img",
     "replaceElement": ".ptt,.ptb,.sn,.searchnav",
     "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}",
-    "pageInit": "doc.getElementById('img').setAttribute('onerror','setTimeout(()=>{this.src=this.src},2000)');"
+    "pageInit": "let img=doc.getElementById('img');img&&img.setAttribute('onerror','setTimeout(()=>{this.src=this.src},3000)');"
 },
 {
     "name": "177 漫画/xxiav - 圖片",
@@ -5508,13 +5508,14 @@
         "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
         "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
     ],
-    "pageElement": "id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]|id('search')/div/div/style[1]",
+    "pageElement": "id('rso')|id('main')//style|//head//style",
     "action": 1,
     "pageNum": "&start={10*($p-1)}",
     "pageBarTop": 55,
     "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
     "replaceElement": "[role='navigation']>[role='presentation']",
-    "css": "ol>li{display: inline-flex;}"
+    "css": "ol>li{display: inline-flex;}inIframe:#searchform,[data-l],[data-is-desktop]{display:none;}",
+    "surround": "shadowDom"
 },
 {
     "name": "Google Trends",
@@ -5618,10 +5619,11 @@
     "url": "^https://www\\.pixiv\\.net/",
     "example": "https://www.pixiv.net/tags/%E5%A5%B3%E3%81%AE%E5%AD%90/illustrations",
     "action": 2,
-    "pageElement": "section div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
+    "pageElement": "section div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*,ul.sc-9y4be5-1.jtUPOE",
     "nextLink": "a[class*='filterProps-Styled-Component'][aria-disabled='false']:last-child",
     "wait": 500,
     "fitWidth": false,
+    "listenUrlChange": true,
     "css": "@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
 },
 {
@@ -6178,17 +6180,18 @@
     "name": "魂+",
     "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
     "action": 1,
-    "sleep": 1000
+    "sleep": 1000,
+    "exclude": "//div[@id='main']/form|//tr[@align='center']"
 },
 {
     "name": "魂+阅读页",
     "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
     "action": 1,
     "type": 0,
-    "pageElement": "//div[@id='main']/form",
+    "pageElement": "//div[@id='main']/form[1]",
     "nextLink": "//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
     "sleep": 1000,
-    "pageNum": "page-{$p}.html"
+    "pageNum": "-page-{$p}.html"
 },
 {
     "name": "魂+列表页",
@@ -6198,7 +6201,7 @@
     "pageElement": "//tr[@align='center']",
     "nextLink": "//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
     "sleep": 1000,
-    "pageNum": "page-{$p}.html"
+    "pageNum": "-page-{$p}.html"
 },
 {
     "name": "动漫啦",
@@ -7229,6 +7232,12 @@
     "pageElement": "main.site-main > div.row.posts-wrapper"
 },
 {
+    "name": "投稿列表 pixivFANBOX",
+    "url": "^https?://[^\\.]+\\.fanbox\\.cc/",
+    "example": "https://ffxivinitiala.fanbox.cc/posts",
+    "waitElement": "!.gaaMeK,img[class^=LazyImage]:not([src]),[class^=LazyImage__LoadingIcon]"
+},
+{
     "name": "游戏怀旧灌水首页禁用",
     "url": "^https?://www\\.yxhjgs\\.com/$",
     "enable": 0
@@ -7236,12 +7245,6 @@
 {
     "name": "百度跳转页禁用",
     "url": "^https?://jump\\d?\\.bdimg\\.com/safecheck",
-    "enable": 0
-},
-{
-    "name": "检测到AC百度就不运行",
-    "url": ".",
-    "pageElement": ".AC-style-logo",
     "enable": 0
 },
 {
